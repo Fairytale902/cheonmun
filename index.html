@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>천문(天文) | 정통 자평진전 사주명리학 & 칼 융 분석심리 타로 살롱</title>
+  <meta name="description" content="3,000년 정통 자평진전 명리학과 칼 구스타프 융의 78장 아르카나 무의식 타로. 나를 온전히 읽어내는 인생의 프리미엄 지침서.">
+  <meta name="keywords" content="천문사주, 천문타로, 사주명리학, 만세력, 켈틱크로스, 심리타로, 융심리학, 신년운세, 이직운, 궁합">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="천문(天文) | 정통 사주명리학 & 심리 타로 살롱">
+  <meta property="og:description" content="정해진 운명의 거시적 흐름과 내면 무의식의 미시적 해답을 동시에 만나는 곳.">
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@500;600;700&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #080612;
+      --bg-card: #120d29;
+      --bg-card-hover: #1c1440;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --gold-primary: #f5d061;
+      --gold-glow: rgba(245, 208, 97, 0.4);
+      --border-gold: rgba(245, 208, 97, 0.35);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --font-sans: 'Pretendard', sans-serif;
+      --font-serif: 'Gowun Batang', 'Noto Serif KR', serif;
+      --font-cinzel: 'Cinzel', serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* 별빛 캔버스 */
+    #portalStarsCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 상단 헤더 */
+    .portal-header {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(8, 6, 18, 0.85);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .stamp-seal {
+      width: 42px;
+      height: 42px;
+      background: #8b0000;
+      border: 1.5px solid var(--gold-primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: var(--font-serif);
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -1px;
+      box-shadow: 0 0 12px rgba(139, 0, 0, 0.6);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: var(--gold-primary);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: block;
+      margin-top: -2px;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-nav {
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-nav-saju {
+      background: rgba(245, 208, 97, 0.12);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-primary);
+    }
+    .btn-nav-saju:hover {
+      background: var(--gold-primary);
+      color: #120c06;
+      box-shadow: 0 0 15px var(--gold-glow);
+    }
+
+    .btn-nav-tarot {
+      background: rgba(147, 51, 234, 0.2);
+      border: 1px solid rgba(167, 139, 250, 0.4);
+      color: #c084fc;
+    }
+    .btn-nav-tarot:hover {
+      background: #9333ea;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(147, 51, 234, 0.6);
+    }
+
+    /* 히어로 섹션 */
+    .portal-hero {
+      padding: 60px 0 40px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 208, 97, 0.1);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-primary);
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 20px;
+      word-break: keep-all;
+    }
+
+    .gold-text {
+      background: linear-gradient(135deg, #fff 20%, #f5d061 60%, #e5b838 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto;
+      word-break: keep-all;
+      line-height: 1.7;
+    }
+
+    /* 2대 메인 서비스 선택 카드 그리드 */
+    .services-section {
+      padding: 30px 0 60px;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 20px;
+    }
+
+    .portal-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-gold);
+      border-radius: 24px;
+      padding: 40px 32px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.35s ease;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+    }
+
+    .portal-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 80% 20%, rgba(245, 208, 97, 0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .portal-card.card-tarot::before {
+      background: radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.12) 0%, transparent 60%);
+    }
+
+    .portal-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold-primary);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px var(--gold-glow);
+    }
+
+    .card-badge {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .card-saju .card-badge {
+      background: rgba(245, 208, 97, 0.15);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-primary);
+    }
+
+    .card-tarot .card-badge {
+      background: rgba(147, 51, 234, 0.2);
+      border: 1px solid rgba(167, 139, 250, 0.4);
+      color: #c084fc;
+    }
+
+    .card-icon {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+    }
+    .card-saju .card-icon { color: var(--gold-primary); }
+    .card-tarot .card-icon { color: #c084fc; }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .card-desc {
+      font-size: 0.98rem;
+      color: #cbd5e1;
+      margin-bottom: 24px;
+      line-height: 1.7;
+      word-break: keep-all;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feature-list li {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-list li i {
+      color: var(--gold-primary);
+      font-size: 0.85rem;
+    }
+    .card-tarot .feature-list li i {
+      color: #c084fc;
+    }
+
+    .btn-card-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 28px;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      width: 100%;
+      transition: all 0.25s ease;
+    }
+
+    .card-saju .btn-card-action {
+      background: linear-gradient(135deg, #f5d061, #d4a017);
+      color: #120c06;
+      box-shadow: 0 4px 20px rgba(245, 208, 97, 0.3);
+    }
+    .card-saju:hover .btn-card-action {
+      box-shadow: 0 6px 25px rgba(245, 208, 97, 0.5);
+    }
+
+    .card-tarot .btn-card-action {
+      background: linear-gradient(135deg, #a855f7, #7e22ce);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(147, 51, 234, 0.3);
+    }
+    .card-tarot:hover .btn-card-action {
+      box-shadow: 0 6px 25px rgba(147, 51, 234, 0.6);
+    }
+
+    /* 신뢰 및 특장점 바 */
+    .trust-bar {
+      margin: 20px 0 60px;
+      background: rgba(16, 11, 36, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      text-align: center;
+    }
+
+    .trust-item h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold-primary);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .trust-item p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* 푸터 및 법적 고지 */
+    .portal-footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(5, 3, 12, 0.95);
+      padding: 40px 0 30px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .company-info {
+      line-height: 1.8;
+    }
+    .company-info strong {
+      color: #e2e8f0;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .footer-nav a:hover {
+      color: var(--gold-primary);
+      text-decoration: underline;
+    }
+
+    .footer-copyright {
+      font-size: 0.78rem;
+      color: #64748b;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 16px;
+    }
+
+    /* 반응형 */
+    @media (max-width: 820px) {
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+      .trust-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .hero-title {
+        font-size: 1.9rem;
+      }
+      .nav-buttons {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .trust-bar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 별빛 배경 캔버스 -->
+  <canvas id="portalStarsCanvas"></canvas>
+
+  <!-- 헤더 -->
+  <header class="portal-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="stamp-seal">天門</div>
+        <div class="brand-text">
+          <h1>천문(天文)</h1>
+          <span>DESTINY & PSYCHOLOGY SALON</span>
+        </div>
+      </a>
+      <div class="nav-buttons">
+        <a href="1/index.html" class="btn-nav btn-nav-saju"><i class="fa-solid fa-scroll"></i> 사주 만세력</a>
+        <a href="2/index.html" class="btn-nav btn-nav-tarot"><i class="fa-solid fa-wand-magic-sparkles"></i> 심리 타로</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 히어로 -->
+  <section class="portal-hero">
+    <div class="container">
+      <div class="hero-eyebrow">
+        <i class="fa-solid fa-shield-halved"></i> 3,000년 정통 자평진전 명리학 × 칼 융 분석심리학
+      </div>
+      <h2 class="hero-title">
+        "정해진 운명의 거시적 흐름을 읽고,<br>
+        <span class="gold-text">내면의 무의식</span>을 비추어 주체적 삶을 선택합니다."
+      </h2>
+      <p class="hero-subtitle">
+        답답한 갈림길에 서 계신가요? 사주 8글자의 대운 시간표와 타로 78장 아르카나의 영적 거울을 통해 당신 내면의 진짜 해답을 찾으십시오.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2대 서비스 선택 그리드 -->
+  <main class="services-section">
+    <div class="container">
+      <div class="service-grid">
+
+        <!-- 서비스 1: 천문 사주명리학 -->
+        <a href="1/index.html" class="portal-card card-saju">
+          <div>
+            <span class="card-badge"><i class="fa-solid fa-crown"></i> 정통 명리학 원전 고증</span>
+            <div class="card-icon"><i class="fa-solid fa-scroll"></i></div>
+            <h3 class="card-title">천문(天文) 사주명리학</h3>
+            <p class="card-desc">
+              자평진전 10정격, 조후·억부론, 음양오행 및 12신살을 완벽히 연산하는 3,000년 정통 만세력 엔진.
+              87페이지 조선 왕실 목판본 고서적 A4 소장용 비서를 발급합니다.
+            </p>
+            <ul class="feature-list">
+              <li><i class="fa-solid fa-circle-check"></i> 천간·지지 8글자 및 24절기 정밀 만세력</li>
+              <li><i class="fa-solid fa-circle-check"></i> 87페이지 고서적 A4 평생 심층 비서 발급</li>
+              <li><i class="fa-solid fa-circle-check"></i> 이직·취업, 연애·궁합, 신년운세, 재물운 4대 카테고리</li>
+              <li><i class="fa-solid fa-circle-check"></i> 의명진단학(體質) 맞춤 식재료 및 라이프스타일 처방</li>
+            </ul>
+          </div>
+          <div>
+            <div class="btn-card-action">
+              <span>사주 만세력 감명 시작하기</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+        </a>
+
+        <!-- 서비스 2: 천문 심리 타로 살롱 -->
+        <a href="2/index.html" class="portal-card card-tarot">
+          <div>
+            <span class="card-badge"><i class="fa-solid fa-sparkles"></i> 융 분석심리학 3단계 화법</span>
+            <div class="card-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <h3 class="card-title">천문(天文) 심리 타로 살롱</h3>
+            <p class="card-desc">
+              단순한 점괘가 아닌 무의식을 비추는 거울. 78장 라이더-웨이트 3D 부채꼴 덱에서 직접 카드를 터치하여 뽑고,
+              4원소 조화도와 칼 융의 3단계(공감 ➔ 맹점 조명 ➔ 행동 지침)로 주체적 길을 찾습니다.
+            </p>
+            <ul class="feature-list">
+              <li><i class="fa-solid fa-circle-check"></i> 78장 아르카나 인터랙티브 3D 부채꼴 덱 1인칭 뽑기</li>
+              <li><i class="fa-solid fa-circle-check"></i> 켈틱 크로스 10카드, 3카드 시간선, 양자택일 5카드 지원</li>
+              <li><i class="fa-solid fa-circle-check"></i> '못' 가는지 '안' 가는지 뼈를 때리는 융 심리학 직면</li>
+              <li><i class="fa-solid fa-circle-check"></i> 14페이지 완벽 규격의 A4 소장용 타로 감명서 PDF 발급</li>
+            </ul>
+          </div>
+          <div>
+            <div class="btn-card-action">
+              <span>78장 아르카나 타로 뽑기</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- 신뢰 및 안심 바 -->
+      <div class="trust-bar">
+        <div class="trust-item">
+          <h4><i class="fa-solid fa-lock"></i> 안전한 결제 시스템</h4>
+          <p>토스페이먼츠 · 포트원 정식 연동, 256bit SSL 암호화</p>
+        </div>
+        <div class="trust-item">
+          <h4><i class="fa-solid fa-bolt"></i> 결제 즉시 즉각 열람</h4>
+          <p>대기 시간 없이 즉시 고해상도 PDF 및 E-Book 열람</p>
+        </div>
+        <div class="trust-item">
+          <h4><i class="fa-solid fa-mobile-screen"></i> 모바일 100% 최적화</h4>
+          <p>스마트폰에서도 깨알글씨 없는 17px/1.88배율 가독성</p>
+        </div>
+        <div class="trust-item">
+          <h4><i class="fa-solid fa-shield"></i> 개인정보 엄격 보호</h4>
+          <p>생년월일 및 질문 데이터 암호화 및 조회 후 파기</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 푸터 및 전자상거래법 필수 고지 -->
+  <footer class="portal-footer">
+    <div class="container footer-inner">
+      <div class="footer-nav">
+        <a href="1/terms.html">이용약관</a>
+        <a href="1/privacy.html">개인정보처리방침</a>
+        <a href="1/refund.html">환불정책 및 청약철회 안내</a>
+        <a href="1/index.html">천문 사주명리학</a>
+        <a href="2/index.html">천문 타로살롱</a>
+      </div>
+
+      <div class="company-info">
+        <p>
+          <strong>상호명:</strong> 천문라이프 | <strong>대표자:</strong> 김명리 | <strong>사업자등록번호:</strong> 123-45-67890 | <strong>통신판매업신고번호:</strong> 제2026-서울강남-01234호<br>
+          <strong>사업장 주소:</strong> 서울특별시 강남구 테헤란로 152 강남파이낸스센터 18층 | <strong>고객센터:</strong> support@cheonmun.life | <strong>운영시간:</strong> 평일 10:00 ~ 18:00 (주말/공휴일 휴무)<br>
+          <strong>호스팅 서비스 제공자:</strong> Vercel Inc.
+        </p>
+        <p style="margin-top: 6px; color: #64748b; font-size: 0.8rem;">
+          ※ 본 서비스에서 제공하는 사주명리 및 심리 타로 감명서는 학술적 이론 및 분석심리학적 모델에 기반한 상담 참고 자료이며, 내담자의 주체적인 삶의 의사결정을 지원하기 위한 목적으로 제공됩니다.
+        </p>
+      </div>
+
+      <div class="footer-copyright">
+        © 2026 CHEONMUN LIFE. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 별빛 캔버스 애니메이션
+    (function initStars() {
+      const canvas = document.getElementById('portalStarsCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = (canvas.width = window.innerWidth);
+      let h = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      });
+
+      const stars = [];
+      const count = Math.min(100, Math.floor((w * h) / 5000));
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 1.3 + 0.3,
+          a: Math.random() * 0.7 + 0.3,
+          spd: Math.random() * 0.015 + 0.005,
+          dir: Math.random() > 0.5 ? 1 : -1
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        stars.forEach(s => {
+          s.a += s.spd * s.dir;
+          if (s.a > 0.95 || s.a < 0.2) s.dir *= -1;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(245, 208, 97, ' + s.a.toFixed(2) + ')';
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+
+</body>
+</html>

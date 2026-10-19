@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>천문(天文) 사주 | 3,000년 정통 명리학과 AI의 만남 - 내 만세력 원국 조회</title>
+  <meta name="description" content="남들은 모르는 내 사주 8글자의 비밀. 정통 명리학과 AI 엔진이 밝혀내는 12신살과 촌철살인 운명 나침반. 지금 무료로 내 만세력을 조회해보세요.">
+  <meta name="keywords" content="사주, 만세력, 신살, 일주, 무료만세력, 신년운세, 궁합, 평생사주, 오행분석, 천문, 천문사주">
+
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://cheonmun.life">
+  <meta property="og:title" content="천문(天文) 사주 | 내 만세력 8글자와 숨겨진 신살의 비밀">
+  <meta property="og:description" content="왜 내 노력에 비해 결실이 늦을까? 내 일주와 월주에 깃든 신살과 촌철살인 AI 총평을 지금 무료로 확인하세요.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80">
+  <link rel="canonical" href="https://cheonmun.life">
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@500;600;700&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- 포트원(PortOne V2) 브라우저 SDK -->
+  <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 배경 별빛 캔버스 -->
+  <canvas id="starsCanvas"></canvas>
+
+  <!-- 실시간 알림 토스트 (소셜 프루프) -->
+  <div id="liveToast" class="live-toast">
+    <div class="toast-avatar">
+      <i class="fa-solid fa-moon"></i>
+    </div>
+    <div class="toast-content">
+      <p class="toast-text" id="toastMessage">서울 강남구 김*현님이 <strong>'일주 & 월주 심층 신살'</strong>을 해독하셨습니다.</p>
+      <span class="toast-time" id="toastTime">방금 전</span>
+    </div>
+  </div>
+
+  <!-- 상단 프로모션 배너 -->
+  <aside class="top-banner">
+    <div class="banner-inner container">
+      <span class="badge">오늘 한정</span>
+      <p class="banner-text">첫 방문 고객 전원 <strong>'나만의 만세력 원국 & 12신살 촌철살인 분석'</strong> 무료 개방!</p>
+      <div class="countdown" id="topCountdown">
+        <span class="clock-icon"><i class="fa-regular fa-clock"></i></span>
+        <span class="time-box" id="hours">00</span>:
+        <span class="time-box" id="minutes">00</span>:
+        <span class="time-box" id="seconds">00</span> 남음
+      </div>
+    </div>
+  </aside>
+
+  <!-- 헤더 네비게이션 -->
+  <header class="header">
+    <div class="container nav-container">
+      <a href="javascript:void(0)" class="logo" onclick="switchView('landing')">
+        <span class="logo-mark stamp" aria-hidden="true">
+          <span class="stamp-inner">
+            <span class="stamp-char">天</span>
+            <span class="stamp-char">文</span>
+          </span>
+        </span>
+        <div class="logo-brand">
+          <span class="logo-title">천문<span class="logo-accent">사주</span></span>
+          <span class="logo-subtag">正統命理 · AI 萬歲曆</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="javascript:void(0)" onclick="switchView('landing')">홈 이야기</a>
+        <a href="javascript:void(0)" onclick="switchView('input')">만세력 조회</a>
+        <a href="#storySection" onclick="if(currentView!=='landing'){switchView('landing'); setTimeout(()=>document.getElementById('storySection').scrollIntoView({behavior:'smooth'}), 100);}">운명 스토리</a>
+        <a href="#reviewsSection" onclick="if(currentView!=='landing'){switchView('landing'); setTimeout(()=>document.getElementById('reviewsSection').scrollIntoView({behavior:'smooth'}), 100);}">적중 후기</a>
+        <a href="../2/index.html" style="color: #c084fc; font-weight: 700;" title="천문 심리 타로 살롱으로 이동"><i class="fa-solid fa-wand-magic-sparkles"></i> 심리 타로</a>
+      </nav>
+
+      <div class="header-cta">
+        <button type="button" class="btn btn-primary-sm glow-btn" onclick="switchView('input')">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> 바로 확인
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       VIEW 1: 메인 스토리텔링 홍보 랜딩페이지 (후킹 & 몰입)
+       ===================================================================== -->
+  <main id="landingView" class="page-view active">
+
+    <!-- 스토리텔링 히어로 섹션 -->
+    <section class="hero-section">
+      <div class="container hero-container">
+        <div class="hero-badge fade-in">
+          <i class="fa-solid fa-fire-flame-curved"></i> 누적 감명 148,200건 돌파 · 평점 4.96
+        </div>
+
+        <h1 class="hero-title fade-in delay-1">
+          "왜 매일 죽어라 노력해도,<br>
+          <span class="gold-gradient">인생의 문턱에서 번번이 미끄러질까?"</span>
+        </h1>
+
+        <p class="hero-desc fade-in delay-2">
+          당신의 노력이 부족해서가 아닙니다.<br>
+          당신이 태어난 순간에 정해진 <strong>'운의 계절과 기운의 방향'</strong>을 거슬러 헤엄치고 있었기 때문입니다.
+        </p>
+
+        <div class="hero-actions fade-in delay-3">
+          <button type="button" class="btn btn-hero glow-effect" onclick="switchView('input')">
+            <span class="btn-text">내 만세력 바로 확인</span>
+            <span class="btn-subtext">30초 소요 · 즉시 신살 & 촌철살인 분석</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- 만세력 티저 카드 -->
+        <div class="manse-teaser-box fade-in delay-4" onclick="switchView('input')">
+          <div class="teaser-header">
+            <span class="teaser-tag"><i class="fa-solid fa-fingerprint"></i> AI 정밀 만세력 미리보기</span>
+            <span class="teaser-hint">터치하면 내 만세력 입력창으로 이동합니다 <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+          <div class="saju-pillars-preview teaser-pillars">
+            <div class="pillar-card">
+              <span class="pillar-tag">시주 (時柱)</span>
+              <div class="hanja-box">
+                <span class="cheongan wood">甲</span>
+                <span class="jiji fire">午</span>
+              </div>
+              <span class="pillar-label">말년 / 자녀</span>
+            </div>
+            <div class="pillar-card highlight">
+              <span class="pillar-tag current-tag">일주 (日柱) · 나</span>
+              <div class="hanja-box">
+                <span class="cheongan water">壬</span>
+                <span class="jiji wood">寅</span>
+              </div>
+              <span class="pillar-label">본성 / 배우자</span>
+            </div>
+            <div class="pillar-card">
+              <span class="pillar-tag">월주 (月柱)</span>
+              <div class="hanja-box">
+                <span class="cheongan metal">辛</span>
+                <span class="jiji earth">丑</span>
+              </div>
+              <span class="pillar-label">청년 / 사회운</span>
+            </div>
+            <div class="pillar-card">
+              <span class="pillar-tag">연주 (年柱)</span>
+              <div class="hanja-box">
+                <span class="cheongan fire">丙</span>
+                <span class="jiji fire">午</span>
+              </div>
+              <span class="pillar-label">초년 / 근본</span>
+            </div>
+          </div>
+          <p class="teaser-footer">
+            💡 <strong>월주와 일주</strong>를 열어보면, 지금 내 길을 막고 있는 <strong>숨겨진 살(煞)과 터닝포인트</strong>가 적나라하게 드러납니다.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 스토리텔링 섹션: 운의 계절 -->
+    <section id="storySection" class="story-section">
+      <div class="container">
+        <div class="story-card">
+          <div class="story-tag">THE HIDDEN TRUTH</div>
+          <h2>겨울에 씨앗을 뿌리면 얼어 죽고,<br><span class="gold-gradient">가을에 낫을 들면 산더미 같은 곡식을 거둡니다</span></h2>
+          <div class="story-content">
+            <p>
+              누구에게나 인생의 <strong>봄(준비), 여름(확장), 가을(결실), 겨울(휴식과 축적)</strong>이 있습니다.<br>
+              내가 지금 한겨울의 대운에 서 있는지, 아니면 거대한 결실을 앞둔 가을의 문턱에 있는지 모른 채 발버둥치는 것은, 안개 속에서 액셀러레이터를 밟는 것과 같습니다.
+            </p>
+            <p>
+              사주팔자는 점쟁이의 막연한 예언이 아닙니다. 3,000년 동안 축적된 <strong>동양 최고의 통계학이자 인간 에너지의 일기예보</strong>입니다.
+            </p>
+          </div>
+
+          <div class="story-points">
+            <div class="point-item">
+              <div class="point-icon"><i class="fa-solid fa-compass"></i></div>
+              <div class="point-text">
+                <h4>나만의 무기(용신)를 아는 사람</h4>
+                <p>내가 물(水)의 지혜를 쓸 사람인지, 불(火)의 추진력으로 사람을 모을 사람인지 알면 남들의 방식에 흔들리지 않습니다.</p>
+              </div>
+            </div>
+            <div class="point-item">
+              <div class="point-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+              <div class="point-text">
+                <h4>결정적인 타이밍(대운)을 잡는 사람</h4>
+                <p>이직, 투자, 독립, 결혼... 언제 웅크리고 언제 뛰쳐나가야 하는지 때를 아는 자가 인생의 패를 바꿉니다.</p>
+              </div>
+            </div>
+            <div class="point-item">
+              <div class="point-icon"><i class="fa-solid fa-shield-heart"></i></div>
+              <div class="point-text">
+                <h4>내 발목을 잡는 신살(煞)을 다스리는 사람</h4>
+                <p>도화살, 역마살, 백호살, 화개살... 액운을 두려워할 것이 아니라, 나의 강력한 개성과 매력으로 반전시킵니다.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center story-cta-box">
+            <button type="button" class="btn btn-hero glow-effect" onclick="switchView('input')">
+              내 만세력 바로 확인 <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4대 차별점 -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-sub">WHY CHEONMYEONG</span>
+          <h2 class="section-title">틀에 박힌 공포 마케팅이 아닌,<br><span class="gold-gradient">나를 꿰뚫어 보는 현실적인 명리 솔루션</span></h2>
+          <p class="section-desc">"살(煞)이 꼈으니 부적 써라"는 식의 불안 조장은 이제 그만. 천명은 정밀 알고리즘으로 당신의 진짜 강점과 타이밍을 짚어냅니다.</p>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-scroll"></i></div>
+            <span class="feature-num">01</span>
+            <h3>자평진전 · 궁통보감 고전 고증</h3>
+            <p>단순 확률 프로그램이 아닌, 수천 년간 검증된 정통 명리학 3대 고전의 원리를 현대적 언어로 명쾌하게 풀어냅니다.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-microchip"></i></div>
+            <span class="feature-num">02</span>
+            <h3>시차 30분 & 서머타임 정밀 보정</h3>
+            <p>한국 표준시(동경 135도)로 인해 발생하는 30분 오차와 출생 연도별 서머타임을 1분 단위로 자동 보정하여 시주 오차를 완벽히 바로잡습니다.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <span class="feature-num">03</span>
+            <h3>촌철살인 AI 심층 독심술</h3>
+            <p>일주와 월주의 8글자, 십신, 신살을 종합하여 가려운 곳을 긁어주고 뼈를 때리는 현실적인 조언과 개운법을 제공합니다.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
+            <span class="feature-num">04</span>
+            <h3>100% 비대면 & 철저한 프라이버시</h3>
+            <p>어색하게 점집을 찾아갈 필요 없이, 모바일에서 편안하게 확인하고 평생 디지털 리포트로 소장할 수 있습니다.</p>
+          </div>
+        </div>
+
+        <!-- 신뢰 수치 -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-num">148,200+</span>
+            <span class="stat-label">누적 만세력 감명 건수</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num">98.4%</span>
+            <span class="stat-label">상담 만족도 및 적중률 평가</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-num">4.96 / 5.0</span>
+            <span class="stat-label">고객 평점 (리뷰 32,400+건)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 고객 실제 후기 (100개 데이터셋) -->
+    <section id="reviewsSection" class="reviews-section">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-sub">REAL 100+ REVIEWS</span>
+          <h2 class="section-title">"처음으로 내 사주를 똑바로 마주했습니다"<br><span class="gold-gradient">실제 감명 고객들의 생생한 후기 (100선)</span></h2>
+          <p class="section-desc">누적 감명 148,200건 돌파 · 실구매자 평점 <strong>4.96 / 5.0</strong> (만족도 98.4%)</p>
+        </div>
+
+        <!-- 리뷰 필터 탭 -->
+        <div class="reviews-filter-bar">
+          <button type="button" class="filter-btn active" data-filter="all" onclick="filterReviews('all')">전체 후기 (100)</button>
+          <button type="button" class="filter-btn" data-filter="career" onclick="filterReviews('career')">💼 이직·직장운</button>
+          <button type="button" class="filter-btn" data-filter="wealth" onclick="filterReviews('wealth')">💰 재물·사업운</button>
+          <button type="button" class="filter-btn" data-filter="love" onclick="filterReviews('love')">❤️ 연애·궁합</button>
+          <button type="button" class="filter-btn" data-filter="year" onclick="filterReviews('year')">✨ 연간·월별운세</button>
+        </div>
+
+        <!-- 동적 렌더링 리뷰 그리드 -->
+        <div class="reviews-grid" id="reviewsGrid">
+          <!-- JS에서 동적 렌더링 -->
+        </div>
+
+        <!-- 더보기 버튼 -->
+        <div class="text-center reviews-more-wrap">
+          <button type="button" class="btn btn-outline glow-btn" id="btnLoadMoreReviews" onclick="loadMoreReviews()">
+            <i class="fa-solid fa-plus"></i> 실구매자 후기 더보기 (<span id="reviewCountDisplay">8 / 100</span>)
+          </button>
+        </div>
+
+        <div class="text-center" style="margin-top: 40px;">
+          <button type="button" class="btn btn-hero glow-effect" onclick="switchView('input')">
+            내 만세력 바로 확인 <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================================
+       VIEW 2: 사주 정보 입력 화면 (집중 입력 뷰)
+       ===================================================================== -->
+  <main id="inputView" class="page-view hidden">
+    <section class="input-screen-section">
+      <div class="container">
+        
+        <div class="view-back-nav">
+          <button type="button" class="btn-text-nav" onclick="switchView('landing')">
+            <i class="fa-solid fa-arrow-left"></i> 홈으로 돌아가기
+          </button>
+        </div>
+
+        <div class="analyzer-card">
+          <div class="card-glow"></div>
+
+          <div class="section-header text-center" style="margin-bottom: 28px;">
+            <span class="section-sub">BIRTH CHART DECRYPTION</span>
+            <h2 class="section-title">나만의 <span class="gold-gradient">만세력 원국과 신살</span> 해독</h2>
+            <p class="section-desc">태어난 순간의 천간과 지지 8글자를 추출하여 숨겨진 기운과 촌철살인 한줄평을 도출합니다.</p>
+          </div>
+
+          <form id="sajuForm" class="saju-form" onsubmit="event.preventDefault(); analyzeSaju();">
+            <div class="form-grid">
+              
+              <div class="form-group">
+                <label for="userName"><i class="fa-solid fa-user"></i> 이름 (또는 별칭)</label>
+                <input type="text" id="userName" placeholder="예: 김우주" required value="김우주">
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-venus-mars"></i> 성별</label>
+                <div class="radio-pill-group">
+                  <label class="radio-pill">
+                    <input type="radio" name="gender" value="female" checked>
+                    <span>여성</span>
+                  </label>
+                  <label class="radio-pill">
+                    <input type="radio" name="gender" value="male">
+                    <span>남성</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-calendar-days"></i> 양력 / 음력</label>
+                <div class="radio-pill-group">
+                  <label class="radio-pill">
+                    <input type="radio" name="calendarType" value="solar" checked>
+                    <span>양력</span>
+                  </label>
+                  <label class="radio-pill">
+                    <input type="radio" name="calendarType" value="lunar">
+                    <span>음력 (평달)</span>
+                  </label>
+                  <label class="radio-pill">
+                    <input type="radio" name="calendarType" value="lunar_leap">
+                    <span>음력 (윤달)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="birthDate"><i class="fa-solid fa-cake-candles"></i> 생년월일</label>
+                <div class="date-inputs">
+                  <input type="number" id="birthYear" placeholder="년도 (예: 1996)" min="1930" max="2035" value="1996" required>
+                  <input type="number" id="birthMonth" placeholder="월 (1~12)" min="1" max="12" value="7" required>
+                  <input type="number" id="birthDay" placeholder="일 (1~31)" min="1" max="31" value="15" required>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="birthTime"><i class="fa-solid fa-clock"></i> 태어난 시간 (시주 분석)</label>
+                <div class="time-select-row">
+                  <select id="birthTime">
+                    <option value="unknown">태어난 시간을 잘 몰라요 (삼주 분석)</option>
+                    <option value="23:30-01:29">자시 (23:30 ~ 01:29) - 쥐</option>
+                    <option value="01:30-03:29">축시 (01:30 ~ 03:29) - 소</option>
+                    <option value="03:30-05:29">인시 (03:30 ~ 05:29) - 호랑이</option>
+                    <option value="05:30-07:29">묘시 (05:30 ~ 07:29) - 토끼</option>
+                    <option value="07:30-09:29">진시 (07:30 ~ 09:29) - 용</option>
+                    <option value="09:30-11:29" selected>사시 (09:30 ~ 11:29) - 뱀</option>
+                    <option value="11:30-13:29">오시 (11:30 ~ 13:29) - 말</option>
+                    <option value="13:30-15:29">미시 (13:30 ~ 15:29) - 양</option>
+                    <option value="15:30-17:29">신시 (15:30 ~ 17:29) - 원숭이</option>
+                    <option value="17:30-19:29">유시 (17:30 ~ 19:29) - 닭</option>
+                    <option value="19:30-21:29">술시 (19:30 ~ 21:29) - 개</option>
+                    <option value="21:30-23:29">해시 (21:30 ~ 23:29) - 돼지</option>
+                  </select>
+                  <span class="info-bubble"><i class="fa-solid fa-circle-question"></i> 대한민국 표준 시차(동경 135도 30분) 자동 보정 적용</span>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label><i class="fa-solid fa-heart-pulse"></i> 지금 가장 답답한 영역은?</label>
+                <div class="concern-tags">
+                  <label class="concern-tag active">
+                    <input type="radio" name="concern" value="wealth" checked>
+                    <span>💰 평생 재물선 & 의명 체질 진단</span>
+                  </label>
+                  <label class="concern-tag">
+                    <input type="radio" name="concern" value="love">
+                    <span>❤️ 연애 · 재회 · 1:1 심층 궁합</span>
+                  </label>
+                  <label class="concern-tag">
+                    <input type="radio" name="concern" value="career">
+                    <span>💼 이직 · 취업 · 내 길은 사업인가</span>
+                  </label>
+                  <label class="concern-tag">
+                    <input type="radio" name="concern" value="year">
+                    <span>✨ 향후 12개월 월별 터닝포인트</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="submit-wrapper">
+              <button type="submit" class="btn btn-submit glow-btn">
+                <span>내 만세력 바로 확인</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+              <p class="privacy-notice">
+                <i class="fa-solid fa-shield-halved"></i> 입력하신 정보는 암호화되어 안전하게 분석 후 즉시 소멸됩니다.
+              </p>
+            </div>
+          </form>
+
+          <!-- 로딩 인디케이터 -->
+          <div id="analysisLoader" class="analysis-loader hidden">
+            <div class="spinner-sacred">
+              <div class="yinyang-symbol"></div>
+            </div>
+            <h3 class="loader-status" id="loaderStatus">천간(天干)과 지지(地支) 8글자를 추출하고 있습니다...</h3>
+            <p class="loader-sub">3,000년 자평진전 명리학 데이터베이스와 12신살 매핑 중</p>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================================
+       VIEW 3: 나만의 만세력 원국 & 촌철살인 분석 + 토스페이먼츠 결제란
+       ===================================================================== -->
+  <main id="resultView" class="page-view hidden">
+    <section class="result-screen-section">
+      <div class="container">
+
+        <div class="view-back-nav">
+          <button type="button" class="btn-text-nav" onclick="switchView('input')">
+            <i class="fa-solid fa-rotate-left"></i> 다른 생년월일 다시 조회
+          </button>
+          <button type="button" class="btn-text-nav" onclick="switchView('landing')">
+            <i class="fa-solid fa-house"></i> 홈으로 가기
+          </button>
+        </div>
+
+        <!-- 만세력 결과 메인 카드 -->
+        <div class="analyzer-card result-dashboard-card">
+          <div class="card-glow"></div>
+
+          <div class="result-header">
+            <div class="congrats-tag">✨ 맞춤 만세력 원국 해독 완료</div>
+            <h2 id="resUserTitle">김우주님의 일주는 <span class="gold-gradient" id="resElementalNature">임인(壬寅)</span>입니다.</h2>
+            <p id="resShortSummary">생각이 깊고 스케일이 크나, 내면의 남모를 조급증과 자존심이 갈림길을 만드는 형국입니다.</p>
+            <div class="strength-badge-wrap" id="resStrengthWrap">
+              <span class="strength-badge strong" id="resStrengthBadge"><i class="fa-solid fa-fire"></i> 신강(身强) 사주</span>
+              <span class="season-badge" id="resSeasonBadge" style="font-size: 0.8rem; color: #cbd5e1; background: rgba(255,255,255,0.06); padding: 5px 12px; border-radius: 999px;">여름(午월)의 壬水</span>
+            </div>
+          </div>
+
+          <!-- 인터랙티브 만세력 4기둥 안내 -->
+          <div class="pillars-instruction-badge">
+            <i class="fa-solid fa-hand-pointer"></i> <strong>기둥을 터치해보세요!</strong> 월주, 일주 등 각 기둥에 숨겨진 <strong>십신 심리 · 특수 신살(원진/귀문/충) · 뼈를 때리는 한줄평</strong>이 실시간으로 열립니다.
+          </div>
+
+          <!-- 사주 4기둥 인터랙티브 그리드 (시주 / 일주 / 월주 / 연주) -->
+          <div class="result-pillars-interactive" id="resultPillars">
+            <!-- JS 동적 생성 -->
+          </div>
+
+          <!-- 선택된 기둥 상세 해설 박스 (신살 & 자극적인 한줄평) -->
+          <div class="pillar-detail-box" id="pillarDetailBox">
+            <div class="detail-box-top">
+              <div class="detail-title-wrap">
+                <span class="active-pillar-badge" id="detailPillarBadge">일주 (日柱) · 나 자신의 본질</span>
+                <h3 id="detailPillarTitle">壬寅 (임인) - 검은 호랑이</h3>
+              </div>
+              <div class="detail-shinsal-tags" id="detailShinsalTags">
+                <span class="shinsal-pill warning"><i class="fa-solid fa-bolt"></i> 백호대살</span>
+                <span class="shinsal-pill benefit"><i class="fa-solid fa-star"></i> 문창귀인</span>
+                <span class="shinsal-pill dynamic"><i class="fa-solid fa-horse"></i> 역마살</span>
+              </div>
+            </div>
+
+            <!-- 특수 지지 관계 (원진살 / 귀문관살 / 충·합) 알림 -->
+            <div class="detail-relation-box hidden" id="detailRelationBox">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <div class="detail-relation-content">
+                <h5 id="detailRelationTitle">특수 지지 관계 감지</h5>
+                <p id="detailRelationDesc">설명 내용</p>
+              </div>
+            </div>
+
+            <!-- 현대적 십신 심리학 해독 -->
+            <div class="detail-psychology-box" id="detailPsychologyBox">
+              <h5 id="detailPsychologyTitle"><i class="fa-solid fa-brain"></i> 심리적 본질: 식신 (묵묵히 결과로 증명하는 뚝심)</h5>
+              <p id="detailPsychologyDesc">생각을 말로만 떠벌리기보다 직접 만들고 다듬어 결과를 쌓는 것을 중요하게 여깁니다.</p>
+            </div>
+
+            <div class="ai-critic-quote">
+              <div class="quote-header">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> <strong>천명 AI 촌철살인 명리 독심술</strong>
+              </div>
+              <blockquote id="detailCriticQuote">
+                "겉으로는 큰 바다처럼 유연하고 대범해 보이지만, 실상은 내면의 날카로운 조급증과 '내가 다 안다'는 식의 은밀한 자존심이 주변의 거대한 귀인을 가로막고 있는 형국입니다."
+              </blockquote>
+            </div>
+
+            <div class="detail-advice-row">
+              <div class="advice-col">
+                <span class="advice-label"><i class="fa-solid fa-circle-check"></i> 타고난 최대 무기</span>
+                <p id="detailWeaponText">위기 상황에서 동물적인 감각으로 돌파구를 찾아내는 비상한 수완과 아이디어.</p>
+              </div>
+              <div class="advice-col">
+                <span class="advice-label warning"><i class="fa-solid fa-triangle-exclamation"></i> 인생을 망치는 치명적 맹점</span>
+                <p id="detailFlawText">뒷심 부족과 즉흥적인 판단. 남의 조언을 귀찮아하여 다 차려진 밥상을 엎을 위험.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 나의 오행 밸런스 -->
+          <div class="elements-distribution">
+            <h4><i class="fa-solid fa-chart-pie"></i> 나의 5대 기운(오행) 밸런스</h4>
+            <div class="bars-container" id="elementsBarsContainer">
+              <!-- JS 렌더링 -->
+            </div>
+            <p class="element-advice" id="resElementAdvice">
+              💡 <strong>기운 처방:</strong> 현재 <strong>'金(결단력/마무리)'</strong>의 기운이 취약합니다. 시작은 화려하나 끝을 맺지 못하는 패턴을 깨려면 환경적인 보완이 시급합니다.
+            </p>
+          </div>
+
+          <!-- ===================================================================
+               하단: 만세력 기반 후킹 멘트 + 리포트 중복 선택 & 결제란
+               (결제 모듈: 토스페이먼츠 - 추후 triggerPayment()에서 SDK 연동)
+               =================================================================== -->
+          <div class="report-checkout-section" id="checkoutSection">
+            <div class="checkout-header text-center">
+              <span class="special-badge">2개 이상 선택 시 추가 10% 할인</span>
+              <h3 class="checkout-title" id="checkoutTitle">"김우주님의 만세력에는 아직 열리지 않은 이야기가 남아 있습니다"</h3>
+              <p class="checkout-desc">아래는 방금 해독한 <strong>내 8글자</strong>에서 읽어낸 신호입니다. 더 깊이 알고 싶은 이야기를 골라주세요. <strong>중복 선택</strong>이 가능합니다.</p>
+            </div>
+
+            <!-- 리포트 선택 카드 (4대 카테고리 · 중복 선택 가능) -->
+            <div class="report-select-grid">
+
+              <!-- 리포트 1: 세운(歲運) 총운 & 12개월 월별 터닝포인트 -->
+              <div class="report-select-card" id="repCard_newyear" onclick="toggleReport('newyear')" role="checkbox" aria-checked="false" tabindex="0">
+                <div class="card-radio-mark"><i class="fa-solid fa-check"></i></div>
+                <div class="rep-tag popular"><i class="fa-solid fa-crown"></i> 연간·월별 베스트셀러</div>
+                <h4>세운(歲運) 총운 & 12개월 월별 터닝포인트</h4>
+                <div class="rep-hook" id="repHook_newyear">
+                  <i class="fa-solid fa-quote-left"></i>
+                  <span>지금 이 순간부터 펼쳐질 향후 12개월, 당신의 일주에 강한 충(沖)과 합(合)이 교차합니다. 움직이면 기회, 버티면 손해가 되는 달이 정확히 언제인지 확인하세요.</span>
+                </div>
+                <p class="rep-summary">생성일 기준 당해 세운 총운 · 향후 12개월 월별 단독 심층 감명서 · 재물/계약/귀인 길일 (21장 분량)</p>
+                <div class="rep-price-box">
+                  <span class="orig-price">45,000원</span>
+                  <span class="sale-price">22,500원</span>
+                  <span class="discount-badge">50% OFF</span>
+                </div>
+              </div>
+
+              <!-- 리포트 2: 평생 총운 & 의명진단 마스터팩 -->
+              <div class="report-select-card" id="repCard_master" onclick="toggleReport('master')" role="checkbox" aria-checked="false" tabindex="0">
+                <div class="card-radio-mark"><i class="fa-solid fa-check"></i></div>
+                <div class="rep-tag master"><i class="fa-solid fa-scroll"></i> 의명진단학(醫命診斷學) 수록</div>
+                <h4>평생 총운 & 10년 대운 · 의명진단 마스터팩</h4>
+                <div class="rep-hook" id="repHook_master">
+                  <i class="fa-solid fa-quote-left"></i>
+                  <span>재물 그릇은 결코 작지 않습니다. 문제는 돈이 들어오는 대운과 건강이 무너지는 대운이 겹친다는 것. 당신의 '진짜 황금기'와 오장육부 체질 처방을 확인하세요.</span>
+                </div>
+                <p class="rep-summary">자평진전 10대 격국 · 8대운 전생애 연대기 · 황제내경·동의보감 의명진단학 & 약선 처방 (23장 분량)</p>
+                <div class="rep-price-box">
+                  <span class="orig-price">59,000원</span>
+                  <span class="sale-price">29,500원</span>
+                  <span class="discount-badge">50% OFF</span>
+                </div>
+              </div>
+
+              <!-- 리포트 3: 1:1 심층 사주 궁합 & 성인 속궁합 -->
+              <div class="report-select-card" id="repCard_match" onclick="toggleReport('match')" role="checkbox" aria-checked="false" tabindex="0">
+                <div class="card-radio-mark"><i class="fa-solid fa-check"></i></div>
+                <div class="rep-tag couple"><i class="fa-solid fa-heart-pulse"></i> 재회·짝사랑·연인·19+ 속궁합</div>
+                <h4>1:1 심층 사주 궁합 & 에로틱 속궁합</h4>
+                <div class="rep-hook" id="repHook_match">
+                  <i class="fa-solid fa-quote-left"></i>
+                  <span>재회를 바라는 사람도, 짝사랑 중인 사람도, 현재 교제 중인 연인도 결국 답은 두 사주의 '결핍과 보완'에 있습니다. 식궁합·여행지부터 은밀한 침실 무드·체위까지 해부합니다.</span>
+                </div>
+                <p class="rep-summary">오행 궁합 & 결핍 보완 · 체질별 식재료/음식 · 국내외 여행지 & 이동수단 · 19+ 무드/전희/체위 (20장 분량)</p>
+                <div class="rep-price-box">
+                  <span class="orig-price">49,000원</span>
+                  <span class="sale-price">24,500원</span>
+                  <span class="discount-badge">50% OFF</span>
+                </div>
+              </div>
+
+              <!-- 리포트 4: 이직 · 취업 · 창업 커리어 천직 비서 -->
+              <div class="report-select-card" id="repCard_career" onclick="toggleReport('career')" role="checkbox" aria-checked="false" tabindex="0">
+                <div class="card-radio-mark"><i class="fa-solid fa-check"></i></div>
+                <div class="rep-tag career"><i class="fa-solid fa-briefcase"></i> 심층 심리상담 & 천직 해부</div>
+                <h4>이직 · 취업 · 창업 커리어 천직 비서</h4>
+                <div class="rep-hook" id="repHook_career">
+                  <i class="fa-solid fa-quote-left"></i>
+                  <span>판에 박힌 '만약 ~한다면' 식의 풀이가 아닙니다. 당신의 사주가 지금 왜 흔들리는지, 못 들어가는 것인지 안 들어가는 것인지 사주 원국의 본심부터 꿰뚫어 봅니다.</span>
+                </div>
+                <p class="rep-summary">정신과 상담형 맞춤 진입 · 이직 승률/연봉협상 · 취업 관인운 돌파 · 창업/동업 감별 & 10년 로드맵 (20장 분량)</p>
+                <div class="rep-price-box">
+                  <span class="orig-price">52,000원</span>
+                  <span class="sale-price">26,000원</span>
+                  <span class="discount-badge">50% OFF</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 결제 요약 박스 (포트원 V2 결제 연동) -->
+            <div class="portone-payment-box toss-payment-box">
+              <div class="portone-brand-row toss-brand-row">
+                <div class="portone-badge toss-badge">
+                  <span class="portone-logo-text"><i class="fa-solid fa-shield-halved"></i> 포트원 안전결제</span>
+                  <span class="portone-sub">PG 수수료 우대</span>
+                </div>
+                <span class="ssl-badge"><i class="fa-solid fa-lock"></i> SSL 암호화 · 결제 즉시 발급</span>
+              </div>
+
+              <div class="checkout-price-summary">
+                <div id="selectedItemsList" class="selected-items-list">
+                  <p class="empty-selection">위에서 보고 싶은 리포트를 선택해주세요.</p>
+                </div>
+                <div class="sum-row" id="subtotalRow">
+                  <span>상품 금액</span>
+                  <span id="subtotalPrice">0원</span>
+                </div>
+                <div class="sum-row bundle-discount hidden" id="bundleDiscountRow">
+                  <span><i class="fa-solid fa-gift"></i> 묶음 할인 (10%)</span>
+                  <span id="bundleDiscountPrice">-0원</span>
+                </div>
+                <div class="sum-row total">
+                  <span>최종 결제 금액</span>
+                  <span class="final-amt" id="selectedReportPrice">0원</span>
+                </div>
+              </div>
+
+              <p class="bundle-nudge" id="bundleNudge">
+                <i class="fa-solid fa-circle-info"></i> 리포트를 <strong>1개 더</strong> 선택하면 전체 금액에서 <strong>10% 추가 할인</strong>됩니다.
+              </p>
+
+              <!-- 전자상거래법 필수: 청약철회 제한 고지 및 동의 -->
+              <div class="refund-agree-box">
+                <label class="refund-checkbox-label">
+                  <input type="checkbox" id="refundNoticeCheck" checked>
+                  <span class="refund-checkbox-text">
+                    [필수] 본 상품은 맞춤형 디지털 콘텐츠로 결제 후 즉시 열람이 개시되므로 
+                    <strong>열람 개시 후 환불이 불가</strong>함에 동의합니다. 
+                    <a href="refund.html" target="_blank" class="refund-link-inline">[환불규정 보기]</a>
+                  </span>
+                </label>
+              </div>
+
+              <button type="button" class="btn btn-portone-pay btn-toss-pay glow-btn" id="payButton" onclick="triggerPayment()" disabled>
+                <i class="fa-solid fa-credit-card"></i>
+                <span id="payBtnText">리포트를 선택해주세요</span>
+              </button>
+
+              <div class="payment-methods-logos">
+                <span>지원 결제수단:</span>
+                <span class="method-chip"><i class="fa-solid fa-credit-card"></i> 신용·체크카드</span>
+                <span class="method-chip"><i class="fa-solid fa-comment"></i> 카카오페이</span>
+                <span class="method-chip"><i class="fa-solid fa-n"></i> 네이버페이</span>
+                <span class="method-chip"><i class="fa-solid fa-t"></i> 토스페이</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 하단 액션 버튼 -->
+          <div class="result-actions" style="margin-top: 30px;">
+            <button type="button" class="btn btn-reset" onclick="switchView('input')">
+              <i class="fa-solid fa-rotate-left"></i> 다른 생년월일 조회하기
+            </button>
+            <button type="button" class="btn btn-share" onclick="shareResult()">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i> 내 만세력 결과 공유
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================================
+       VIEW 4: 결제 완료 후 프리미엄 운명서 열람 뷰 (모바일 최적화 E-Book 뷰어)
+       ===================================================================== -->
+  <main id="reportView" class="page-view hidden">
+    <section class="report-screen-section">
+      <div class="container report-container">
+
+        <!-- 모바일 상단 고정 서책 툴바 -->
+        <div class="report-top-bar">
+          <button type="button" class="btn-report-nav" onclick="switchView('result')">
+            <i class="fa-solid fa-arrow-left"></i> 만세력으로
+          </button>
+          <div class="report-bar-title">
+            <span class="cert-pill"><i class="fa-solid fa-certificate"></i> 정품 인증</span>
+            <span class="report-user-name" id="reportBarUserName">김우주님의 운명서</span>
+          </div>
+          <div class="report-bar-actions">
+            <button type="button" class="btn-report-tool" onclick="downloadOrPrintReport()" title="PDF로 저장 / 인쇄">
+              <i class="fa-solid fa-file-pdf"></i> <span>PDF 저장</span>
+            </button>
+            <button type="button" class="btn-report-tool" onclick="shareReport()" title="리포트 링크 복사">
+              <i class="fa-solid fa-share-nodes"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 구매 리포트 탭 네비게이션 (2개 이상 구매 시 표시) -->
+        <div class="report-tabs-nav" id="reportTabsNav">
+          <!-- JS 동적 생성 -->
+        </div>
+
+        <!-- 운명서 본문 서책 카드 (모바일 최적화) -->
+        <article class="report-book-wrapper" id="reportBookWrapper">
+
+          <!-- 1. 전통 황실 서책 커버 (A4 PDF 전용 제첨 & 낙관 완벽 규격) -->
+          <header class="report-cover-card" id="reportCoverCard">
+            <div class="cover-ornament-border">
+              <div class="cover-header-meta">
+                <span class="order-id" id="reportOrderId">발급번호: CM-20261019-8921</span>
+                <span class="issue-date" id="reportIssueDate">감명일자: 2026. 10. 19</span>
+              </div>
+
+              <div class="cover-main-titles">
+                <div class="traditional-jecheom-badge">
+                  <span class="jecheom-tag">皇室 秘傳 · 正統 命理</span>
+                  <span class="jecheom-sub">四柱八字 命理鑑明書</span>
+                </div>
+                <h1 class="main-book-title" id="reportBookTitle">천문사주 평생 총운 & 세운 비서</h1>
+                <p class="book-recipient" id="reportRecipient">고객 님 惠存 (혜존)</p>
+              </div>
+
+              <div class="cover-stamp-row">
+                <div class="cover-royal-seal">
+                  <div class="seal-outer">
+                    <span class="seal-inner-char">天</span>
+                    <span class="seal-inner-char">門</span>
+                    <span class="seal-inner-char">之</span>
+                    <span class="seal-inner-char">印</span>
+                  </div>
+                </div>
+                <div class="stamp-text">
+                  <strong>天門 사주 명리학술원 공인 감명</strong>
+                  <span>자평진전 10대 격국 · 궁통보감 120조후 · 의명진단학 정밀 고증 완료</span>
+                </div>
+              </div>
+
+              <div class="cover-footer-meta">
+                <span>AUTHENTIC REPORT · CHEONMUN.LIFE</span>
+                <span>무단 전재 및 복제를 금하며 본인의 운명 지침서로만 소장하십시오.</span>
+              </div>
+            </div>
+          </header>
+
+          <!-- 2. 리포트 본문 콘텐츠 컨테이너 (탭별 전환 또는 연속 스크롤) -->
+          <div class="report-chapters-container" id="reportChaptersContainer">
+            <!-- JS 동적 생성: 구매한 리포트별 내용이 렌더링됩니다 -->
+          </div>
+
+          <!-- 서책 하단 안내 및 평생 소장 안내 -->
+          <footer class="report-book-footer">
+            <div class="footer-save-banner">
+              <i class="fa-solid fa-bookmark"></i>
+              <div class="save-text">
+                <strong>이 페이지를 북마크하거나 PDF로 저장해두세요.</strong>
+                <p>본 리포트는 고객님의 고유 세션에 보관되며, 언제든 다시 열람하실 수 있습니다.</p>
+              </div>
+            </div>
+            <div class="report-footer-actions">
+              <button type="button" class="btn btn-save-pdf glow-btn" onclick="downloadOrPrintReport()">
+                <i class="fa-solid fa-download"></i> 전체 리포트 PDF 저장하기
+              </button>
+              <button type="button" class="btn btn-back-dashboard" onclick="switchView('result')">
+                <i class="fa-solid fa-table-cells"></i> 내 만세력 원국으로 돌아가기
+              </button>
+            </div>
+          </footer>
+
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="javascript:void(0)" class="logo" onclick="switchView('landing')" style="margin-bottom: 12px;">
+            <span class="logo-mark stamp" aria-hidden="true">
+              <span class="stamp-inner">
+                <span class="stamp-char">天</span>
+                <span class="stamp-char">文</span>
+              </span>
+            </span>
+            <div class="logo-brand">
+              <span class="logo-title">천문<span class="logo-accent">사주</span></span>
+              <span class="logo-subtag">正統命理 · AI 萬歲曆</span>
+            </div>
+          </a>
+          <p class="brand-desc">동양 3,000년 명리학 고전의 지혜를 현대적인 알고리즘과 AI로 재해석하여 삶의 방향을 비추는 인생 나침반 서비스를 제공합니다.</p>
+        </div>
+        <div class="link-col-wrap footer-links">
+          <div class="link-col">
+            <h4>서비스</h4>
+            <a href="javascript:void(0)" onclick="switchView('input')">만세력 원국 조회</a>
+            <a href="javascript:void(0)" onclick="switchView('input')">세운 총운 & 월별 운세</a>
+            <a href="javascript:void(0)" onclick="switchView('input')">평생 총운 · 의명진단</a>
+            <a href="javascript:void(0)" onclick="switchView('input')">심층 궁합 · 커리어 비서</a>
+          </div>
+          <div class="link-col">
+            <h4>고객센터 & 약관</h4>
+            <a href="javascript:void(0)" onclick="alert('카카오 채널: @cheonmun-saju')">카카오톡 1:1 상담</a>
+            <a href="refund.html" target="_blank" style="color: var(--gold-primary); font-weight: 600;">취소 및 환불정책</a>
+            <a href="terms.html" target="_blank">이용약관</a>
+            <a href="privacy.html" target="_blank">개인정보처리방침</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="company-info">
+          천문사주 (cheonmun.life) | 대표: 김명리 | 사업자등록번호: 123-45-67890 | 통신판매업신고: 2026-서울강남-01234호<br>
+          주소: 서울특별시 강남구 테헤란로 152 강남파이낸스센터 18층 | 고객센터: 카카오톡 @cheonmun-saju | 문의: support@cheonmun.life
+        </p>
+        <p class="copyright">© CHEONMUN SAJU (cheonmun.life). All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 모바일 하단 고정 플로팅 CTA 바 -->
+  <div class="mobile-sticky-bar" id="mobileStickyBar">
+    <div class="sticky-inner">
+      <div class="sticky-text">
+        <span class="tag">무료 만세력 해독</span>
+        <span class="txt">내 일주와 12신살은?</span>
+      </div>
+      <button type="button" class="btn btn-sticky glow-btn" onclick="switchView('input')">
+        바로 확인 <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 결제 확인 모달 (결제 모듈: 포트원 PortOne V2 브라우저 SDK) -->
+  <div id="payModal" class="modal-backdrop hidden" onclick="if(event.target === this) closePayModal();">
+    <div class="modal-card portone-modal-card toss-modal-card">
+      <button type="button" class="modal-close" onclick="closePayModal()"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="portone-modal-badge toss-modal-badge">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>포트원 V2 통합결제 · 결제 즉시 발급</span>
+      </div>
+
+      <h3>주문 내용을 확인해주세요</h3>
+      <p class="modal-desc">결제 완료 후 맞춤형 운명서 웹 뷰어와 고화질 PDF가 즉시 발급됩니다.</p>
+
+      <div class="order-summary-box">
+        <div id="payModalItems"></div>
+        <div class="summary-row hidden" id="payModalDiscountRow">
+          <span>묶음 할인 (10%)</span>
+          <span class="discount-text" id="payModalDiscount">-0원</span>
+        </div>
+        <div class="summary-row highlight">
+          <span>최종 결제 금액</span>
+          <strong class="portone-price-highlight toss-price-highlight" id="payModalTotal">0원</strong>
+        </div>
+      </div>
+
+      <!-- 결제 수단 선택 -->
+      <div class="pay-method-select-wrap">
+        <label class="pay-method-label">결제 수단</label>
+        <div class="pay-method-options" id="payMethodOptions">
+          <button type="button" class="pay-method-btn active" data-method="CARD" onclick="selectPayMethod('CARD', this)">
+            <i class="fa-solid fa-credit-card"></i> 신용·체크카드
+          </button>
+          <button type="button" class="pay-method-btn" data-method="KAKAOPAY" onclick="selectPayMethod('KAKAOPAY', this)">
+            <i class="fa-solid fa-comment"></i> 카카오페이
+          </button>
+          <button type="button" class="pay-method-btn" data-method="NAVERPAY" onclick="selectPayMethod('NAVERPAY', this)">
+            <i class="fa-solid fa-n"></i> 네이버페이
+          </button>
+          <button type="button" class="pay-method-btn" data-method="TOSSPAY" onclick="selectPayMethod('TOSSPAY', this)">
+            <i class="fa-solid fa-t"></i> 토스페이
+          </button>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-portone-confirm btn-toss-confirm glow-btn" onclick="confirmPayment()">
+        <span id="payConfirmBtnText">0원 안전 결제하기</span>
+      </button>
+
+      <p class="security-text"><i class="fa-solid fa-lock"></i> 포트원(PortOne) 256bit 암호화 보안 결제</p>
+    </div>
+  </div>
+
+  <script src="lib/lunar.js"></script>
+  <script src="lib/climate-data.js"></script>
+  <script src="lib/report-builders.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

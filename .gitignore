@@ -1,0 +1,16 @@
+# Logs and temp files
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment and sensitive files
+.env*
+!.env.example
+
+# Test outputs
+*.tmp
+
+# Vercel local cache
+.vercel/
+

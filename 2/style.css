@@ -1,0 +1,2375 @@
+/* ==========================================================================
+   天門 (CHEONMUN) 타로 심리 살롱 — 글로벌 스타일시트 (style.css)
+   - 78장 아르카나 인터랙티브 3D 덱 & 부채꼴 셔플
+   - 켈틱 크로스 10카드 벨벳 보드 레이아웃 & 3D 플립 애니메이션
+   - 모바일 최적화 1.05rem(17px) E-Book 뷰어 & A4 고서적 PDF 인쇄 규칙
+   ========================================================================== */
+
+:root {
+  --bg-primary: #080612;
+  --bg-secondary: #100b24;
+  --bg-card: #181236;
+  --bg-card-hover: #221a48;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-gold: #f5d061;
+  
+  --gold-primary: #f5d061;
+  --gold-secondary: #e5b838;
+  --gold-dark: #8c6b18;
+  --gold-glow: rgba(245, 208, 97, 0.4);
+  
+  --purple-glow: rgba(147, 51, 234, 0.3);
+  --border-gold: rgba(245, 208, 97, 0.3);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+
+  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  --font-serif: 'Gowun Batang', 'Noto Serif KR', serif;
+  --font-cinzel: 'Cinzel', serif;
+
+  --fire-color: #ef4444;
+  --water-color: #38bdf8;
+  --air-color: #a78bfa;
+  --earth-color: #34d399;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* 별빛 배경 캔버스 */
+#starsCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 실시간 알림 토스트 */
+.live-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: rgba(16, 11, 36, 0.92);
+  border: 1px solid var(--border-gold);
+  padding: 12px 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px var(--gold-glow);
+  z-index: 999;
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  animation: toastFadeIn 0.5s ease-out;
+}
+
+.toast-avatar {
+  color: var(--gold-primary);
+  font-size: 1.1rem;
+}
+
+.toast-text {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+.toast-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+@keyframes toastFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 상단 긴급 프로모션 배너 */
+.top-banner {
+  background: linear-gradient(90deg, #781d42, #4c1d95, #1e1b4b);
+  border-bottom: 1px solid rgba(245, 208, 97, 0.3);
+  padding: 8px 0;
+  font-size: 0.85rem;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.top-banner .badge {
+  background: #ef4444;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  animation: pulse 1.5s infinite;
+}
+
+.countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--gold-primary);
+}
+
+.countdown .time-box {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+/* 헤더 */
+.header {
+  padding: 16px 0;
+  background: rgba(8, 6, 18, 0.85);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.logo-mark.stamp {
+  width: 40px;
+  height: 40px;
+  background: #b91c1c;
+  border: 1.5px solid #ef4444;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.stamp-inner {
+  font-family: var(--font-serif);
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: #fef2f2;
+}
+
+.logo-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-sub {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--gold-primary);
+  font-family: var(--font-cinzel);
+}
+
+.brand-name {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav-saju-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gold-primary);
+  text-decoration: none;
+  font-size: 0.88rem;
+  border: 1px solid var(--border-gold);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(245, 208, 97, 0.08);
+  transition: all 0.2s ease;
+}
+
+.nav-saju-link:hover {
+  background: rgba(245, 208, 97, 0.2);
+  box-shadow: 0 0 15px var(--gold-glow);
+}
+
+/* SPA 뷰 전환 */
+.page-view {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.page-view.active {
+  display: block;
+  opacity: 1;
+}
+
+/* ==========================================================================
+   VIEW 1: LANDING & 질문 접수
+   ========================================================================== */
+.tarot-hero-section {
+  padding: 50px 0 80px;
+  text-align: center;
+}
+
+.mystic-orb-wrap {
+  margin-bottom: 24px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.mystic-orb {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f5d061, #9333ea 55%, #080612 90%);
+  box-shadow: 0 0 35px var(--purple-glow), 0 0 20px var(--gold-glow);
+  animation: orbFloat 4s ease-in-out infinite;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.orb-badge {
+  font-family: var(--font-cinzel);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-primary);
+  background: rgba(245, 208, 97, 0.1);
+  border: 1px solid var(--border-gold);
+  padding: 3px 12px;
+  border-radius: 999px;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: 2.3rem;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  word-break: keep-all;
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #fff7d6 0%, #f5d061 50%, #c49619 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-desc {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 680px;
+  margin: 0 auto 40px;
+  word-break: keep-all;
+}
+
+/* 입력 카드 */
+.tarot-input-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: 24px;
+  padding: 36px 32px;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: left;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 20px var(--purple-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.input-card-header {
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+}
+
+.input-card-header h3 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: var(--gold-primary);
+  margin-bottom: 6px;
+}
+
+.input-card-header p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--gold-primary);
+}
+
+.input-wrap input[type="text"],
+.input-wrap textarea {
+  width: 100%;
+  background: rgba(10, 7, 24, 0.8);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 12px 14px 12px 42px;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.textarea-wrap {
+  display: block;
+}
+
+.textarea-wrap textarea {
+  padding: 14px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.input-wrap input:focus,
+.input-wrap textarea:focus {
+  outline: none;
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+/* 도메인 그리드 (4대 카테고리) */
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.domain-card {
+  position: relative;
+  background: rgba(16, 11, 36, 0.6);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.domain-card input {
+  position: absolute;
+  opacity: 0;
+}
+
+.domain-card:hover {
+  background: rgba(245, 208, 97, 0.05);
+  border-color: rgba(245, 208, 97, 0.4);
+}
+
+.domain-card.active,
+.domain-card:has(input:checked) {
+  background: rgba(245, 208, 97, 0.12);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 15px var(--gold-glow);
+}
+
+.domain-card .d-icon {
+  font-size: 1.5rem;
+  color: var(--gold-primary);
+}
+
+.domain-card .d-info strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.domain-card .d-info span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* 예시 질문 칩 */
+.question-guide-tags {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.guide-label {
+  font-size: 0.78rem;
+  color: var(--gold-primary);
+  font-weight: 700;
+}
+
+.q-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  color: #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.q-chip:hover {
+  background: rgba(245, 208, 97, 0.15);
+  border-color: var(--gold-primary);
+  color: #fff;
+}
+
+/* 스프레드 선택 리스트 */
+.spread-select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.spread-opt-card {
+  position: relative;
+  background: rgba(16, 11, 36, 0.6);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.spread-opt-card input {
+  position: absolute;
+  opacity: 0;
+}
+
+.spread-opt-card:hover {
+  border-color: rgba(245, 208, 97, 0.4);
+}
+
+.spread-opt-card:has(input:checked) {
+  background: rgba(245, 208, 97, 0.12);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.s-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+}
+
+.s-badge.popular {
+  background: #b91c1c;
+  color: #fff;
+  border-color: #ef4444;
+}
+
+.s-detail strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #fff;
+}
+
+.s-detail span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* 사주 오행 크로스 옵션 토글 */
+.saju-opt-toggle-box {
+  background: rgba(10, 7, 24, 0.6);
+  border: 1px dashed rgba(245, 208, 97, 0.4);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+
+.toggle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: var(--gold-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.th-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.saju-input-sub-wrap {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.saju-help-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.saju-inline-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.sub-col label {
+  font-size: 0.76rem;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.sub-col input,
+.sub-col select {
+  width: 100%;
+  background: rgba(16, 11, 36, 0.9);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+/* 메인 액션 버튼 */
+.glow-btn {
+  background: linear-gradient(135deg, #f5d061 0%, #d4a017 100%);
+  color: #120c06;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(212, 160, 23, 0.4);
+  transition: all 0.2s ease;
+}
+
+.glow-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(212, 160, 23, 0.6);
+}
+
+.glow-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-tarot-start {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   VIEW 2: 78장 아르카나 인터랙티브 3D 부채꼴 덱 & 1인칭 카드 뽑기
+   ========================================================================== */
+.tarot-table-section {
+  padding: 30px 0 60px;
+  text-align: center;
+}
+
+.shuffle-top-guide {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn-text-nav {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-text-nav:hover {
+  color: #fff;
+}
+
+.shuffle-counter-badge {
+  background: rgba(16, 11, 36, 0.9);
+  border: 1.5px solid var(--border-gold);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 0 15px var(--gold-glow);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: pulse 1.5s infinite;
+}
+
+.btn-auto-pick {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-gold);
+  color: #f1f5f9;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-auto-pick:hover {
+  background: rgba(245, 208, 97, 0.2);
+  color: var(--gold-primary);
+}
+
+.shuffle-instruction h2 {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.shuffle-instruction p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* 부채꼴 아크 덱 컨테이너 */
+.fan-deck-wrapper {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  margin: 30px auto 20px;
+  overflow: visible;
+}
+
+.fan-deck-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 1200px;
+}
+
+/* 개별 카드 아이템 (부채꼴 아크 배치) */
+.fan-card-item {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  width: 72px;
+  height: 120px;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+  transform-origin: 50% 320px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  user-select: none;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(245, 208, 97, 0.4);
+}
+
+.fan-card-item:hover {
+  transform: translate(-50%, -50%) rotate(calc(var(--rot) * 1deg)) translateY(-45px) scale(1.15) !important;
+  box-shadow: 0 15px 35px rgba(245, 208, 97, 0.9), 0 0 25px #9333ea !important;
+  z-index: 500 !important;
+}
+
+.fan-card-item.picked {
+  opacity: 0.2;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+/* 하단 픽 트레이 */
+.picked-tray-container {
+  background: rgba(16, 11, 36, 0.9);
+  border: 1px solid var(--border-gold);
+  border-radius: 20px;
+  padding: 20px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.tray-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  margin-bottom: 14px;
+}
+
+.picked-slots-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-height: 130px;
+  margin-bottom: 18px;
+}
+
+.tray-slot {
+  width: 68px;
+  height: 115px;
+  border: 1.5px dashed rgba(245, 208, 97, 0.35);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  position: relative;
+  background: rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+.tray-slot.filled {
+  border-style: solid;
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 15px var(--gold-glow);
+  background-size: cover;
+  background-position: center;
+  animation: slotPop 0.3s ease-out;
+}
+
+@keyframes slotPop {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.tray-slot .slot-idx {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  font-weight: 800;
+  font-size: 0.68rem;
+  color: var(--gold-primary);
+}
+
+.btn-reveal-spread {
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   VIEW 3: 스프레드 보드 매트 (켈틱 크로스 십자가 + 기둥) & 3D 플립
+   ========================================================================== */
+.tarot-board-section {
+  padding: 30px 0 60px;
+}
+
+.board-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.board-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.board-badge {
+  background: rgba(245, 208, 97, 0.12);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-primary);
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.btn-flip-all {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-gold);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-flip-all:hover {
+  background: rgba(245, 208, 97, 0.25);
+  color: var(--gold-primary);
+}
+
+.board-main-title {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+.board-sub-desc {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* 벨벳 스프레드 매트 */
+.spread-cloth-mat {
+  background: radial-gradient(circle at 50% 50%, #1a103c 0%, #0d0822 65%, #05030e 100%);
+  border: 2px solid var(--border-gold);
+  border-radius: 28px;
+  padding: 40px 30px;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8), 0 20px 60px rgba(0, 0, 0, 0.7);
+  min-height: 580px;
+  position: relative;
+}
+
+/* 켈틱 크로스 10카드 레이아웃 그리드 */
+.celtic-cross-layout {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  gap: 30px;
+  align-items: center;
+}
+
+/* 왼쪽 십자가 영역 (Cross Area: 3x3 Grid) */
+.celtic-cross-center {
+  display: grid;
+  grid-template-areas:
+    ".       crown    ."
+    "past    center   near_future"
+    ".       found    .";
+  grid-template-columns: 120px 120px 120px;
+  grid-template-rows: 170px 170px 170px;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.c-slot-crown { grid-area: crown; }
+.c-slot-past { grid-area: past; }
+.c-slot-center {
+  grid-area: center;
+  position: relative;
+  width: 110px;
+  height: 165px;
+}
+.c-slot-future { grid-area: near_future; }
+.c-slot-found { grid-area: found; }
+
+/* 오른쪽 기둥 영역 (Staff / Pillar Area: 4단 스택) */
+.celtic-pillar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  border-left: 1px dashed rgba(245, 208, 97, 0.25);
+  padding-left: 24px;
+}
+
+/* 3카드 스프레드 레이아웃 */
+.three-cards-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 40px 0;
+  flex-wrap: wrap;
+}
+
+/* 양자택일 5카드 레이아웃 */
+.two-choice-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.two-choice-branches {
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+}
+
+.choice-branch-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+/* 3D 플립 카드 컴포넌트 */
+.tarot-flip-card {
+  width: 105px;
+  height: 165px;
+  perspective: 1000px;
+  cursor: pointer;
+  position: relative;
+}
+
+.tarot-flip-card.crossing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(90deg);
+  z-index: 10;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+.tarot-flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.tarot-flip-card.flipped.reversed .flip-card-inner {
+  transform: rotateY(180deg) rotate(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  border: 1.5px solid var(--border-gold);
+}
+
+.flip-card-back {
+  background-image: url('assets/cards/card_back.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.flip-card-front {
+  transform: rotateY(180deg);
+  background: #000;
+}
+
+.flip-card-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-pos-label {
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  color: var(--gold-primary);
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* 카드 퀵 프리뷰 바 */
+.card-preview-bar {
+  margin-top: 30px;
+  background: rgba(16, 11, 36, 0.85);
+  border: 1px solid var(--border-gold);
+  border-radius: 14px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.prev-icon {
+  font-size: 1.4rem;
+  color: var(--gold-primary);
+}
+
+.prev-content {
+  font-size: 0.92rem;
+  color: #e2e8f0;
+}
+
+.board-actions {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.btn-analyze-all {
+  padding: 16px 36px;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   VIEW 4: 결과 대시보드 및 결제란
+   ========================================================================== */
+.tarot-result-section {
+  padding: 40px 0 80px;
+}
+
+.view-back-nav {
+  margin-bottom: 20px;
+}
+
+.result-dashboard-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: 28px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.congrats-tag {
+  display: inline-block;
+  background: rgba(245, 208, 97, 0.12);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-primary);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.result-header h2 {
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  margin-bottom: 10px;
+  word-break: keep-all;
+}
+
+.result-header p {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* 4원소 조화도 프리뷰 */
+.result-dignity-box {
+  background: rgba(10, 7, 24, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.elements-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.el-stat-col {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+
+.el-stat-col.fire { border-top: 3px solid var(--fire-color); }
+.el-stat-col.water { border-top: 3px solid var(--water-color); }
+.el-stat-col.air { border-top: 3px solid var(--air-color); }
+.el-stat-col.earth { border-top: 3px solid var(--earth-color); }
+
+.el-head {
+  font-weight: 800;
+  font-size: 0.88rem;
+  margin-bottom: 4px;
+}
+.el-jung {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.el-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.el-bar-fill {
+  height: 100%;
+  background: var(--gold-primary);
+  border-radius: 999px;
+}
+
+.el-stat-col.fire .el-bar-fill { background: var(--fire-color); }
+.el-stat-col.water .el-bar-fill { background: var(--water-color); }
+.el-stat-col.air .el-bar-fill { background: var(--air-color); }
+.el-stat-col.earth .el-bar-fill { background: var(--earth-color); }
+
+.el-pct {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* 촌철살인 인용구 박스 */
+.ai-critic-quote {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.15), rgba(245, 208, 97, 0.08));
+  border: 1.5px solid var(--border-gold);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 40px;
+}
+
+.quote-header {
+  font-size: 0.85rem;
+  color: var(--gold-primary);
+  font-weight: 800;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-critic-quote blockquote {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #fff;
+  font-style: italic;
+  word-break: keep-all;
+}
+
+/* 결제란 */
+.report-checkout-section {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 36px;
+}
+
+.checkout-header {
+  margin-bottom: 24px;
+}
+
+.special-badge {
+  background: #b91c1c;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.checkout-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  margin: 10px 0 6px;
+}
+
+.checkout-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.report-select-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.report-select-card {
+  position: relative;
+  background: rgba(16, 11, 36, 0.8);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.report-select-card:hover {
+  border-color: rgba(245, 208, 97, 0.5);
+}
+
+.report-select-card.active {
+  background: rgba(245, 208, 97, 0.1);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+
+.card-radio-mark {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+}
+
+.report-select-card.active .card-radio-mark {
+  background: var(--gold-primary);
+  color: #120c06;
+}
+
+.rep-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.rep-tag.popular { background: #b91c1c; color: #fff; }
+.rep-tag.master { background: #581c87; color: #f5d061; border: 1px solid var(--border-gold); }
+
+.report-select-card h4 {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+}
+
+.rep-hook {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.rep-summary {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.rep-price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.orig-price {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-decoration: line-through;
+}
+
+.sale-price {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--gold-primary);
+}
+
+.discount-badge {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* 결제 패널 */
+.checkout-pay-panel {
+  background: rgba(10, 7, 24, 0.8);
+  border: 1px solid var(--border-gold);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.toss-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.toss-badge {
+  color: var(--gold-primary);
+  font-weight: 800;
+}
+
+.checkout-price-summary .sum-row.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.final-amt {
+  font-size: 1.6rem;
+  color: var(--gold-primary);
+}
+
+.refund-agree-box {
+  margin-bottom: 18px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.refund-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.refund-link-inline {
+  color: var(--gold-primary);
+}
+
+.btn-toss-pay {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.payment-methods-logos {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.method-chip {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   VIEW 5: 리포트 뷰 (모바일 반응형 E-Book 뷰어 & A4 PDF 출력)
+   ========================================================================== */
+.tarot-report-screen-section {
+  padding: 20px 0 80px;
+}
+
+.report-top-bar {
+  position: sticky;
+  top: 0;
+  background: rgba(16, 11, 36, 0.95);
+  border-bottom: 1px solid var(--border-gold);
+  padding: 10px 16px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.btn-report-nav {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.report-bar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cert-pill {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.report-user-name {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.report-bar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-report-tool {
+  background: rgba(245, 208, 97, 0.15);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-primary);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+/* 서책 래퍼 */
+.tarot-book-wrapper {
+  background: #0d091e;
+  border: 1.5px solid var(--border-gold);
+  border-radius: 24px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+
+/* 표지 카드 */
+.tarot-cover-card {
+  padding: 40px 30px;
+  background: radial-gradient(circle at 50% 30%, #211545 0%, #0d091e 100%);
+  border-bottom: 2px solid var(--border-gold);
+}
+
+.tarot-cover-border {
+  border: 1.5px dashed rgba(245, 208, 97, 0.4);
+  border-radius: 18px;
+  padding: 30px 24px;
+  text-align: center;
+}
+
+.cover-top-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.mystic-seal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(245, 208, 97, 0.12);
+  border: 1.5px solid var(--border-gold);
+  padding: 6px 18px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.badge-tag {
+  color: var(--gold-primary);
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+}
+
+.badge-sub {
+  font-family: var(--font-cinzel);
+  font-size: 0.72rem;
+  color: #fff;
+  border-left: 1px solid rgba(245, 208, 97, 0.4);
+  padding-left: 10px;
+}
+
+.tarot-main-title {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  color: #fff;
+  margin-bottom: 8px;
+  word-break: keep-all;
+}
+
+.tarot-sub-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--gold-primary);
+  margin-bottom: 16px;
+}
+
+.tarot-client-name {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: #f1e6c4;
+  margin-bottom: 28px;
+}
+
+.cover-spread-info {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 580px;
+  margin: 0 auto 28px;
+}
+
+.spread-pill {
+  font-size: 0.88rem;
+  color: var(--gold-primary);
+  margin-bottom: 8px;
+}
+
+.question-quote {
+  font-size: 0.95rem;
+  color: #e2e8f0;
+  font-style: italic;
+}
+
+.cover-auth-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 20px;
+  margin-bottom: 16px;
+}
+
+.seal-mark {
+  background: #b91c1c;
+  color: #fff;
+  font-family: var(--font-serif);
+  font-weight: 900;
+  font-size: 0.85rem;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1.5px solid #ef4444;
+}
+
+.auth-text {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-text strong {
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.auth-text span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.cover-footer-notice {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  padding-top: 12px;
+}
+
+/* 챕터 본문 */
+.tarot-chapter {
+  padding: 40px 30px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.chapter-badge {
+  display: inline-block;
+  background: rgba(245, 208, 97, 0.1);
+  border: 1px solid rgba(245, 208, 97, 0.3);
+  color: var(--gold-primary);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.chapter-title {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  word-break: keep-all;
+}
+
+/* 모바일 및 화면 가독성: 1.05rem (17px) 최적화 */
+.chapter-prose {
+  font-size: 1.05rem;
+  line-height: 1.88;
+  letter-spacing: -0.015em;
+  color: #e2e8f0;
+  word-break: keep-all;
+  margin-bottom: 24px;
+}
+
+.chapter-prose p {
+  margin-bottom: 16px;
+}
+
+/* 원소 요약 카드 */
+.dignity-summary-card {
+  background: rgba(16, 11, 36, 0.7);
+  border: 1px solid var(--border-gold);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.dignity-summary-card h4 {
+  color: var(--gold-primary);
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+}
+
+.dignity-tags {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.d-tag {
+  font-size: 0.78rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.d-tag.dom { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+.d-tag.def { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+.saju-cross-card {
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.25), rgba(16, 11, 36, 0.9));
+  border: 1.5px solid var(--border-gold);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.saju-cross-card h4 {
+  color: var(--gold-primary);
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+}
+
+/* 포지션별 카드 리딩 리스트 */
+.cards-reading-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.card-reading-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 24px;
+  background: rgba(16, 11, 36, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 24px;
+  transition: all 0.2s ease;
+}
+
+.card-thumb-col {
+  text-align: center;
+}
+
+.card-frame-wrap {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid var(--border-gold);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.card-frame-wrap.reversed img {
+  transform: rotate(180deg);
+}
+
+.tarot-card-img {
+  width: 100%;
+  display: block;
+}
+
+.dir-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 0;
+  text-align: center;
+}
+
+.dir-badge.upright { background: rgba(34, 197, 94, 0.9); color: #000; }
+.dir-badge.reversed { background: rgba(239, 68, 68, 0.9); color: #fff; }
+
+.card-roman-meta {
+  font-family: var(--font-cinzel);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.card-content-col .pos-badge {
+  display: inline-block;
+  background: rgba(245, 208, 97, 0.12);
+  color: var(--gold-primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.pos-role-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.card-name-title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.card-dir-mark {
+  font-size: 0.95rem;
+  color: var(--gold-primary);
+}
+
+.card-keywords-wrap {
+  margin-bottom: 14px;
+}
+
+.c-tag {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+.symbol-desc-box {
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.core-psychology-box,
+.domain-solution-box {
+  margin-bottom: 14px;
+}
+
+.core-psychology-box h5,
+.domain-solution-box h5 {
+  font-size: 0.92rem;
+  color: var(--gold-primary);
+  margin-bottom: 6px;
+}
+
+.core-psychology-box p,
+.domain-solution-box p {
+  font-size: 0.98rem;
+  line-height: 1.8;
+  color: #e2e8f0;
+  word-break: keep-all;
+}
+
+.action-advice-box {
+  background: rgba(245, 208, 97, 0.08);
+  border-left: 3px solid var(--gold-primary);
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.92rem;
+  color: #fff;
+}
+
+/* 융 3단계 카타르시스 리딩 박스 */
+.jungian-step-box {
+  background: rgba(16, 11, 36, 0.75);
+  border: 1px solid var(--border-gold);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 10px;
+}
+
+.step-num {
+  background: #3b82f6;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.step-num.warning { background: #ef4444; }
+.step-num.success { background: #22c55e; color: #000; }
+
+.step-header h4 {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: #fff;
+}
+
+.step-body p {
+  font-size: 1.05rem;
+  line-height: 1.88;
+  color: #e2e8f0;
+  word-break: keep-all;
+}
+
+.action-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-list li {
+  font-size: 1rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 3px solid var(--gold-primary);
+  line-height: 1.6;
+}
+
+.final-oracle-box {
+  background: linear-gradient(135deg, rgba(245, 208, 97, 0.15), rgba(147, 51, 234, 0.2));
+  border: 2px solid var(--gold-primary);
+  border-radius: 20px;
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 0 30px var(--gold-glow);
+}
+
+.oracle-icon {
+  font-size: 2.2rem;
+  color: var(--gold-primary);
+}
+
+.oracle-text h5 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--gold-primary);
+  margin-bottom: 6px;
+}
+
+.oracle-text p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #fff;
+}
+
+.oracle-seal-row {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top: 1px dashed rgba(245, 208, 97, 0.3);
+  padding-top: 16px;
+}
+
+.oracle-seal-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.oracle-seal-text .sub-line {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.oracle-seal-text strong {
+  font-size: 0.95rem;
+  color: var(--gold-primary);
+  font-family: var(--font-serif);
+}
+
+.report-footer-actions {
+  margin-top: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-save-pdf {
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+}
+
+.btn-back-dashboard {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-gold);
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* 푸터 */
+.footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 40px 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.company-info {
+  margin-bottom: 10px;
+  line-height: 1.7;
+}
+
+.disclaimer {
+  margin-bottom: 16px;
+  color: #94a3b8;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.footer-links a {
+  color: #94a3b8;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--gold-primary);
+}
+
+/* ==========================================================================
+   모바일 반응형 최적화 (768px 이하)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .hero-title { font-size: 1.7rem; }
+  .tarot-input-card { padding: 24px 18px; }
+  .domain-grid { grid-template-columns: 1fr; }
+  .saju-inline-inputs { grid-template-columns: 1fr; }
+
+  /* 부채꼴 덱 높이 및 스케일 조정 */
+  .fan-deck-wrapper { height: 280px; }
+  .fan-card-item {
+    width: 52px;
+    height: 88px;
+    transform-origin: 50% 240px;
+  }
+
+  /* 켈틱 크로스 모바일 레이아웃 (1열로 세로 정렬) */
+  .celtic-cross-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .celtic-cross-center {
+    grid-template-columns: 90px 90px 90px;
+    grid-template-rows: 135px 135px 135px;
+    gap: 10px;
+  }
+  .tarot-flip-card {
+    width: 80px;
+    height: 125px;
+  }
+  .c-slot-center {
+    width: 80px;
+    height: 125px;
+  }
+  .celtic-pillar-col {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-left: none;
+    border-top: 1px dashed rgba(245, 208, 97, 0.25);
+    padding-left: 0;
+    padding-top: 24px;
+  }
+
+  .report-select-grid { grid-template-columns: 1fr; }
+  .card-reading-row { grid-template-columns: 1fr; }
+  .card-thumb-col { max-width: 140px; margin: 0 auto; }
+
+  /* 모바일 화면 텍스트 가독성 극대화: 1.05rem (17px) */
+  .chapter-prose,
+  .step-body p,
+  .core-psychology-box p,
+  .domain-solution-box p {
+    font-size: 1.05rem !important;
+    line-height: 1.88 !important;
+  }
+
+  /* 리포트 열람 중 모바일 화면 가림 방지 (헤더, 토스트 은닉) */
+  .live-toast {
+    display: none !important;
+  }
+  body.in-report-view .top-banner,
+  body.in-report-view header.header,
+  body.in-report-view #liveToast {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  body.in-report-view .report-top-bar {
+    top: 0 !important;
+    padding: 8px 10px;
+    gap: 6px;
+  }
+  body.in-report-view .report-bar-title .cert-pill {
+    display: none;
+  }
+  body.in-report-view .report-user-name {
+    font-size: 0.85rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+  }
+  body.in-report-view .btn-report-nav,
+  body.in-report-view .btn-report-tool {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+  body.in-report-view .tarot-report-screen-section {
+    padding-top: 20px !important;
+  }
+}
+
+/* ==========================================================================
+   고해상도 A4 PDF 인쇄 규칙 (@media print)
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  body {
+    background: #fff !important;
+    color: #120c06 !important;
+    font-size: 10pt !important;
+  }
+
+  #starsCanvas,
+  #liveToast,
+  .top-banner,
+  .header,
+  .footer,
+  .report-top-bar,
+  .report-footer-actions,
+  #landingView,
+  #shuffleView,
+  #boardView,
+  #resultView {
+    display: none !important;
+  }
+
+  #reportView {
+    display: block !important;
+    opacity: 1 !important;
+  }
+
+  .tarot-book-wrapper {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 고서적 표지 (A4 1페이지) */
+  .tarot-cover-card {
+    page-break-after: always !important;
+    break-after: page !important;
+    min-height: 270mm !important;
+    background: #fdfaf2 !important;
+    border: 3.5px solid #201004 !important;
+    box-shadow: inset 0 0 0 3px #dfc398, inset 0 0 0 5px #54270c !important;
+    padding: 14mm !important;
+    color: #120c06 !important;
+    box-sizing: border-box !important;
+  }
+
+  .tarot-cover-border {
+    border: 1.5px solid #78441b !important;
+    background: rgba(255, 253, 248, 0.76) !important;
+    min-height: 240mm !important;
+  }
+
+  .tarot-main-title {
+    color: #120c06 !important;
+  }
+
+  .tarot-sub-title {
+    color: #5c2d12 !important;
+  }
+
+  .tarot-client-name {
+    color: #231104 !important;
+  }
+
+  /* 본문 챕터 페이징 */
+  .tarot-chapter {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    min-height: 270mm !important;
+    background: #fdfaf2 !important;
+    border: 3.5px solid #201004 !important;
+    box-shadow: inset 0 0 0 3px #dfc398, inset 0 0 0 5px #54270c !important;
+    padding: 12mm !important;
+    color: #120c06 !important;
+    box-sizing: border-box !important;
+  }
+
+  .chapter-title {
+    color: #120c06 !important;
+    border-bottom: 2px solid #8c5222 !important;
+    padding-bottom: 6px !important;
+  }
+
+  .chapter-prose p,
+  .step-body p,
+  .core-psychology-box p,
+  .domain-solution-box p {
+    color: #181008 !important;
+    font-size: 9.8pt !important;
+    line-height: 1.75 !important;
+  }
+
+  .card-reading-row {
+    background: #fffefb !important;
+    border: 1px solid #bf9d72 !important;
+    color: #120c06 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .card-name-title {
+    color: #120c06 !important;
+  }
+
+  .symbol-desc-box {
+    background: #fbf5e7 !important;
+    color: #181008 !important;
+    border: 1px solid #dfcca2 !important;
+  }
+
+  .action-advice-box {
+    background: #fbf3dd !important;
+    border-left: 4px solid #6d4008 !important;
+    color: #231104 !important;
+  }
+
+  .jungian-step-box {
+    background: #fffefb !important;
+    border: 1.5px solid #8c601c !important;
+    color: #181008 !important;
+  }
+
+  .step-header h4 {
+    color: #120c06 !important;
+  }
+
+  .action-list li {
+    background: #fbf5e7 !important;
+    color: #120c06 !important;
+    border-left: 3px solid #8c5222 !important;
+  }
+
+  .final-oracle-box {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    min-height: 220mm !important;
+    background: #fdfaf2 !important;
+    border: 3.5px solid #201004 !important;
+    box-shadow: inset 0 0 0 3px #dfc398, inset 0 0 0 5px #54270c !important;
+    padding: 24mm 18mm !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .final-oracle-box .oracle-icon {
+    font-size: 3rem !important;
+    color: #8c5222 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .oracle-text h5 {
+    font-family: var(--font-serif) !important;
+    font-size: 1.6rem !important;
+    color: #5c2d12 !important;
+    margin-bottom: 24px !important;
+  }
+
+  .oracle-text p {
+    font-size: 1.15rem !important;
+    line-height: 2.1 !important;
+    color: #120c06 !important;
+    word-break: keep-all !important;
+    margin-bottom: 30px !important;
+  }
+
+  .oracle-seal-row {
+    margin-top: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    border-top: 1.5px solid #8c5222 !important;
+    padding-top: 20px !important;
+  }
+
+  .oracle-seal-text {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+
+  .oracle-seal-text .sub-line {
+    font-size: 8.5pt !important;
+    color: #5c2d12 !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  .oracle-seal-text strong {
+    font-size: 11pt !important;
+    color: #120c06 !important;
+    font-family: var(--font-serif) !important;
+  }
+}
