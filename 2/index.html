@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>천문(天文) 타로 | 칼 융 분석심리학과 78장 아르카나 무의식 상담 엔진</title>
-  <meta name="description" content="정해진 미래를 점치는 것이 아니라 내면의 무의식을 비추는 거울. 융 분석심리학 3단계 화법과 4원소 조화도로 당신의 주체적 선택권을 복원합니다.">
-  <meta name="keywords" content="타로, 타로상담, 심리타로, 켈틱크로스, 연애타로, 이직타로, 사주타로, 융심리학, 천문타로">
+  <title>천문(天文) 타로 살롱 | 6대 상황별 정통 스프레드 & 78장 아르카나 심층 감명</title>
+  <meta name="description" content="타로는 상황에 맞는 정통 스프레드에서 시작됩니다. 재회 브릿지, 러버스 미러, 양자택일 V-스프레드, 호스슈 커리어, 펜타클 다이아몬드, 켈틱 크로스까지 당신이 직접 뽑은 카드와 포지션의 공명을 고서적 PDF에 완벽히 담아냅니다.">
+  <meta name="keywords" content="타로, 정통타로, 타로스프레드, 켈틱크로스, 재회타로, 연애타로, 양자택일타로, 이직타로, 호스슈스프레드, 천문타로">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="천문(天文) 타로 | 내면의 무의식을 비추는 78장의 거울">
-  <meta property="og:description" content="내가 '못' 가는 걸까, '안' 가는 걸까? 융 분석심리학 3단계 팩폭과 공감으로 내면의 답을 찾아보세요.">
+  <meta property="og:title" content="천문(天文) 타로 살롱 | 상황별 정통 스프레드 & 맞춤형 PDF 감명서">
+  <meta property="og:description" content="6가지 고민 상황에 특화된 정통 스프레드 위에 당신이 직접 뽑은 카드를 배치하고, 포지션별 맥락과 카드 간 유기적 흐름을 정밀 해독합니다.">
   <meta property="og:image" content="assets/cards/maj_00.jpg">
 
   <!-- Fonts & Icons -->
@@ -40,30 +40,16 @@
   <!-- 배경 미스틱 별빛 캔버스 -->
   <canvas id="starsCanvas"></canvas>
 
-  <!-- 실시간 알림 토스트 (소셜 프루프) -->
+  <!-- 실시간 알림 토스트 -->
   <div id="liveToast" class="live-toast">
     <div class="toast-avatar">
       <i class="fa-solid fa-wand-magic-sparkles"></i>
     </div>
     <div class="toast-content">
-      <p class="toast-text" id="toastMessage">서울 서초구 박*원님이 <strong>'이직 켈틱 크로스 10카드'</strong>를 해독하셨습니다.</p>
+      <p class="toast-text" id="toastMessage">서울 서초구 박*원님이 <strong>'호스슈 커리어 7카드 스프레드'</strong> PDF 감명서를 발급받으셨습니다.</p>
       <span class="toast-time" id="toastTime">방금 전</span>
     </div>
   </div>
-
-  <!-- 상단 프로모션 배너 -->
-  <aside class="top-banner">
-    <div class="banner-inner container">
-      <span class="badge">오늘 한정</span>
-      <p class="banner-text">첫 방문 고객 전원 <strong>'78장 아르카나 무의식 셔플 & 4원소 조화도 분석'</strong> 무료 개방!</p>
-      <div class="countdown" id="topCountdown">
-        <span class="clock-icon"><i class="fa-regular fa-clock"></i></span>
-        <span class="time-box" id="hours">23</span>:
-        <span class="time-box" id="minutes">59</span>:
-        <span class="time-box" id="seconds">40</span> 남음
-      </div>
-    </div>
-  </aside>
 
   <!-- 메인 헤더 네비게이션 -->
   <header class="header">
@@ -73,209 +59,181 @@
           <span class="stamp-inner">天門</span>
         </span>
         <div class="logo-text-group">
-          <span class="brand-sub">ANALYTICAL PSYCHOLOGY & TAROT</span>
+          <span class="brand-sub">AUTHENTIC SPREAD & ARCHETYPE TAROT</span>
           <span class="brand-name">천문(天文) 타로 살롱</span>
         </div>
       </a>
       <div class="header-right">
+        <a href="../index.html" class="nav-saju-link" title="천문 포털 홈으로">
+          <i class="fa-solid fa-compass"></i> <span>천문 포털</span>
+        </a>
         <a href="../1/index.html" class="nav-saju-link" title="천문 사주명리학으로 이동">
-          <i class="fa-solid fa-scroll"></i> <span>사주 만세력 보기</span>
+          <i class="fa-solid fa-scroll"></i> <span>사주 고서 감명</span>
         </a>
       </div>
     </div>
   </header>
 
   <!-- =====================================================================
-       VIEW 1: 질문 입력 & 도메인 및 스프레드 선택 뷰 (LANDING)
+       VIEW 1: 정통 상황별 스프레드 선택 & 질문 성소 뷰 (LANDING)
        ===================================================================== -->
   <main id="landingView" class="page-view active">
     <section class="tarot-hero-section">
       <div class="container hero-container">
         <div class="mystic-orb-wrap">
           <div class="mystic-orb"></div>
-          <span class="orb-badge">CARL G. JUNG PSYCHOLOGICAL TAROT</span>
+          <span class="orb-badge">78 ARCANUM · SITUATIONAL SPREAD SYSTEM</span>
         </div>
 
         <h1 class="hero-title">
-          "정해진 미래를 점치는 것이 아니라,<br>
-          <span class="gold-gradient">무의식의 거울</span>을 비추어 주체적 선택을 돕습니다."
+          "타로는 막연한 점술이 아닙니다.<br>
+          당신의 상황에 맞춘 <span class="gold-gradient">정통 스프레드(배치법)</span> 위에서<br>
+          직접 뽑은 카드의 맥락을 해독합니다."
         </h1>
         <p class="hero-desc">
-          왜 같은 패턴의 연애에서 상처받을까? 지금 이직을 '못' 하는 걸까, 두려워서 '안' 하는 걸까?<br class="pc-only">
-          3,000년 자평진전 명리학과 칼 융의 분석심리학이 만나, 당신 내면의 진짜 목소리를 해독합니다.
+          재회·속마음·양자택일·커리어·재물·종합운명까지, 상황마다 카드를 놓는 자리(Position)의 질문이 다릅니다.<br class="pc-only">
+          당신의 상황에 꼭 맞는 정통 스프레드를 고르고, 각 자리를 채울 카드를 직접 뽑아보세요.
         </p>
 
-        <!-- 타로 질문 접수 카드 -->
+        <!-- 정통 타로 스프레드 & 질문 설정 카드 -->
         <div class="tarot-input-card">
           <div class="card-glow"></div>
 
-          <div class="input-card-header">
-            <h3><i class="fa-solid fa-compass"></i> 마음속 가장 절실한 질문을 들려주세요</h3>
-            <p>타로는 질문이 구체적이고 진실할수록 거울처럼 선명한 해답을 보여줍니다.</p>
-          </div>
-
           <form id="tarotForm" onsubmit="handleStartShuffle(event)">
-            <!-- 1. 내담자 성함 -->
+
+            <!-- STEP 1. 내 현재 고민 상황 & 전용 정통 스프레드 선택 (6대 스프레드) -->
             <div class="form-group">
-              <label for="userName">내담자 성함 (또는 닉네임)</label>
-              <div class="input-wrap">
-                <i class="fa-solid fa-user input-icon"></i>
-                <input type="text" id="userName" placeholder="예: 김우주" value="김우주" required>
+              <div class="step-label-row">
+                <span class="step-pill">STEP 1</span>
+                <label>현재 당신이 마주한 상황과 전용 스프레드를 선택하십시오</label>
+              </div>
+
+              <div class="situation-spread-grid" id="situationSpreadGrid">
+                <!-- 1. 재회 / 이별 -->
+                <label class="situation-card" data-category="reunion" data-spread="reunion_bridge">
+                  <input type="radio" name="tarotSituation" value="reunion">
+                  <div class="sit-top">
+                    <span class="sit-icon"><i class="fa-solid fa-heart-crack"></i></span>
+                    <span class="sit-count-badge">7 Cards · Bridge</span>
+                  </div>
+                  <strong class="sit-title">이별 · 재회 · 그 사람의 미련</strong>
+                  <span class="sit-spread-name">릴레이션십 브릿지 스프레드</span>
+                  <p class="sit-desc">나(좌)와 상대(우)의 겉모습·속마음을 대조하고 두 사람을 다시 잇는 다리(Bridge)를 해독합니다.</p>
+                </label>
+
+                <!-- 2. 연애 / 썸 / 짝사랑 -->
+                <label class="situation-card" data-category="romance" data-spread="lovers_mirror">
+                  <input type="radio" name="tarotSituation" value="romance">
+                  <div class="sit-top">
+                    <span class="sit-icon"><i class="fa-solid fa-heart"></i></span>
+                    <span class="sit-count-badge">6 Cards · Mirror</span>
+                  </div>
+                  <strong class="sit-title">짝사랑 · 썸 · 연인 속마음</strong>
+                  <span class="sit-spread-name">러버스 미러(거울) 스프레드</span>
+                  <p class="sit-desc">서로 마주 본 거울처럼 나와 상대방의 표면 태도와 무의식 속 진짜 호감도를 1:1로 비춥니다.</p>
+                </label>
+
+                <!-- 3. 양자택일 (A vs B) -->
+                <label class="situation-card" data-category="choice" data-spread="two_paths">
+                  <input type="radio" name="tarotSituation" value="choice">
+                  <div class="sit-top">
+                    <span class="sit-icon"><i class="fa-solid fa-code-fork"></i></span>
+                    <span class="sit-count-badge">7 Cards · V-Path</span>
+                  </div>
+                  <strong class="sit-title">양자택일 · 인생의 갈림길 (A vs B)</strong>
+                  <span class="sit-spread-name">운명의 갈림길 V-스프레드</span>
+                  <p class="sit-desc">갈림길 기점에서 선택 A 경로(3장)와 선택 B 경로(3장)의 진행 과정·대가·최종 결과를 비교합니다.</p>
+                </label>
+
+                <!-- 4. 커리어 / 이직 / 취업 / 사업 (기본 선택) -->
+                <label class="situation-card active" data-category="career" data-spread="career_horseshoe">
+                  <input type="radio" name="tarotSituation" value="career" checked>
+                  <div class="sit-top">
+                    <span class="sit-icon"><i class="fa-solid fa-briefcase"></i></span>
+                    <span class="sit-count-badge">7 Cards · Horseshoe</span>
+                  </div>
+                  <strong class="sit-title">이직 · 취업 · 창업 · 커리어 돌파</strong>
+                  <span class="sit-spread-name">호스슈(말굽) 커리어 스프레드</span>
+                  <p class="sit-desc">내가 진짜 '못' 가는 건지 두려워서 '안' 가는 건지, 현실 장벽과 무의식 방어기제를 돌파합니다.</p>
+                </label>
+
+                <!-- 5. 재물 / 투자 / 금전 -->
+                <label class="situation-card" data-category="wealth" data-spread="wealth_diamond">
+                  <input type="radio" name="tarotSituation" value="wealth">
+                  <div class="sit-top">
+                    <span class="sit-icon"><i class="fa-solid fa-gem"></i></span>
+                    <span class="sit-count-badge">6 Cards · Diamond</span>
+                  </div>
+                  <strong class="sit-title">재물 · 투자 · 금전 누수 차단</strong>
+                  <span class="sit-spread-name">펜타클 다이아몬드 스프레드</span>
+                  <p class="sit-desc">현재 자금 흐름의 중심에서 돈이 새는 구멍(누수)을 막고 새로운 수익 파이프라인을 찾습니다.</p>
+                </label>
+
+                <!-- 6. 켈틱 크로스 종합 심층 -->
+                <label class="situation-card" data-category="celtic" data-spread="celtic_cross">
+                  <input type="radio" name="tarotSituation" value="celtic">
+                  <div class="sit-top">
+                    <span class="sit-icon"><i class="fa-solid fa-cross"></i></span>
+                    <span class="sit-count-badge popular"><i class="fa-solid fa-crown"></i> 10 Cards · Master</span>
+                  </div>
+                  <strong class="sit-title">종합 운명 · 무의식 그림자 총괄</strong>
+                  <span class="sit-spread-name">정통 켈틱 크로스 10카드 스프레드</span>
+                  <p class="sit-desc">타로 스프레드의 제왕. 의식·무의식·과거·미래의 십자가와 내면·환경·결말의 기둥으로 입체 해독합니다.</p>
+                </label>
               </div>
             </div>
 
-            <!-- 2. 고민 도메인 선택 (4대 카테고리) -->
-            <div class="form-group">
-              <label>고민 영역 (카테고리)</label>
-              <div class="domain-grid">
-                <label class="domain-card active">
-                  <input type="radio" name="tarotDomain" value="love" checked>
-                  <div class="d-icon"><i class="fa-solid fa-heart"></i></div>
-                  <div class="d-info">
-                    <strong>연애 · 재회</strong>
-                    <span>속마음, 짝사랑, 갈림길</span>
-                  </div>
-                </label>
-
-                <label class="domain-card">
-                  <input type="radio" name="tarotDomain" value="career">
-                  <div class="d-icon"><i class="fa-solid fa-briefcase"></i></div>
-                  <div class="d-info">
-                    <strong>이직 · 커리어</strong>
-                    <span>취업, 창업, 번아웃, 천직</span>
-                  </div>
-                </label>
-
-                <label class="domain-card">
-                  <input type="radio" name="tarotDomain" value="wealth">
-                  <div class="d-icon"><i class="fa-solid fa-coins"></i></div>
-                  <div class="d-info">
-                    <strong>재물 · 투자</strong>
-                    <span>현실적 번영, 금전 흐름</span>
-                  </div>
-                </label>
-
-                <label class="domain-card">
-                  <input type="radio" name="tarotDomain" value="inner">
-                  <div class="d-icon"><i class="fa-solid fa-brain"></i></div>
-                  <div class="d-info">
-                    <strong>내면 · 심리</strong>
-                    <span>무의식 그림자, 영적 성찰</span>
-                  </div>
-                </label>
+            <!-- STEP 2. 선택된 스프레드의 포지션 구성 & 배치도 안내 프리뷰 박스 -->
+            <div class="spread-preview-panel" id="spreadPreviewPanel">
+              <div class="spp-header">
+                <div class="spp-title-wrap">
+                  <span class="spp-tag"><i class="fa-solid fa-compass-drafting"></i> 선택된 스프레드 설계도</span>
+                  <h4 id="sppSpreadTitle">호스슈(말굽) 커리어 돌파 7카드 스프레드 (Horseshoe Career Spread · 7장)</h4>
+                </div>
+                <span class="spp-badge" id="sppCardCountBadge">총 7장의 카드를 뽑습니다</span>
+              </div>
+              <p class="spp-desc" id="sppSpreadDesc">
+                과거의 경력 축적부터 현재의 번아웃·정체 원인, 눈에 보이지 않는 변수를 지나 내가 정말 '못' 가는 것인지 두려워서 '안' 가는 것인지 직면하고 돌파구를 찾는 7장 말굽 배열입니다.
+              </p>
+              <div class="spp-positions-grid" id="sppPositionsGrid">
+                <!-- JS 동적 업데이트: 포지션 1~N 목록 -->
               </div>
             </div>
 
-            <!-- 3. 구체적 질문 입력창 -->
+            <!-- STEP 3. 내담자 호칭 및 구체적 질문 입력 -->
+            <div class="form-row-two">
+              <div class="form-group">
+                <div class="step-label-row">
+                  <span class="step-pill">STEP 2</span>
+                  <label for="userName">질문자 호칭 (이름 또는 닉네임)</label>
+                </div>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-signature input-icon"></i>
+                  <input type="text" id="userName" placeholder="예: 김우주 (감명서 표지에 기재됩니다)" value="김우주" required>
+                </div>
+              </div>
+            </div>
+
             <div class="form-group">
-              <label for="userQuestion">구체적인 질문 내용</label>
+              <div class="step-label-row">
+                <span class="step-pill">STEP 3</span>
+                <label for="userQuestion">카드에게 물어볼 구체적인 상황을 적어주세요</label>
+              </div>
               <div class="input-wrap textarea-wrap">
-                <textarea id="userQuestion" rows="3" placeholder="예: 지금 다니는 직장에서 번아웃이 왔습니다. 과감히 퇴사하고 새로운 분야로 이직을 시도해도 될까요?" required>지금 다니는 직장에서 번아웃이 왔습니다. 과감히 퇴사하고 새로운 분야로 이직을 시도해도 될까요?</textarea>
+                <textarea id="userQuestion" rows="3" placeholder="상황이 구체적일수록 각 포지션에 놓인 카드의 상징이 날카롭게 적중합니다." required>지금 다니는 직장에서 번아웃이 왔습니다. 과감히 퇴사하고 새로운 분야로 이직을 시도해도 될까요?</textarea>
               </div>
-              <div class="question-guide-tags">
-                <span class="guide-label"><i class="fa-solid fa-lightbulb"></i> 예시 질문:</span>
-                <button type="button" class="q-chip" onclick="setPresetQuestion(this)">"헤어진 그 사람에게 먼저 연락해도 후회 없을까요?"</button>
-                <button type="button" class="q-chip" onclick="setPresetQuestion(this)">"준비 중인 사업을 지금 시작하는 게 맞을까요?"</button>
-                <button type="button" class="q-chip" onclick="setPresetQuestion(this)">"현재 내 삶에서 가장 놓치고 있는 무의식의 맹점은?"</button>
-              </div>
-            </div>
-
-            <!-- 4. 스프레드 방식 선택 -->
-            <div class="form-group">
-              <label>타로 스프레드 방식</label>
-              <div class="spread-select-list">
-                <label class="spread-opt-card">
-                  <input type="radio" name="tarotSpread" value="single">
-                  <div class="s-badge">1장</div>
-                  <div class="s-detail">
-                    <strong>원카드 (Single Focus)</strong>
-                    <span>오늘의 핵심 화두 및 즉각적인 직관적 행동 지침</span>
-                  </div>
-                </label>
-
-                <label class="spread-opt-card">
-                  <input type="radio" name="tarotSpread" value="three_timeline">
-                  <div class="s-badge">3장</div>
-                  <div class="s-detail">
-                    <strong>3카드 시간선 (과거 · 현재 · 미래)</strong>
-                    <span>문제의 발단 원인과 현재 기류, 3~6개월 뒤의 귀결</span>
-                  </div>
-                </label>
-
-                <label class="spread-opt-card">
-                  <input type="radio" name="tarotSpread" value="three_mind">
-                  <div class="s-badge">3장</div>
-                  <div class="s-detail">
-                    <strong>3카드 융 심리 구조 (의식 · 무의식 · 통합)</strong>
-                    <span>표면적 생각과 숨겨진 그림자(Shadow), 치유의 열쇠</span>
-                  </div>
-                </label>
-
-                <label class="spread-opt-card">
-                  <input type="radio" name="tarotSpread" value="two_choice">
-                  <div class="s-badge">5장</div>
-                  <div class="s-detail">
-                    <strong>양자택일 5카드 (A vs B 갈림길)</strong>
-                    <span>이직할까 잔류할까? A와 B의 전개 과정과 대가를 비교</span>
-                  </div>
-                </label>
-
-                <label class="spread-opt-card active">
-                  <input type="radio" name="tarotSpread" value="celtic_cross" checked>
-                  <div class="s-badge popular"><i class="fa-solid fa-crown"></i> 10장</div>
-                  <div class="s-detail">
-                    <strong>켈틱 크로스 (Celtic Cross · 정밀 심층 감명)</strong>
-                    <span>타로의 제왕: 현재, 장애, 잠재의식, 과거, 미래, 내면, 환경, 최종결과</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            <!-- 5. 사주 오행 크로스 분석 옵션 (선택 사항) -->
-            <div class="saju-opt-toggle-box">
-              <div class="toggle-header" onclick="toggleSajuInput()">
-                <div class="th-left">
-                  <i class="fa-solid fa-scroll"></i>
-                  <span>(선택) 내 사주명식(오행)과 타로 4원소 크로스 분석</span>
-                </div>
-                <div class="th-right">
-                  <span id="sajuToggleText">열기</span>
-                  <i class="fa-solid fa-chevron-down" id="sajuToggleIcon"></i>
-                </div>
-              </div>
-
-              <div class="saju-input-sub-wrap hidden" id="sajuInputSubWrap">
-                <p class="saju-help-text">생년월일시를 입력하시면 당신의 사주 일간(목화토금수)과 타로의 4원소를 결합하여 더욱 입체적인 하이브리드 리딩을 제공합니다.</p>
-                <div class="saju-inline-inputs">
-                  <div class="sub-col">
-                    <label>생년월일</label>
-                    <input type="date" id="sajuBirthDate" value="1993-05-18">
-                  </div>
-                  <div class="sub-col">
-                    <label>출생시간</label>
-                    <select id="sajuBirthTime">
-                      <option value="11:30" selected>오시 (11:30 ~ 13:29)</option>
-                      <option value="05:30">묘시 (05:30 ~ 07:29)</option>
-                      <option value="13:30">미시 (13:30 ~ 15:29)</option>
-                      <option value="23:30">자시 (23:30 ~ 01:29)</option>
-                      <option value="unknown">시간 모름</option>
-                    </select>
-                  </div>
-                  <div class="sub-col">
-                    <label>성별</label>
-                    <select id="sajuGender">
-                      <option value="male" selected>남성</option>
-                      <option value="female">여성</option>
-                    </select>
-                  </div>
+              <div class="question-guide-tags" id="presetQuestionsWrap">
+                <span class="guide-label"><i class="fa-solid fa-wand-magic-sparkles"></i> 이 스프레드 추천 질문:</span>
+                <div class="preset-chips-list" id="presetChipsList">
+                  <!-- JS 동적 생성 -->
                 </div>
               </div>
             </div>
 
             <!-- 제출 버튼 -->
             <button type="submit" class="btn btn-tarot-start glow-btn">
-              <i class="fa-solid fa-wand-magic-sparkles"></i>
-              <span>78장 아르카나 셔플 & 카드 직접 뽑기</span>
+              <i class="fa-solid fa-hand-sparkles"></i>
+              <span id="startShuffleBtnText">호스슈 커리어 7카드 셔플 & 포지션별 카드 뽑기</span>
             </button>
           </form>
         </div>
@@ -284,7 +242,7 @@
   </main>
 
   <!-- =====================================================================
-       VIEW 2: 인터랙티브 부채꼴 덱 펼침 & 1인칭 카드 뽑기 뷰 (SHUFFLE)
+       VIEW 2: 포지션 인식형 78장 부채꼴 덱 & 1인칭 카드 뽑기 뷰 (SHUFFLE)
        ===================================================================== -->
   <main id="shuffleView" class="page-view hidden">
     <section class="tarot-table-section">
@@ -292,39 +250,41 @@
         <!-- 상단 가이드 바 -->
         <div class="shuffle-top-guide">
           <button type="button" class="btn-text-nav" onclick="switchView('landing')">
-            <i class="fa-solid fa-arrow-left"></i> 질문 다시 쓰기
+            <i class="fa-solid fa-arrow-left"></i> 스프레드 / 질문 다시 고르기
           </button>
           <div class="shuffle-counter-badge">
             <span class="pulse-dot"></span>
-            <span id="shuffleCounterText">카드를 1장씩 터치하여 골라주세요 ( 0 / 10 )</span>
+            <span id="shuffleCounterText">포지션별 카드를 1장씩 선택해주세요 ( 0 / 7 )</span>
           </div>
           <button type="button" class="btn-auto-pick" onclick="handleAutoPick()">
-            <i class="fa-solid fa-dice"></i> <span>빠른 자동 추첨</span>
+            <i class="fa-solid fa-wand-sparkles"></i> <span>남은 포지션 직관 자동 추첨</span>
           </button>
         </div>
 
-        <div class="shuffle-instruction">
-          <h2 id="shuffleHeading">마음을 가다듬고 직관이 이끄는 카드를 선택하십시오</h2>
-          <p id="shuffleSubHeading">원하는 카드를 터치하면 보드로 이동합니다.</p>
+        <!-- 현재 뽑고 있는 포지션 실시간 안내 배너 -->
+        <div class="current-position-prompt-box" id="currentPosPromptBox">
+          <div class="cpp-badge" id="cppStepBadge">현재 뽑을 자리: 포지션 1 / 7</div>
+          <h2 class="cpp-title" id="shuffleHeading">1. 과거부터 쌓아온 커리어 기반</h2>
+          <p class="cpp-question" id="shuffleSubHeading">"지금의 나를 있게 한 과거의 노력과 경력의 토대는 어떠한가?"를 떠올리며 카드를 1장 터치하세요.</p>
         </div>
 
-        <!-- 78장 아르카나 인터랙티브 덱 캔버스 / 부채꼴 컨테이너 -->
+        <!-- 78장 아르카나 인터랙티브 덱 부채꼴 컨테이너 -->
         <div class="fan-deck-wrapper" id="fanDeckWrapper">
           <div class="fan-deck-stage" id="fanDeckStage">
             <!-- JS 동적 생성: 78장의 카드 뒷면이 아크(Arc) 형태로 펼쳐집니다 -->
           </div>
         </div>
 
-        <!-- 하단: 현재 뽑힌 카드 트레이 슬롯 -->
+        <!-- 하단: 현재 뽑힌 카드 포지션 트레이 슬롯 -->
         <div class="picked-tray-container">
           <div class="tray-title">
-            <i class="fa-solid fa-layer-group"></i> 내가 고른 카드들 (<span id="trayCountText">0</span> / <span id="trayTotalText">10</span>)
+            <i class="fa-solid fa-compass-drafting"></i> <strong id="traySpreadName">호스슈 커리어 7카드</strong> 포지션 슬롯 (<span id="trayCountText">0</span> / <span id="trayTotalText">7</span>)
           </div>
           <div class="picked-slots-row" id="pickedSlotsRow">
             <!-- JS 동적 생성 -->
           </div>
           <button type="button" class="btn btn-reveal-spread glow-btn" id="btnGoToBoard" onclick="goToSpreadBoard()" disabled>
-            <i class="fa-solid fa-eye"></i> <span>선택 완료 · 스프레드 보드로 이동</span>
+            <i class="fa-solid fa-eye"></i> <span>모든 포지션 선택 완료 · 스프레드 보드에 배치하기</span>
           </button>
         </div>
       </div>
@@ -341,18 +301,18 @@
         <div class="board-header">
           <div class="board-nav-row">
             <button type="button" class="btn-text-nav" onclick="switchView('shuffle')">
-              <i class="fa-solid fa-rotate-left"></i> 다시 뽑기
+              <i class="fa-solid fa-rotate-left"></i> 카드 다시 뽑기
             </button>
-            <span class="board-badge" id="boardSpreadBadge">켈틱 크로스 10카드</span>
+            <span class="board-badge" id="boardSpreadBadge">호스슈 커리어 7카드</span>
             <button type="button" class="btn-flip-all" onclick="flipAllCards()">
-              <i class="fa-solid fa-arrows-rotate"></i> <span>모두 뒤집기</span>
+              <i class="fa-solid fa-arrows-rotate"></i> <span>전체 카드 한 번에 뒤집기</span>
             </button>
           </div>
-          <h2 class="board-main-title" id="boardTitle">"김우주 님의 질문에 대한 우주의 배치도"</h2>
-          <p class="board-sub-desc" id="boardDesc">카드를 탭하여 앞면을 확인하세요. 각 포지션에 숨겨진 무의식의 상징이 드러납니다.</p>
+          <h2 class="board-main-title" id="boardTitle">"김우주 님이 뽑으신 스프레드 배치도"</h2>
+          <p class="board-sub-desc" id="boardDesc">각 포지션의 카드를 터치하여 앞면을 확인하세요. 자리에 담긴 질문과 카드의 상징이 결합됩니다.</p>
         </div>
 
-        <!-- 실제 스프레드 매트 (켈틱 크로스 등 레이아웃) -->
+        <!-- 실제 스프레드 매트 (6종 정통 레이아웃 렌더링) -->
         <div class="spread-cloth-mat" id="spreadClothMat">
           <!-- JS 동적 렌더링 -->
         </div>
@@ -361,15 +321,15 @@
         <div class="card-preview-bar" id="cardPreviewBar">
           <div class="prev-icon"><i class="fa-solid fa-wand-sparkles"></i></div>
           <div class="prev-content" id="cardPreviewContent">
-            <strong>카드를 터치해보세요!</strong> 각 카드가 가리키는 융 심리학적 무의식 메시지가 나타납니다.
+            <strong>배치된 카드를 터치해보세요!</strong> 해당 포지션의 질문에 대한 아르카나의 1차 응답이 나타납니다.
           </div>
         </div>
 
         <!-- 종합 해독서 열람 및 결제 버튼 -->
         <div class="board-actions">
           <button type="button" class="btn btn-analyze-all glow-btn" onclick="proceedToResultView()">
-            <i class="fa-solid fa-scroll"></i>
-            <span>4원소 조화도 & 융 심리학 3단계 심층 해독서 열람</span>
+            <i class="fa-solid fa-book-open-reader"></i>
+            <span>뽑은 스프레드 배치도 & 포지션별 심층 PDF 감명서 열람하기</span>
           </button>
         </div>
       </div>
@@ -377,7 +337,7 @@
   </main>
 
   <!-- =====================================================================
-       VIEW 4: 결과 대시보드 + 토스페이먼츠 결제 뷰 (RESULT)
+       VIEW 4: 스프레드 1차 판독 요약 + 토스페이먼츠 PDF 감명서 발급 뷰 (RESULT)
        ===================================================================== -->
   <main id="resultView" class="page-view hidden">
     <section class="tarot-result-section">
@@ -392,9 +352,14 @@
           <div class="card-glow"></div>
 
           <div class="result-header">
-            <div class="congrats-tag">✨ 78장 아르카나 무의식 해독 완료</div>
-            <h2 id="resTitle">"지금 내면에서 가장 강하게 요동치는 기운은 <span class="gold-gradient" id="resDominantEl">불(火)과 공기(金)</span>입니다."</h2>
+            <div class="congrats-tag" id="resSpreadTag">✨ 호스슈 커리어 7카드 1차 배열 판독 완료</div>
+            <h2 id="resTitle">"뽑으신 카드들을 지배하는 핵심 원소는 <span class="gold-gradient" id="resDominantEl">불(火)</span>입니다."</h2>
             <p id="resOneLineSummary">겉으로는 차분하게 때를 기다리는 척하지만, 마음속에서는 이미 결단을 내리고 뛰쳐나갈 준비를 마친 상태입니다.</p>
+          </div>
+
+          <!-- 내가 뽑은 카드 요약 리스트 프리뷰 -->
+          <div class="result-drawn-summary-strip" id="resDrawnSummaryStrip">
+            <!-- JS 동적 생성 -->
           </div>
 
           <!-- 4원소 조화도 간이 프리뷰 -->
@@ -402,38 +367,40 @@
             <!-- JS 동적 생성 -->
           </div>
 
-          <!-- 촌철살인 융 심리학 1차 독심술 박스 -->
+          <!-- 촌철살인 융 심리학 1차 직면 박스 -->
           <div class="ai-critic-quote">
             <div class="quote-header">
-              <i class="fa-solid fa-brain"></i> <strong>천문 융 분석심리학 촌철살인 직면</strong>
+              <i class="fa-solid fa-brain"></i> <strong>뽑힌 핵심 장애물·그림자 카드 1차 판독</strong>
             </div>
             <blockquote id="resCriticQuote">
-              "당신은 스스로 '능력이 부족해서 못 들어간다'고 자책하고 있지만, 카드는 정반대를 말하고 있습니다. 당신은 상처받는 것이 두려워 무의식적으로 '안' 들어가고 발을 빼고 계셨던 것입니다."
+              "당신은 스스로 '여건이 안 돼서 못 간다'고 말하지만, 뽑으신 카드는 상처받기 싫어 스스로 발을 묶고 '안' 가고 있음을 가리킵니다."
             </blockquote>
           </div>
 
           <!-- ===================================================================
-               토스페이먼츠 결제란 (프리미엄 심층 타로 감명서)
+               토스페이먼츠 결제란 (상황별 스프레드 맞춤형 PDF 감명서)
                =================================================================== -->
           <div class="report-checkout-section" id="checkoutSection">
             <div class="checkout-header text-center">
-              <span class="special-badge">오늘 한정 50% 특별 할인</span>
-              <h3 class="checkout-title">"무의식의 빗장을 열고 주체적인 운명을 선택하십시오"</h3>
-              <p class="checkout-desc">아래의 정밀 감명서는 <strong>뽑으신 모든 카드의 상징학 고증</strong>과 <strong>3단계 현실 행동 지침</strong>을 완벽히 수록한 평생 소장용 디지털 서책입니다.</p>
+              <span class="special-badge">맞춤형 스프레드 정밀 해독서</span>
+              <h3 class="checkout-title">"내가 뽑은 카드들이 각 포지션에서 전하는 모든 해답을 확인하십시오"</h3>
+              <p class="checkout-desc">
+                단순한 카드 뜻풀이가 아닙니다. <strong>시각적 스프레드 배치도 도면</strong>부터 <strong>포지션별 맥락 해독</strong>, <strong>앞뒤 카드의 유기적 연결 흐름</strong>, <strong>핵심 대칭축(Axis) 교차 판정</strong>까지 수록된 소장용 PDF 감명서입니다.
+              </p>
             </div>
 
-            <!-- 타로 리포트 단독 및 패키지 선택 -->
+            <!-- 타로 리포트 상품 구성 선택 -->
             <div class="report-select-grid">
-              <!-- 상품 1: 심층 타로 감명서 -->
+              <!-- 상품 1: 현재 스프레드 심층 감명서 PDF -->
               <div class="report-select-card active" id="repCard_tarot" onclick="toggleTarotProduct('tarot')" role="checkbox" aria-checked="true" tabindex="0">
                 <div class="card-radio-mark"><i class="fa-solid fa-check"></i></div>
-                <div class="rep-tag popular"><i class="fa-solid fa-crown"></i> 융 심리학 마스터팩</div>
-                <h4>천문 78장 아르카나 심층 타로 감명서</h4>
+                <div class="rep-tag popular"><i class="fa-solid fa-crown"></i> 정통 스프레드 완역본</div>
+                <h4 id="checkoutProdTitle">호스슈 커리어 7카드 심층 타로 감명서 (PDF)</h4>
                 <div class="rep-hook">
                   <i class="fa-solid fa-quote-left"></i>
-                  <span>뽑으신 전 카드의 원형 분석 · 4원소 조화도 · 뼈를 때리는 맹점 조명 및 주체적 3대 행동 지침 완벽 수록</span>
+                  <span>① 시각적 스프레드 배치도 도면 · ② 전 포지션 질문×카드 맞춤 풀이 · ③ 앞뒤 카드 연결 흐름 · ④ 핵심 축 교차 판정 & 융 3단계 솔루션</span>
                 </div>
-                <p class="rep-summary">스프레드 전 포지션 심층 해독 · 사주 x 타로 크로스 분석 · A4 고해상도 PDF 발급 지원</p>
+                <p class="rep-summary">내가 뽑은 카드 그대로 조립되는 고서적 A4 PDF 즉시 열람 및 인쇄·저장 지원</p>
                 <div class="rep-price-box">
                   <span class="orig-price">39,000원</span>
                   <span class="sale-price">19,500원</span>
@@ -441,20 +408,20 @@
                 </div>
               </div>
 
-              <!-- 상품 2: 사주 + 타로 하이브리드 통합권 -->
+              <!-- 상품 2: 심층 타로 감명서 + 추가 스프레드 무제한 열람권 -->
               <div class="report-select-card" id="repCard_bundle" onclick="toggleTarotProduct('bundle')" role="checkbox" aria-checked="false" tabindex="0">
                 <div class="card-radio-mark"><i class="fa-solid fa-check"></i></div>
-                <div class="rep-tag master"><i class="fa-solid fa-scroll"></i> 사주 + 타로 통합 프리미엄</div>
-                <h4>천문사주 87페이지 평생 원국 + 심리 타로 통합권</h4>
+                <div class="rep-tag master"><i class="fa-solid fa-wand-magic-sparkles"></i> 6대 스프레드 마스터 패스</div>
+                <h4>현재 스프레드 PDF 감명서 + 6대 상황별 스프레드 올인원 패스</h4>
                 <div class="rep-hook">
                   <i class="fa-solid fa-quote-left"></i>
-                  <span>내 사주 8글자의 거시적 대운 흐름과, 타로가 짚어내는 현재 무의식의 미시적 해답을 하나로 묶은 완전판</span>
+                  <span>현재 뽑으신 스프레드 완역본 PDF 발급은 물론, 재회·연애·양자택일·커리어·재물·켈틱 크로스 6종 스프레드를 모두 해독할 수 있는 VIP 이용권</span>
                 </div>
-                <p class="rep-summary">정통 조선 왕실 목판본 87p A4 사주 비서 + 심층 타로 감명서 동시 발급 (추가 20% 특별 우대)</p>
+                <p class="rep-summary">6대 정통 스프레드 전체 해독 + 고해상도 A4 PDF 무제한 저장 (특별 우대)</p>
                 <div class="rep-price-box">
-                  <span class="orig-price">98,000원</span>
-                  <span class="sale-price">39,200원</span>
-                  <span class="discount-badge">60% OFF</span>
+                  <span class="orig-price">58,000원</span>
+                  <span class="sale-price">29,000원</span>
+                  <span class="discount-badge">50% OFF</span>
                 </div>
               </div>
             </div>
@@ -465,7 +432,7 @@
                 <div class="portone-badge toss-badge">
                   <span class="portone-logo-text"><i class="fa-solid fa-shield-halved"></i> 토스페이먼츠 · 포트원 안전결제</span>
                 </div>
-                <span class="ssl-badge"><i class="fa-solid fa-lock"></i> SSL 암호화 · 결제 즉시 열람</span>
+                <span class="ssl-badge"><i class="fa-solid fa-lock"></i> 결제 즉시 감명서 전문 & PDF 열람</span>
               </div>
 
               <div class="checkout-price-summary">
@@ -480,7 +447,7 @@
                 <label class="refund-checkbox-label">
                   <input type="checkbox" id="refundNoticeCheck" checked>
                   <span class="refund-checkbox-text">
-                    [필수] 본 상품은 맞춤형 디지털 콘텐츠로 결제 후 즉시 열람이 개시되므로 
+                    [필수] 본 상품은 내담자가 직접 뽑은 카드 배열에 맞춰 즉시 생성되는 디지털 감명서이므로 
                     <strong>열람 개시 후 환불이 불가</strong>함에 동의합니다. 
                     <a href="refund.html" target="_blank" class="refund-link-inline">[환불규정 보기]</a>
                   </span>
@@ -489,7 +456,7 @@
 
               <button type="button" class="btn btn-portone-pay btn-toss-pay glow-btn" id="payButton" onclick="triggerTarotPayment()">
                 <i class="fa-solid fa-credit-card"></i>
-                <span id="payBtnText">19,500원 안전 결제하고 리포트 열람</span>
+                <span id="payBtnText">19,500원 안전 결제하고 스프레드 PDF 감명서 열람</span>
               </button>
 
               <div class="payment-methods-logos">
@@ -507,24 +474,24 @@
   </main>
 
   <!-- =====================================================================
-       VIEW 5: 결제 완료 후 프리미엄 타로 감명서 열람 뷰 (REPORT)
+       VIEW 5: 결제 완료 후 프리미엄 타로 스프레드 감명서 열람 & PDF 인쇄 뷰 (REPORT)
        ===================================================================== -->
   <main id="reportView" class="page-view hidden">
     <section class="tarot-report-screen-section">
       <div class="container report-container">
 
-        <!-- 모바일 상단 고정 툴바 -->
+        <!-- 상단 고정 툴바 -->
         <div class="report-top-bar">
           <button type="button" class="btn-report-nav" onclick="switchView('board')">
-            <i class="fa-solid fa-arrow-left"></i> 타로 보드로
+            <i class="fa-solid fa-arrow-left"></i> 스프레드 보드로
           </button>
           <div class="report-bar-title">
-            <span class="cert-pill"><i class="fa-solid fa-certificate"></i> 정품 인증</span>
-            <span class="report-user-name" id="reportBarUserName">김우주 님의 타로 비서</span>
+            <span class="cert-pill"><i class="fa-solid fa-certificate"></i> 정통 스프레드 감명본</span>
+            <span class="report-user-name" id="reportBarUserName">김우주 님의 타로 감명서</span>
           </div>
           <div class="report-bar-actions">
             <button type="button" class="btn-report-tool" onclick="downloadOrPrintReport()" title="PDF로 저장 / 인쇄">
-              <i class="fa-solid fa-file-pdf"></i> <span>PDF 저장</span>
+              <i class="fa-solid fa-file-pdf"></i> <span>PDF 저장 / 인쇄</span>
             </button>
             <button type="button" class="btn-report-tool" onclick="shareReport()" title="리포트 공유">
               <i class="fa-solid fa-share-nodes"></i>
@@ -540,10 +507,10 @@
         <!-- 하단 액션 버튼 -->
         <div class="report-footer-actions">
           <button type="button" class="btn btn-save-pdf glow-btn" onclick="downloadOrPrintReport()">
-            <i class="fa-solid fa-download"></i> 전체 타로 감명서 PDF 저장하기
+            <i class="fa-solid fa-file-pdf"></i> 내가 뽑은 스프레드 감명서 PDF 저장 / 인쇄하기
           </button>
           <button type="button" class="btn btn-back-dashboard" onclick="switchView('landing')">
-            <i class="fa-solid fa-rotate-left"></i> 새로운 질문 던지기
+            <i class="fa-solid fa-rotate-left"></i> 다른 상황 스프레드로 새 질문 던지기
           </button>
         </div>
 
@@ -557,10 +524,10 @@
       <div class="footer-legal">
         <p class="company-info">
           (주)천문라이프 | 대표자: 홍길동 | 사업자등록번호: 123-45-67890 | 통신판매업신고: 제2026-서울서초-0000호<br>
-          주소: 서울특별시 서초구 사임당로 123 | 고객센터: support@cheonmun.life | 호스팅: Cloudflare
+          주소: 서울특별시 서초구 사임당로 123 | 고객센터: support@cheonmun.life | 호스팅: Vercel & GitHub Pages
         </p>
         <p class="disclaimer">
-          천문 타로는 칼 구스타프 융의 분석심리학적 모델에 기반하여 내담자의 성찰과 주체적 의사결정을 돕는 심리 상담 가이드입니다.
+          천문 타로 살롱은 상황별 정통 타로 스프레드 역학과 칼 구스타프 융의 분석심리학적 원형 이론에 기반하여 내담자의 주체적 의사결정을 돕는 프리미엄 타로 리딩 서비스입니다.
         </p>
         <div class="footer-links">
           <a href="terms.html">이용약관</a>
