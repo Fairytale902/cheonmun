@@ -19,7 +19,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "ace",
     keywords: ["물질적 기회", "황금 동전의 씨앗", "확실한 결실", "현실적 번영", "새로운 수입원"],
-    image: "assets/cards/pen_01.jpg",
+    image: "/2/assets/cards/pen_01.jpg",
     upright: {
       core: "구름 속 신의 손이 풍요로운 정원 위에서 거대한 황금 펜타클 동전을 내려줍니다. 실체 없는 허상이 아닌, 손에 만져지는 구체적인 부와 현실적 기회의 씨앗이 손에 쥐어지는 순간입니다.",
       love: "안정적이고 현실적인 사랑의 시작. 경제적으로 든든하고 신뢰할 수 있는 파트너와의 만남, 결혼을 전제로 한 만남.",
@@ -47,7 +47,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "2",
     keywords: ["저글링", "유연한 균형", "두 가지 일의 병행", "파도를 타는 곡예", "변화에 적응"],
-    image: "assets/cards/pen_02.jpg",
+    image: "/2/assets/cards/pen_02.jpg",
     upright: {
       core: "모자를 쓴 어릿광대가 파도치는 바다를 뒤로하고 무한대(∞) 리본 속에서 두 개의 황금 동전을 절묘하게 저글링하고 있습니다. 변화무쌍한 상황 속에서도 기막힌 유연성으로 수지타산을 맞추고 균형을 유지합니다.",
       love: "일과 연애의 병행, 혹은 두 사람 사이에서의 조율. 바쁜 일상 속에서도 위트와 유연함으로 관계의 균형을 잡아냅니다.",
@@ -75,7 +75,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "3",
     keywords: ["장인 정신", "전문가 협업", "성당 건축", "공인된 기술력", "팀워크"],
-    image: "assets/cards/pen_03.jpg",
+    image: "/2/assets/cards/pen_03.jpg",
     upright: {
       core: "젊은 조각가가 성당 아치 아래에서 수도사와 건축가의 설계도를 보며 조각을 다듬고 있습니다. 각 분야의 전문가들이 서로를 존중하며 완벽한 예술품을 세워나가는 협업과 장인 정신의 결정체입니다.",
       love: "서로의 부족한 점을 채워주며 든든한 미래를 함께 세워가는 성숙한 동반자. 신뢰와 존경에 기반한 사랑입니다.",
@@ -103,7 +103,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "4",
     keywords: ["구두쇠", "소유욕", "자산 방어", "변화 거부", "꽉 쥔 손", "불안한 집착"],
-    image: "assets/cards/pen_04.jpg",
+    image: "/2/assets/cards/pen_04.jpg",
     upright: {
       core: "왕관을 쓴 남자가 머리 위, 가슴 앞, 그리고 양발 밑에 총 네 개의 동전을 빈틈없이 끌어안고 도시를 등진 채 앉아 있습니다. 가진 것을 지키기 위한 극도의 집착과 안정 추구이지만, 손을 꽉 쥐고 있어 새로운 것을 받을 수 없습니다.",
       love: "상대방을 내 소유물처럼 옭아매는 집착과 통제욕. 데이트 비용 한 푼도 아까워하는 인색함이 관계를 질식시킵니다.",
@@ -131,7 +131,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "5",
     keywords: ["눈보라 속의 빈곤", "고립", "결핍감", "교회의 스테인드글라스", "도움을 청하지 못함"],
-    image: "assets/cards/pen_05.jpg",
+    image: "/2/assets/cards/pen_05.jpg",
     upright: {
       core: "눈보라 치는 혹한의 밤, 목발을 짚은 절름발이와 누더기를 걸친 거지가 불 켜진 교회의 스테인드글라스를 보지 못하고 지나쳐 걷고 있습니다. 극심한 물질적 결핍, 소외감, 빈곤의 순간이지만 구원의 문은 바로 머리 위에 열려 있습니다.",
       love: "함께 고난을 겪는 빈곤한 사랑. 돈 문제로 인한 비참함과 자괴감. 서로에게 상처를 주면서도 추위 속에 의지합니다.",
@@ -159,7 +159,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "6",
     keywords: ["자선과 베풂", "공정한 나눔", "저울", "스폰서", "정당한 보상", "상생"],
-    image: "assets/cards/pen_06.jpg",
+    image: "/2/assets/cards/pen_06.jpg",
     upright: {
       core: "부유한 상인이 한 손에는 정확한 저울을 들고, 무릎 꿇은 가난한 이들에게 공정하게 은화를 나누어주고 있습니다. 일방적인 동정이 아닌, 공정한 자격과 균형에 입각한 자선과 도움, 정당한 보상의 흐름입니다.",
       love: "서로에게 아낌없이 베풀고 배려하는 균형 잡힌 사랑. 힘든 연인에게 든든한 현실적 버팀목이 되어줍니다.",
@@ -187,7 +187,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "7",
     keywords: ["중간 점검", "수확의 평가", "기다림", "노력 대비 수익성 고민", "가지치기"],
-    image: "assets/cards/pen_07.jpg",
+    image: "/2/assets/cards/pen_07.jpg",
     upright: {
       core: "농부가 괭이에 턱을 괴고 덩굴에 주렁주렁 열린 일곱 개의 펜타클을 물끄러미 바라보고 있습니다. 열심히 땀 흘려 가꿔온 결과를 중간 점검하며, '이것이 과연 내 노력만큼의 가치가 있는가?'를 평가하는 신중한 멈춤입니다.",
       love: "이 관계를 계속 이어가는 것이 맞는지 진지하게 저울질함. 결혼을 앞두고 현실적인 조건과 감정을 냉정히 평가합니다.",
@@ -215,7 +215,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "8",
     keywords: ["장인 정신", "성실한 반복", "숙련도", "자기 계발", "묵묵한 노력", "디테일"],
-    image: "assets/cards/pen_08.jpg",
+    image: "/2/assets/cards/pen_08.jpg",
     upright: {
       core: "작업대 앞에 앉은 장인이 망치와 끌을 들고 한 땀 한 땀 동전을 정성스럽게 조각하고 있습니다. 기둥에는 이미 완성된 여섯 개의 동전이 걸려 있습니다. 요행을 바라지 않고 우직한 반복과 훈련으로 최고의 마스터가 되어가는 과정입니다.",
       love: "화려한 이벤트보다 일상에서의 꾸준하고 성실한 사랑. 서로를 위해 작은 배려를 매일 실천하는 듬직한 관계입니다.",
@@ -243,7 +243,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "9",
     keywords: ["우아한 풍요", "자수성가", "경제적 독립", "홀로 누리는 여유", "품격", "정원"],
-    image: "assets/cards/pen_09.jpg",
+    image: "/2/assets/cards/pen_09.jpg",
     upright: {
       core: "포도가 주렁주렁 열린 아름다운 저택의 정원에서 화려한 로브를 입은 귀부인이 사냥매를 손에 얹고 여유롭게 산책합니다. 타인에게 의존하지 않고 자신의 실력으로 일구어낸 자수성가와 완벽한 경제적 자유의 우아한 향유입니다.",
       love: "남에게 기대지 않는 당당하고 성숙한 연애. 혼자서도 충분히 행복하기에 더 좋은 사람을 여유롭게 고를 수 있습니다.",
@@ -271,7 +271,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "10",
     keywords: ["가문의 번영", "막대한 유산", "안정된 가업", "영구적인 부", "세대를 잇는 전통"],
-    image: "assets/cards/pen_10.jpg",
+    image: "/2/assets/cards/pen_10.jpg",
     upright: {
       core: "성문 아치 아래에 할아버지, 부부, 아이, 그리고 충성스러운 개들이 평화롭게 모여 있습니다. 열 개의 펜타클이 생명나무 문양을 이루며 가문 전체를 축복합니다. 세대를 넘어 대물림되는 거대한 부와 영구적인 번영의 완성입니다.",
       love: "양가의 전폭적인 축복 속에 이루어지는 명문가적 결혼, 대대손손 번영할 화목한 가정. 현실적이고 물질적인 완벽한 결합입니다.",
@@ -299,7 +299,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "page",
     keywords: ["성실한 학생", "현실적 배움", "종잣돈", "새로운 프로젝트 기획", "신중한 출발"],
-    image: "assets/cards/pen_11.jpg",
+    image: "/2/assets/cards/pen_11.jpg",
     upright: {
       core: "푸른 들판에 선 젊은이가 두 손으로 황금 동전을 정성스럽게 받쳐 들고 깊은 집중력으로 응시하고 있습니다. 성실하게 현실의 기술을 배우고 미래의 거대한 부를 일구어낼 착실한 학생입니다.",
       love: "성실하고 진중한 호감. 화려한 말재주는 없지만 행동 하나하나에 진심과 책임감이 묻어나는 듬직한 사람입니다.",
@@ -327,7 +327,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "knight",
     keywords: ["우직한 황소", "철저한 성실함", "책임감의 화신", "끝까지 완수함", "느리지만 확실함"],
-    image: "assets/cards/pen_12.jpg",
+    image: "/2/assets/cards/pen_12.jpg",
     upright: {
       core: "묵직한 흑마를 타고 밭 한가운데 굳건히 서서 황금 동전을 묵묵히 응시하는 기사. 속도는 느릴지라도 결코 포기하지 않고 맡은 바 책임을 100% 완수해 내는 우직한 신뢰의 화신입니다.",
       love: "말보다 묵직한 행동으로 증명하는 변함없는 사랑. 바람기 제로, 성실하고 책임감 넘치는 최고의 결혼 상대입니다.",
@@ -355,7 +355,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "queen",
     keywords: ["현모양처", "살림의 달인", "풍요로운 보살핌", "실용적인 지혜", "따뜻한 안식처"],
-    image: "assets/cards/pen_13.jpg",
+    image: "/2/assets/cards/pen_13.jpg",
     upright: {
       core: "꽃들이 만발한 정원의 석조 왕좌에 앉아 무릎 위에 황금 동전을 포근히 안고 있는 여왕. 발치에는 토끼(다산과 번영)가 뛰놉니다. 실용적인 지혜와 따뜻한 모성으로 가족과 일터를 풍요롭게 가꾸는 안주인입니다.",
       love: "맛있는 밥을 지어주고 편안한 휴식을 제공하는 따뜻한 연인. 함께 있으면 마음이 푸근해지는 최고의 배필입니다.",
@@ -383,7 +383,7 @@ const MINOR_PENTACLES_DATA = [
     elementKo: "흙 (Earth / 土)",
     rank: "king",
     keywords: ["미다스의 손", "금융 재벌", "성공한 사업가", "최고의 안정감", "물질적 왕국"],
-    image: "assets/cards/pen_14.jpg",
+    image: "/2/assets/cards/pen_14.jpg",
     upright: {
       core: "포도 넝쿨이 휘감긴 화려한 성채의 왕좌에 앉아 황금 펜타클을 굳건히 쥐고 있는 왕. 손대는 사업마다 황금으로 바꾸는 미다스의 손이자, 흔들리지 않는 거대한 물질적 제국을 다스리는 최고의 성공자입니다.",
       love: "경제적으로나 정신적으로 완벽한 기둥이 되어주는 파트너. 약속을 지키며 평생 동안 물질적 안락함을 보장해 주는 든든한 배우자입니다.",

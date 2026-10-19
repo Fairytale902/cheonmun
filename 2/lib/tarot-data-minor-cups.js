@@ -19,7 +19,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "ace",
     keywords: ["사랑의 시작", "마음의 충만", "감정의 분출", "치유", "영적 은혜", "수용"],
-    image: "assets/cards/cup_01.jpg",
+    image: "/2/assets/cards/cup_01.jpg",
     upright: {
       core: "구름 속 신의 손에서 넘쳐흐르는 성배에서 다섯 줄기의 물(오감과 영성)이 쏟아져 내립니다. 메말랐던 마음에 순수한 사랑과 공감, 치유의 샘물이 솟구치는 감동의 시작입니다.",
       love: "가슴 벅찬 진정한 사랑의 시작, 고백의 성공, 영혼의 떨림. 재회를 바란다면 서운함이 눈 녹듯 사라지고 따뜻한 화해의 눈물을 흘리게 됩니다.",
@@ -47,7 +47,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "2",
     keywords: ["상호 교감", "영혼의 단짝", "서약", "파트너십", "화해", "대등한 교류"],
-    image: "assets/cards/cup_02.jpg",
+    image: "/2/assets/cards/cup_02.jpg",
     upright: {
       core: "남녀가 서로의 컵을 마주 들고 서약을 나눕니다. 머리 위에는 치유와 지혜의 헤르메스 지팡이와 사자 머리가 축복을 내립니다. 완벽한 1:1 대등한 교감과 영혼의 결합입니다.",
       love: "연애의 황금기. 서로의 눈빛만 봐도 통하는 깊은 신뢰와 끌림. 재회 운에서는 오해가 풀리고 서로의 소중함을 절감하며 극적으로 화해합니다.",
@@ -75,7 +75,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "3",
     keywords: ["축배", "친목", "친구들의 연대", "파티", "기쁨의 나눔", "치유의 연대"],
-    image: "assets/cards/cup_03.jpg",
+    image: "/2/assets/cards/cup_03.jpg",
     upright: {
       core: "세 여인이 과일이 익어가는 정원에서 서로의 컵을 높이 들고 춤을 춥니다. 친구, 동료들과 함께 마음을 터놓고 웃고 떠들며 슬픔을 치유하고 기쁨을 나누는 축제의 순간입니다.",
       love: "친구에서 연인으로의 발전, 모임이나 파티에서 자연스럽게 싹트는 인연. 연인 관계라면 친구들과 어울리며 즐거운 추억을 만듭니다.",
@@ -103,7 +103,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "4",
     keywords: ["권태", "매너리즘", "무관심", "눈앞의 기회를 외면함", "마음의 벽"],
-    image: "assets/cards/cup_04.jpg",
+    image: "/2/assets/cards/cup_04.jpg",
     upright: {
       core: "나무 아래 팔짱을 끼고 앉은 청년이 앞에 놓인 세 개의 잔을 무심하게 바라보고 있습니다. 구름 속에서 새로운 네 번째 잔이 다가오고 있지만, 권태와 피로에 찌들어 새로운 기회를 외면하고 있습니다.",
       love: "연애에 대한 흥미 상실, 지독한 권태기. 다가오는 이성이 있어도 '다 귀찮다'며 밀어냅니다. 재회에서는 상대의 연락을 받고도 심드렁하게 반응합니다.",
@@ -131,7 +131,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "5",
     keywords: ["상실의 슬픔", "후회", "비탄", "남겨진 두 개의 잔", "다리를 건너야 함"],
-    image: "assets/cards/cup_05.jpg",
+    image: "/2/assets/cards/cup_05.jpg",
     upright: {
       core: "검은 망토를 두른 사람이 엎질러진 세 개의 잔을 보며 고개를 숙이고 깊은 슬픔에 잠겨 있습니다. 그러나 그의 뒤에는 여전히 온전한 두 개의 잔이 서 있으며, 강 너머 안전한 성채로 이어지는 다리가 놓여 있습니다.",
       love: "이별의 아픔, 배신감, 뼈저린 후회. 지나간 인연에 얽매여 눈물 흘리느라 지금 곁에 있는 소중한 사람들을 보지 못하고 있습니다.",
@@ -159,7 +159,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "6",
     keywords: ["노스탤지어", "순수한 추억", "어린 시절", "옛 인연의 재회", "선물", "순수"],
-    image: "assets/cards/cup_06.jpg",
+    image: "/2/assets/cards/cup_06.jpg",
     upright: {
       core: "동화 같은 오래된 마을에서 소년이 흰 꽃이 담긴 컵을 어린 소녀에게 건넵니다. 순수했던 어린 시절의 기억, 아무런 대가 없이 사랑을 베풀던 순수한 마음, 과거로부터 찾아오는 반가운 인연입니다.",
       love: "첫사랑, 학창 시절 친구, 혹은 옛 연인과의 아련한 재회. 계산 없이 순수하게 상대를 아끼던 감정이 되살아납니다.",
@@ -187,7 +187,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "7",
     keywords: ["환상", "망상", "선택지의 범람", "신기루", "현실성 결여", "우유부단"],
-    image: "assets/cards/cup_07.jpg",
+    image: "/2/assets/cards/cup_07.jpg",
     upright: {
       core: "구름 위에 떠 있는 일곱 개의 잔 속에 보석, 성채, 승리의 월계관, 유혹의 뱀, 가면 등이 가득 담겨 있습니다. 눈앞에 화려한 환상과 선택지가 넘쳐나지만, 실체 없는 신기루에 홀려 결정을 내리지 못하고 있습니다.",
       love: "비현실적인 이상형에 갇힌 짝사랑, 어장관리 속의 혼란. 겉모습만 보고 상대방에게 온갖 환상을 덧씌웠다가 실망할 수 있습니다.",
@@ -215,7 +215,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "8",
     keywords: ["자발적 떠남", "미련을 뒤로함", "더 높은 차원의 탐구", "작별", "새로운 여정"],
-    image: "assets/cards/cup_08.jpg",
+    image: "/2/assets/cards/cup_08.jpg",
     upright: {
       core: "정성껏 쌓아 올린 여덟 개의 잔을 뒤로하고, 지팡이를 짚은 사람이 달밤에 산을 향해 묵묵히 걸어 올라갑니다. 물질적으로나 감정적으로 남부러울 것 없어 보이지만, 영혼의 공허함을 채우기 위해 모든 것을 내려놓고 더 높은 진리를 찾아 떠나는 숭고한 결단입니다.",
       love: "정든 연인과의 가슴 아픈 그러나 단호한 이별. 상대가 싫어서가 아니라, 더 이상 이 관계에서 영혼의 성장을 이룰 수 없음을 알기에 조용히 짐을 쌉니다.",
@@ -243,7 +243,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "9",
     keywords: ["위시 카드 (Wish Card)", "소원 성취", "감정적 포만감", "자족", "행복", "풍요"],
-    image: "assets/cards/cup_09.jpg",
+    image: "/2/assets/cards/cup_09.jpg",
     upright: {
       core: "아홉 개의 빛나는 황금 잔을 배경으로 넉넉한 체구의 상인이 만족스러운 미소를 지으며 팔짱을 끼고 앉아 있습니다. 타로 78장 중 가장 대표적인 '소원 성취(Wish Card)'로, 당신이 간절히 바라던 꿈이 완벽하게 실현되는 최고의 카드입니다.",
       love: "이상형과의 연애 성공, 꿈꿔왔던 사람과의 결혼, 짝사랑의 완벽한 결실. 바라던 대로 연애가 술술 풀리는 최고의 행복입니다.",
@@ -271,7 +271,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "10",
     keywords: ["영원한 행복", "이상적인 가정", "무지개", "완벽한 조화", "축복", "평화"],
-    image: "assets/cards/cup_10.jpg",
+    image: "/2/assets/cards/cup_10.jpg",
     upright: {
       core: "푸른 언덕 위에서 부부가 서로를 감싸 안고 하늘에 뜬 열 개의 컵 무지개를 바라보며, 아이들은 즐겁게 춤을 춥니다. 개인의 행복을 넘어 온 가족과 공동체가 완전한 평화와 사랑 속에 안식하는 궁극의 축복입니다.",
       love: "완벽한 가정을 이루는 행복한 결혼, 영원한 헌신, 갈등이 완전히 종식된 평화로운 안식처. 함께 늙어가고 싶은 동반자와의 만남입니다.",
@@ -299,7 +299,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "page",
     keywords: ["감성적인 소식", "순수한 고백", "상상력", "직관적 꿈", "귀여운 호감"],
-    image: "assets/cards/cup_11.jpg",
+    image: "/2/assets/cards/cup_11.jpg",
     upright: {
       core: "바닷가에서 화려한 옷을 입은 소년이 컵에서 불쑥 튀어나온 물고기를 신기한 듯 바라봅니다. 순수한 상상력과 따뜻한 감성, 예상치 못한 귀여운 사랑의 소식을 상징합니다.",
       love: "설레는 고백, 수줍은 호감 표현, 예상치 못한 썸. 아이처럼 순수하고 다정한 접근이 상대방의 닫힌 마음을 녹입니다.",
@@ -327,7 +327,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "knight",
     keywords: ["백마 탄 왕자", "로맨틱한 제안", "청혼", "감성적 매력", "평화의 사절"],
-    image: "assets/cards/cup_12.jpg",
+    image: "/2/assets/cards/cup_12.jpg",
     upright: {
       core: "날개 달린 투구를 쓴 기사가 백마를 타고 강가를 천천히 거닐며 사랑의 성배를 정중히 내밉니다. 당신의 마음을 사로잡을 로맨틱한 제안과 따뜻한 화해의 손길입니다.",
       love: "백마 탄 왕자/공주 같은 이상적인 상대의 등장! 달콤한 고백, 프러포즈, 로맨틱한 데이트. 여심/남심을 완벽히 저격합니다.",
@@ -355,7 +355,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "queen",
     keywords: ["깊은 공감", "직관의 여왕", "헌신적 사랑", "치유자", "예술적 감수성"],
-    image: "assets/cards/cup_13.jpg",
+    image: "/2/assets/cards/cup_13.jpg",
     upright: {
       core: "바닷가 조개껍데기 왕좌에 앉아 뚜껑 덮인 화려한 성배를 응시하는 여왕. 타인의 아픔을 제 살처럼 느끼는 깊은 공감 능력과 신비로운 직관력을 지닌 위대한 치유자입니다.",
       love: "영혼을 품어주는 헌신적이고 따뜻한 사랑. 상대방의 말 못 할 상처까지 보듬어주는 성숙한 안식처가 되어줍니다.",
@@ -383,7 +383,7 @@ const MINOR_CUPS_DATA = [
     elementKo: "물 (Water / 水)",
     rank: "king",
     keywords: ["감정의 통제", "지혜로운 멘토", "자비로운 지도자", "평정심", "외유내강"],
-    image: "assets/cards/cup_14.jpg",
+    image: "/2/assets/cards/cup_14.jpg",
     upright: {
       core: "거친 파도가 치는 바다 한가운데 떠 있는 왕좌에 앉아 흔들림 없이 컵과 홀을 쥐고 있는 왕. 격렬한 감정의 파도를 완벽한 지혜와 평정심으로 다스리는 외유내강의 리더입니다.",
       love: "바다처럼 넓은 품을 가진 이상적인 배우자감. 어떤 갈등 속에서도 화내지 않고 성숙하게 품어주는 든든한 사랑입니다.",

@@ -364,7 +364,7 @@
       cardEl.style.setProperty('--rot', angle.toFixed(2));
       cardEl.style.transform = `translate(-50%, -50%) rotate(${angle.toFixed(2)}deg)`;
       cardEl.style.zIndex = String(i + 1);
-      cardEl.style.backgroundImage = "url('assets/cards/card_back.jpg')";
+      cardEl.style.backgroundImage = "url('/2/assets/cards/card_back.jpg')";
 
       cardEl.addEventListener('click', () => handlePickFanCard(i, cardEl));
       fanStage.appendChild(cardEl);
@@ -448,7 +448,7 @@
     const slotEl = document.getElementById(`traySlot_${slotIdx}`);
     if (slotEl) {
       slotEl.classList.add('filled');
-      slotEl.style.backgroundImage = "url('assets/cards/card_back.jpg')";
+      slotEl.style.backgroundImage = "url('/2/assets/cards/card_back.jpg')";
     }
 
     const curCount = APP_STATE.pickedCards.length;

@@ -19,7 +19,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "ace",
     keywords: ["창조적 영감", "새로운 열정", "도전", "돌파구", "원초적 생명력", "추진"],
-    image: "assets/cards/wan_01.jpg",
+    image: "/2/assets/cards/wan_01.jpg",
     upright: {
       core: "구름 속에서 뻗어 나온 신의 손이 살아 숨 쉬는 지팡이를 쥐여줍니다. 심장을 뛰게 만드는 새로운 아이디어와 억누를 수 없는 열정의 불꽃이 점화되는 순간입니다.",
       love: "첫눈에 반하는 번개 같은 설렘, 잠자고 있던 연애 세포의 각성. 열정적이고 주도적인 접근이 상대를 사로잡습니다. 재회에서는 새로운 시작의 불씨가 댕겨집니다.",
@@ -47,7 +47,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "2",
     keywords: ["원대한 계획", "해외 진출", "영토 확장", "성채 위의 고뇌", "선택"],
-    image: "assets/cards/wan_02.jpg",
+    image: "/2/assets/cards/wan_02.jpg",
     upright: {
       core: "성벽 위에 서서 한 손에는 지구본을 쥐고 먼 바다를 바라봅니다. 이미 확보한 성취에 안주하지 않고, 더 넓은 미지의 세계로 영토를 확장하려는 원대한 야망의 단계입니다.",
       love: "기존의 관계를 더 깊은 미래로 발전시키기 위한 진지한 계획. 장거리 연애의 조율, 혹은 함께할 미래의 청사진을 그립니다.",
@@ -75,7 +75,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "3",
     keywords: ["배를 띄움", "무역과 확장", "비전의 가시화", "협력의 결실", "도약"],
-    image: "assets/cards/wan_03.jpg",
+    image: "/2/assets/cards/wan_03.jpg",
     upright: {
       core: "바다를 향해 띄워 보낸 무역선들이 황금빛 노을을 받으며 돌아오고 있습니다. 당신의 선견지명과 용기 있는 투자가 현실적인 결실로 다가오는 확장과 도약의 순간입니다.",
       love: "장거리 연애의 결실, 서로의 가치관을 넓혀주는 발전적 관계. 함께 여행을 떠나거나 미래를 구체화하기에 최적입니다.",
@@ -103,7 +103,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "4",
     keywords: ["축하", "안정된 안식처", "결혼", "홈커밍", "공동체의 축제", "성취"],
-    image: "assets/cards/wan_04.jpg",
+    image: "/2/assets/cards/wan_04.jpg",
     upright: {
       core: "화려한 꽃과 과일로 장식된 네 개의 기둥 아래에서 축제가 열립니다. 1차 관문을 성공적으로 통과하고 사랑하는 이들과 함께 성취의 기쁨을 나누는 가장 행복하고 평화로운 안식처입니다.",
       love: "결혼식, 약혼, 동거, 집들이. 가족과 친지들의 전폭적인 축복 속에 사랑이 가장 안전하고 견고한 결실을 맺습니다.",
@@ -131,7 +131,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "5",
     keywords: ["경쟁", "의견 충돌", "치열한 난투", "소모적 논쟁", "성장을 위한 모의전"],
-    image: "assets/cards/wan_05.jpg",
+    image: "/2/assets/cards/wan_05.jpg",
     upright: {
       core: "다섯 청년이 각자의 막대기를 들고 뒤엉켜 싸우고 있습니다. 살벌한 전쟁이라기보다는 규칙 없는 모의전이나 스포츠처럼, 각자의 개성과 에고가 부딪히며 치열한 경쟁과 혼란이 벌어지는 상황입니다.",
       love: "자존심 싸움, 사소한 말꼬리 잡기, 경쟁자의 등장. 서로 지기 싫어 팽팽하게 맞서며 피로감을 자초합니다.",
@@ -159,7 +159,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "6",
     keywords: ["승리", "대중적 찬사", "금의환향", "인정과 자부심", "리더십"],
-    image: "assets/cards/wan_06.jpg",
+    image: "/2/assets/cards/wan_06.jpg",
     upright: {
       core: "월계관을 쓴 기사가 백마를 타고 당당하게 행진하며 군중들의 열렬한 환호를 받습니다. 난관을 극복하고 공개적인 승리와 명예를 쟁취한 영광의 순간입니다.",
       love: "연애 시장에서의 압도적인 인기와 매력. 짝사랑의 쟁취, 연인과의 관계에서 당당한 주도권을 쥐고 자부심을 느낍니다.",
@@ -187,7 +187,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "7",
     keywords: ["고지 점령", "신념의 사수", "1대 다의 방어", "용기", "불굴의 투지"],
-    image: "assets/cards/wan_07.jpg",
+    image: "/2/assets/cards/wan_07.jpg",
     upright: {
       core: "언덕 위에 홀로 서서 아래에서 찌르고 올라오는 여섯 개의 막대기를 막아내고 있습니다. 비록 수적으로는 불리하지만 당신은 이미 유리한 고지를 점령하고 있으며, 확고한 신념으로 자리를 지켜낼 힘이 있습니다.",
       love: "주변의 반대나 라이벌들의 방해 공작을 이겨내고 사랑을 지켜냄. 상대방과의 관계에서 나의 확고한 가치관과 기준을 사수해야 합니다.",
@@ -215,7 +215,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "8",
     keywords: ["신속함", "급물살", "희소식", "빠른 이동", "막힘없는 전진", "스피드"],
-    image: "assets/cards/wan_08.jpg",
+    image: "/2/assets/cards/wan_08.jpg",
     upright: {
       core: "맑은 하늘을 가르며 여덟 개의 화살 같은 막대기가 거침없이 날아갑니다. 정체되었던 모든 상황이 풀리고, 눈 깜짝할 사이에 소식과 변화가 쏟아져 들어오는 초고속 전개의 순간입니다.",
       love: "기다리던 상대방의 전격적인 연락, 눈 깜짝할 사이에 썸에서 연인으로 직진하는 스피드. 재회 운에서는 갑작스러운 장문의 카톡이 날아옵니다.",
@@ -243,7 +243,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "9",
     keywords: ["마지막 버티기", "경계 태세", "상처 입은 전사", "근성", "회복력"],
-    image: "assets/cards/wan_09.jpg",
+    image: "/2/assets/cards/wan_09.jpg",
     upright: {
       core: "머리에 붕대를 감은 전사가 마지막 막대기를 쥐고 뒤편의 울타리를 지키며 경계하고 있습니다. 수많은 전투로 지치고 상처 입었지만, 그는 결코 쓰러지지 않았으며 마지막 한 고비만 넘기면 완전한 승리가 기다립니다.",
       love: "과거의 연애 상처로 인해 마음의 문에 빗장을 걸어 잠근 상태. 상대를 완전히 믿지 못하고 의심하지만, 이 고통스러운 방어막을 조금만 내려놓으면 진정한 안식이 찾아옵니다.",
@@ -271,7 +271,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "10",
     keywords: ["과중한 책임", "압박감", "번아웃", "목전의 성채", "권한 위임의 필요"],
-    image: "assets/cards/wan_10.jpg",
+    image: "/2/assets/cards/wan_10.jpg",
     upright: {
       core: "열 개의 무거운 막대기 묶음을 홀로 짊어지고 허리를 잔뜩 굽힌 채 마을을 향해 걸어갑니다. 너무 많은 짐을 혼자 떠안아 숨이 턱까지 차올랐지만, 저 앞에 목적지인 성채가 보이고 있습니다.",
       love: "혼자서만 모든 것을 감당하느라 지쳐버린 연애. 데이트 비용, 감정 쓰레기통, 상대방 수발까지 도맡다 사랑이 의무와 짐으로 변했습니다.",
@@ -299,7 +299,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "page",
     keywords: ["새로운 소식", "호기심", "열정적인 학생", "탐험가", "메신저"],
-    image: "assets/cards/wan_11.jpg",
+    image: "/2/assets/cards/wan_11.jpg",
     upright: {
       core: "사막 한가운데서 푸른 잎이 돋아나는 지팡이를 호기심 어린 눈으로 바라보는 소년. 새로운 배움과 모험에 가슴 설레는 열정적인 전령을 상징합니다.",
       love: "설레는 첫 연락, 귀여운 대시, 호기심으로 시작되는 썸. 풋풋하고 솔직한 감정 표현이 매력으로 작용합니다.",
@@ -327,7 +327,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "knight",
     keywords: ["맹렬한 돌격", "행동파", "열정적인 구애", "출장과 이동", "자신감"],
-    image: "assets/cards/wan_12.jpg",
+    image: "/2/assets/cards/wan_12.jpg",
     upright: {
       core: "불타는 갈기를 가진 말을 타고 모래언덕을 향해 맹렬하게 질주하는 기사. 거칠 것 없는 자신감과 압도적인 추진력으로 목표를 향해 돌진합니다.",
       love: "불도저 같은 저돌적인 대시. 심장을 뛰게 만드는 뜨겁고 정열적인 사랑. 지체하지 않고 상대에게 직진합니다.",
@@ -355,7 +355,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "queen",
     keywords: ["따뜻한 카리스마", "자신감 넘치는 매력", "해바라기", "사교성", "독립심"],
-    image: "assets/cards/wan_13.jpg",
+    image: "/2/assets/cards/wan_13.jpg",
     upright: {
       core: "사자 문양이 새겨진 왕좌에 앉아 한 손에는 해바라기를 쥐고 당당하게 미소 짓는 여왕. 활기차고 따뜻하며, 주위 사람들에게 영감을 불어넣는 매력적인 리더입니다.",
       love: "당당하고 매력 넘치는 연애. 상대를 쥐락펴락하는 주도권과 함께 따뜻한 애정을 쏟아붓습니다. 인기 폭발.",
@@ -383,7 +383,7 @@ const MINOR_WANDS_DATA = [
     elementKo: "불 (Fire / 火)",
     rank: "king",
     keywords: ["비전통합 리더", "사업가", "결단력", "영향력", "카리스마", "도전적 성취"],
-    image: "assets/cards/wan_14.jpg",
+    image: "/2/assets/cards/wan_14.jpg",
     upright: {
       core: "불꽃 모양의 왕관을 쓰고 도마뱀 문양의 로브를 입은 채 불타는 왕좌에 앉아 있는 왕. 거시적인 비전을 제시하고 조직을 성공으로 이끄는 타고난 사업가이자 리더입니다.",
       love: "성숙하고 열정적인 동반자. 연인에게 확고한 미래를 약속하고 든든하게 지켜주는 믿음직한 사랑입니다.",
