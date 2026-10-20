@@ -1488,7 +1488,7 @@ function setHook(key, text) {
 const REPORT_PRODUCTS = {
   newyear: { title: '세운(歲運) 총운 & 12개월 월별 터닝포인트', price: 22500 },
   master:  { title: '평생 총운 & 10년 대운 · 의명진단 마스터팩', price: 29500 },
-  match:   { title: '1:1 심층 사주 궁합 & 에로틱 속궁합', price: 24500 },
+  match:   { title: '1:1 심층 사주 궁합', price: 24500 },
   career:  { title: '이직 · 취업 · 창업 커리어 천직 비서', price: 26000 }
 };
 const BUNDLE_MIN_COUNT = 2;
