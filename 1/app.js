@@ -1180,6 +1180,17 @@ function renderFullResult(name, year, month, day, timeStr, gender = 'female', ca
   document.getElementById('resUserTitle').innerHTML = `${name}님의 일주는 <span class="gold-gradient">${natureName}</span>입니다.`;
   document.getElementById('resShortSummary').textContent = climate.quote;
 
+  // 운세위키 역공학: 결제 상단 결정적 시기 P.S. 개인화 동적 바인딩
+  const teaserNameEl = document.getElementById('dynamicTeaserName');
+  if (teaserNameEl) teaserNameEl.textContent = name;
+  const psTextEl = document.getElementById('dynamicPsText');
+  if (psTextEl) {
+    const concernPhrase = userConcernDetail ? `"${userConcernDetail}" 고민` : '지금 겪고 계신 고민';
+    psTextEl.innerHTML = `<strong>${name}</strong>님의 사주 원국과 2026 병오(丙午) 세운 교차 분석 결과:<br>` +
+      `밤잠을 설치시던 ${concernPhrase}이 풀리는 결정적 시기는 <span class="blur-spoiler">「 2026년 ▓월 ▓일 ▓▓대운 전환기 」</span>로 판정되었습니다.<br>` +
+      `<span class="ps-sub">86p 정통 서책 감명서에서 ${name}님의 고민 종결 로드맵을 먼저 확인하십시오.</span>`;
+  }
+
   // 신강/신약 배지 & 계절 배지
   const strengthBadgeEl = document.getElementById('resStrengthBadge');
   if (strengthBadgeEl) {
