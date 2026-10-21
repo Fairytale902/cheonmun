@@ -4223,6 +4223,238 @@ body {
 }
 
 /* ==========================================================================
+   재능관 역공학: 리프레이밍 독심술 박스 · 과거 회한 연도 · 붉은 봉인 티저
+   ========================================================================== */
+.coldread-box {
+  margin: 22px 0 26px;
+  background: linear-gradient(160deg, #f3e8cf 0%, #e9dab8 100%);
+  color: #33281a;
+  border: 1px solid #cbb996;
+  border-radius: 14px;
+  padding: 22px 22px 18px;
+  font-family: var(--font-serif);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45), inset 0 0 40px rgba(120, 90, 40, 0.12);
+  position: relative;
+}
+
+.cr-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px dashed #b9a37a;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+
+.cr-seal {
+  flex-shrink: 0;
+  width: 54px;
+  height: 54px;
+  border: 2.5px solid #b23a26;
+  color: #b23a26;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1.15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transform: rotate(-6deg);
+  background: rgba(178, 58, 38, 0.06);
+}
+
+.cr-kicker {
+  display: block;
+  font-size: 0.78rem;
+  color: #8b7a5c;
+  margin-bottom: 4px;
+  font-family: var(--font-body);
+}
+
+.cr-head h4 {
+  font-size: 1.12rem;
+  font-weight: 800;
+  line-height: 1.45;
+  color: #2a1f12;
+  margin: 0;
+}
+
+.cr-body p {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin: 0 0 8px;
+  color: #3d3020;
+  word-break: keep-all;
+}
+
+.cr-body .cr-punch {
+  font-weight: 800;
+  color: #96311f;
+}
+
+.cr-body .cr-strength {
+  font-size: 0.88rem;
+  color: #5f4e37;
+  border-left: 3px solid #b23a26;
+  padding-left: 10px;
+  margin-top: 10px;
+}
+
+.cr-regret {
+  display: flex;
+  gap: 14px;
+  margin-top: 16px;
+  background: #1d1309;
+  color: #e9dcbe;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.cr-regret-year {
+  flex-shrink: 0;
+  width: 74px;
+  text-align: center;
+  border-right: 1px solid rgba(217, 164, 91, 0.35);
+  padding-right: 12px;
+}
+
+.cr-y-hanja {
+  display: block;
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #d9a45b;
+  letter-spacing: 2px;
+}
+
+.cr-y-num {
+  display: block;
+  font-size: 0.7rem;
+  color: #c9b892;
+  margin-top: 4px;
+  line-height: 1.35;
+}
+
+.cr-regret-text p {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin: 0 0 6px;
+  word-break: keep-all;
+}
+
+.cr-regret-text strong {
+  color: #f5d061;
+}
+
+.cr-next {
+  margin-top: 8px !important;
+  font-weight: 700;
+}
+
+.cr-blur,
+.seal-blur {
+  display: inline-block;
+  filter: blur(4px);
+  user-select: none;
+  color: #f5d061;
+  background: rgba(245, 208, 97, 0.12);
+  padding: 0 6px;
+  border-radius: 4px;
+  transition: filter 0.3s ease;
+}
+
+.cr-blur:hover,
+.seal-blur:hover {
+  filter: blur(2.5px);
+}
+
+/* 리포트 카드 내부 봉인 리스트 */
+.seal-lock-list {
+  margin: 12px 0 10px;
+  background: rgba(18, 11, 5, 0.55);
+  border: 1px solid rgba(178, 58, 38, 0.35);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.seal-lock-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #e9dcbe;
+  margin-bottom: 8px;
+}
+
+.seal-stamp-mini {
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid #dc4a33;
+  color: #dc4a33;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  transform: rotate(-8deg);
+}
+
+.seal-lock-item {
+  display: flex;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px dashed rgba(233, 220, 190, 0.14);
+}
+
+.seal-lock-item:first-of-type {
+  border-top: none;
+}
+
+.seal-lock-item > i {
+  color: #dc4a33;
+  font-size: 0.78rem;
+  margin-top: 4px;
+}
+
+.seal-lock-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.seal-lock-tease {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  word-break: keep-all;
+}
+
+.pay-continue-sub {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--gold-primary);
+  margin: 8px 0 0;
+  opacity: 0.9;
+}
+
+@media (max-width: 480px) {
+  .coldread-box { padding: 18px 16px 14px; }
+  .cr-head h4 { font-size: 1rem; }
+  .cr-regret { flex-direction: column; }
+  .cr-regret-year {
+    width: auto;
+    border-right: none;
+    border-bottom: 1px solid rgba(217, 164, 91, 0.35);
+    padding: 0 0 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+}
+
+/* ==========================================================================
    인쇄 및 PDF 저장 전용 스타일 (@media print - A4 황실 감명서 규격)
    ========================================================================== */
 @media print {

@@ -1185,11 +1185,14 @@ function renderFullResult(name, year, month, day, timeStr, gender = 'female', ca
   if (teaserNameEl) teaserNameEl.textContent = name;
   const psTextEl = document.getElementById('dynamicPsText');
   if (psTextEl) {
-    const concernPhrase = userConcernDetail ? `"${userConcernDetail}" 고민` : '지금 겪고 계신 고민';
+    const concernPhrase = userConcernDetail ? `밤잠을 설치시던 "${crEscape(userConcernDetail)}" 고민` : '지금 겪고 계신 고민';
     psTextEl.innerHTML = `<strong>${name}</strong>님의 사주 원국과 2026 병오(丙午) 세운 교차 분석 결과:<br>` +
-      `밤잠을 설치시던 ${concernPhrase}이 풀리는 결정적 시기는 <span class="blur-spoiler">「 2026년 ▓월 ▓일 ▓▓대운 전환기 」</span>로 판정되었습니다.<br>` +
+      `${concernPhrase}이 풀리는 결정적 시기는 <span class="blur-spoiler">「 2026년 ▓월 ▓일 ▓▓대운 전환기 」</span>로 판정되었습니다.<br>` +
       `<span class="ps-sub">86p 정통 서책 감명서에서 ${name}님의 고민 종결 로드맵을 먼저 확인하십시오.</span>`;
   }
+
+  // 재능관 역공학: 단점→재능 리프레이밍 독심술 · 과거 회한 연도 트리거 · 리포트 봉인 티저
+  renderColdReadAndSeals(name, year, dayMaster, strength);
 
   // 신강/신약 배지 & 계절 배지
   const strengthBadgeEl = document.getElementById('resStrengthBadge');
@@ -1523,6 +1526,181 @@ function calcCart() {
   return { items, subtotal, discount, total: subtotal - discount };
 }
 
+// ==========================================================================
+// 재능관 역공학 모듈: 리프레이밍 독심술 / 과거 회한 연도 / 봉인(封印) 티저
+// ==========================================================================
+const CR_ELEMENT_NAMES = ['木(목)', '火(화)', '土(토)', '金(금)', '水(수)'];
+const CR_BRANCH_ELEMENT = [4, 2, 0, 0, 2, 1, 1, 2, 3, 3, 2, 4]; // 자축인묘진사오미신유술해
+
+// 일간 오행별 '단점처럼 보이던 재능' 리프레이밍 (목·화·토·금·수)
+const COLDREAD_BY_ELEMENT = [
+  {
+    trait: '시작은 누구보다 빠른데, 마무리 앞에서 힘이 빠지는 분',
+    lines: [
+      '새 일을 벌일 때는 눈빛부터 달라지는데, 반쯤 오면 이상하게 손이 느려지지요.',
+      '끈기가 없어서가 아닙니다. 아직 끝까지 키워낼 만한 \'내 나무\'를 못 만난 것입니다.',
+      '남들 사는 걸 보면 문득 "나는 이대로 괜찮은가" 싶은 밤이 있으셨지요. 아니신가요?'
+    ],
+    talent: '없던 것을 세우고 사람을 키워내는 재능'
+  },
+  {
+    trait: '마음이 얼굴에 그대로 드러나는 분',
+    lines: [
+      '좋아하던 일도 재미가 식으면 손이 잘 안 가고, 그런 자신을 탓한 적이 많으셨을 겁니다.',
+      '변덕이 아닙니다. 사람의 마음을 움직이는 불(火)이 꺼진 자리에서는 원래 힘이 안 나는 법입니다.',
+      '요즘도 "내가 진짜 하고 싶던 게 뭐였더라" 싶을 때가 있으시지요. 아니신가요?'
+    ],
+    talent: '사람들 앞에서 보여주고 마음을 데우는 재능'
+  },
+  {
+    trait: '힘든 티를 잘 내지 않는 분',
+    lines: [
+      '다들 당신에게 기대는데, 정작 당신이 기댈 곳은 마땅치 않았지요.',
+      '무던해서가 아닙니다. 흔들리는 자리의 가운데를 잡아주는 무게가 당신 사주에 있어서입니다.',
+      '혼자 있을 때 문득 "나도 좀 지친다" 싶은 순간이 있으시지요. 아니신가요?'
+    ],
+    talent: '사람과 자리를 붙잡아 주는 중심의 재능'
+  },
+  {
+    trait: '싫은 소리를 삼키고 돌아오는 날이 많은 분',
+    lines: [
+      '할 말을 참고 온 날은, 밤에 그 말이 자꾸 떠올라 잠을 설치셨을 겁니다.',
+      '약해서가 아닙니다. 아닌 것을 끊어낼 강단이 있기에, 함부로 칼을 꺼내지 않는 것입니다.',
+      '헌데 당신이 참아 준 덕에 굴러간 일을 알아주는 사람이 없어 서운하셨지요. 아니신가요?'
+    ],
+    talent: '끝을 보고 매듭짓는 결단의 재능'
+  },
+  {
+    trait: '움직이기 전에 머릿속으로 수십 번 그려 보는 분',
+    lines: [
+      '남들 눈에는 "생각만 많은 사람"으로 보일 때도 있었을 겁니다.',
+      '나쁜 게 아닙니다. 남들이 못 보는 흐름을 미리 읽는 머리를, 아직 쓸 자리를 못 만난 것입니다.',
+      '혼자 고민만 하다 때를 놓친 일이 하나쯤 있으시지요. 아니신가요?'
+    ],
+    talent: '남들보다 먼저 흐름을 읽는 통찰의 재능'
+  }
+];
+
+// 리포트별 붉은 봉인 티저: [제목, 공개 문장, 블러 결정타]
+const SEAL_TEASERS = {
+  newyear: [
+    ['2026년 판이 뒤집히는 달', '12개월 중 단 한 달, 움직이면 1년치 성과가 몰리는 달이 있습니다. 그 달은', '▓월 ▓▓ 절입 직후입니다'],
+    ['돈이 새는 달 · 붙잡아야 할 계약', '이 달에 들어오는 제안은 겉보기와 다릅니다. 반드시', '▓▓를 확인하고 서명하십시오'],
+    ['귀인이 들어오는 방향', '올해 당신을 끌어올려 줄 사람은', '▓▓쪽에서 ▓▓의 얼굴로 옵니다']
+  ],
+  master: [
+    ['타고난 그릇의 정체', '당신 안에는 남들이 십 년 걸려 얻는 것을', '처음부터 지니고 태어난 자리가 있습니다'],
+    ['여태 제 크기로 못 산 이유', '재능이 모자라서가 아닙니다. 당신 앞을', '막아 온 기운이 따로 있었습니다'],
+    ['재능이 돈이 되는 때', '앞으로 10년 안에 세 번 옵니다. 그 첫 번째가', '이미 가까이 와 있습니다']
+  ],
+  match: [
+    ['이 사람과 맞는 이유, 어긋나는 이유', '두 사주의 결핍은 정확히 한 글자에서 맞물립니다. 그 글자는', '▓(▓)입니다'],
+    ['관계가 흔들리는 시기', '두 사람 사이에 금이 가는 시기는 따로 정해져 있습니다. 그때는', '▓▓년 ▓월입니다'],
+    ['옆에 두면 안 되는 사람', '이 사람 옆에 있으면 당신 운이 피지 못합니다.', '그 얼굴이 여기 적혀 있습니다']
+  ],
+  career: [
+    ['반드시 대성하는 일', '이 일을 하면 반드시 이름을 냅니다. 그 일은', '당신 여덟 글자에 그려져 있습니다'],
+    ['지금 회사, 남을까 떠날까', '판정은 이미 나와 있습니다. 결론은', '「 ▓▓ 」입니다'],
+    ['연봉이 뛰는 이직 타이밍', '문서운과 관운이 동시에 열리는 구간은', '▓▓년 ▓월부터 ▓개월간입니다']
+  ]
+};
+
+function crEscape(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function crYearElements(y) {
+  const stemIdx = ((y - 4) % 10 + 10) % 10;
+  const branchIdx = ((y - 4) % 12 + 12) % 12;
+  return {
+    stemEl: Math.floor(stemIdx / 2),
+    branchEl: CR_BRANCH_ELEMENT[branchIdx],
+    ganzhi: `${CHEONGAN[stemIdx]}${JIJI[branchIdx]}`,
+    ganzhiHanja: `${CHEONGAN_HANJA[stemIdx]}${JIJI_HANJA[branchIdx]}`
+  };
+}
+
+function crKoreanAge(n) {
+  if (n < 10 || n >= 80) return `${n}세`;
+  const tens = ['', '열', '스물', '서른', '마흔', '쉰', '예순', '일흔'];
+  const ones = ['', '하나', '둘', '셋', '넷', '다섯', '여섯', '일곱', '여덟', '아홉'];
+  const t = Math.floor(n / 10), o = n % 10;
+  return tens[t] + (o ? ones[o] : '');
+}
+
+function renderColdReadAndSeals(name, birthYear, dayMaster, strength) {
+  const safeName = crEscape(name);
+  const dmEl = Math.floor(dayMaster / 2);
+  const talentEl = (dmEl + 1) % 5; // 일간이 생(生)하는 식상 오행 = 재능이 흘러나가는 통로
+  const cr = COLDREAD_BY_ELEMENT[dmEl];
+  const nowYear = new Date().getFullYear();
+
+  // 과거 회한 연도: 최근 3~8년 중 식상(재능) 오행이 들어왔던 해
+  let pastYear = nowYear - 5;
+  for (let y = nowYear - 3; y >= nowYear - 8; y--) {
+    const e = crYearElements(y);
+    if (e.stemEl === talentEl || e.branchEl === talentEl) { pastYear = y; break; }
+  }
+  const past = crYearElements(pastYear);
+  const pastAge = pastYear - birthYear + 1;
+
+  const strengthLine = strength && strength.badgeClass === 'strong'
+    ? '기운이 넘치는 사주라, 쓸 곳을 못 찾은 힘이 안에서 당신을 조급하게 만들었습니다.'
+    : strength && strength.badgeClass === 'weak'
+      ? '기운을 아끼는 사주라, 남 챙기느라 정작 당신 몫의 힘을 늘 뒤로 미뤄 오셨습니다.'
+      : '균형 잡힌 사주라, 무엇이든 곧잘 해내다 보니 "이게 내 길인가" 싶은 날이 많으셨습니다.';
+
+  const box = document.getElementById('coldReadBox');
+  if (box) {
+    box.hidden = false;
+    box.innerHTML = `
+      <div class="cr-head">
+        <span class="cr-seal">天文<br>鑑定</span>
+        <div>
+          <span class="cr-kicker">8글자를 방금 다 짚어 봤습니다</span>
+          <h4>${safeName}님, ${cr.trait}이시군요.</h4>
+        </div>
+      </div>
+      <div class="cr-body">
+        ${cr.lines.map((l, i) => `<p class="${i === cr.lines.length - 1 ? 'cr-punch' : ''}">${l}</p>`).join('')}
+        <p class="cr-strength">${strengthLine}</p>
+      </div>
+      <div class="cr-regret">
+        <div class="cr-regret-year">
+          <span class="cr-y-hanja">${past.ganzhiHanja}</span>
+          <span class="cr-y-num">${pastYear}년<br>${past.ganzhi}년</span>
+        </div>
+        <div class="cr-regret-text">
+          <p><strong>${crKoreanAge(pastAge)} 무렵</strong>, 풀릴 듯 풀릴 듯하다 흐지부지된 일이 하나 있었을 겁니다.</p>
+          <p>그건 그냥 지나간 운이 아닙니다. 당신의 <strong>${cr.talent}</strong>에 ${CR_ELEMENT_NAMES[talentEl]} 기운이 크게 들어왔던 해였습니다. 무엇을 타고났는지 몰라, 기회인 줄 모르고 보낸 것뿐입니다.</p>
+          <p class="cr-next">그런 운은 평생 몇 번 오지 않습니다. 다음 운이 드는 해는 <span class="cr-blur">「 20▓▓년 ▓월 」</span> — 감명서에 적어 두었습니다.</p>
+        </div>
+      </div>`;
+  }
+
+  // 리포트 카드 붉은 봉인 티저 주입
+  Object.keys(SEAL_TEASERS).forEach(key => {
+    const card = document.getElementById(`repCard_${key}`);
+    if (!card) return;
+    let list = card.querySelector('.seal-lock-list');
+    if (!list) {
+      list = document.createElement('div');
+      list.className = 'seal-lock-list';
+      const anchor = card.querySelector('.rep-summary');
+      if (anchor) card.insertBefore(list, anchor); else card.appendChild(list);
+    }
+    list.innerHTML = `<div class="seal-lock-head"><span class="seal-stamp-mini">封</span>${safeName}님 감명서 · 봉인된 대목</div>` +
+      SEAL_TEASERS[key].map(t => `
+        <div class="seal-lock-item">
+          <i class="fa-solid fa-lock"></i>
+          <div>
+            <div class="seal-lock-title">${t[0]}</div>
+            <div class="seal-lock-tease">${t[1]} <span class="seal-blur">${t[2]}</span></div>
+          </div>
+        </div>`).join('');
+  });
+}
+
 function toggleReport(key) {
   if (selectedReports.has(key)) {
     selectedReports.delete(key);
@@ -1584,7 +1762,7 @@ function updateCartUI() {
   const btn = document.getElementById('payButton');
   btn.disabled = items.length === 0;
   document.getElementById('payBtnText').textContent =
-    items.length === 0 ? '리포트를 선택해주세요' : `${won(total)} 결제하기`;
+    items.length === 0 ? '리포트를 선택해주세요' : `${won(total)} · 감명서 이어서 읽기`;
 }
 
 // 카드 키보드 접근성 (Enter / Space)
