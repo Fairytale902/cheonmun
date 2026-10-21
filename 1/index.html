@@ -96,8 +96,12 @@
     <!-- 스토리텔링 히어로 섹션 -->
     <section class="hero-section">
       <div class="container hero-container">
-        <div class="hero-badge fade-in">
-          <i class="fa-solid fa-fire-flame-curved"></i> 누적 감명 148,200건 돌파 · 평점 4.96
+        <div class="hero-badge fade-in" style="display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center;">
+          <span><i class="fa-solid fa-users-viewfinder" style="color:#10b981;"></i> 실시간 <strong>43명</strong> 열람 중</span>
+          <span style="opacity:0.4;">·</span>
+          <span>오늘 <strong>1,842건</strong> 분석 완료</span>
+          <span style="opacity:0.4;">·</span>
+          <span class="gold-gradient" style="font-weight:800;"><i class="fa-solid fa-crown"></i> 상위 1.7% 황실 비기 격국</span>
         </div>
 
         <h1 class="hero-title fade-in delay-1">
@@ -405,6 +409,49 @@
                   </select>
                   <span class="info-bubble"><i class="fa-solid fa-circle-question"></i> 대한민국 표준 시차(동경 135도 30분) 자동 보정 적용</span>
                 </div>
+              </div>
+
+              <div class="form-group">
+                <label for="birthCity"><i class="fa-solid fa-location-dot"></i> 태어난 도시 (출생지)</label>
+                <select id="birthCity">
+                  <option value="seoul" selected>서울특별시 / 경기도 / 인천 (-32분 보정)</option>
+                  <option value="busan">부산광역시 / 울산 / 경남 (-24분 보정)</option>
+                  <option value="daegu">대구광역시 / 경북 (-26분 보정)</option>
+                  <option value="gwangju">광주광역시 / 전남북 (-34분 보정)</option>
+                  <option value="daejeon">대전광역시 / 충남북 / 세종 (-31분 보정)</option>
+                  <option value="gangwon">강원특별자치도 (-28분 보정)</option>
+                  <option value="jeju">제주특별자치도 (-34분 보정)</option>
+                  <option value="abroad">해외 출생 (현지 태양시 기준)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="userMbti"><i class="fa-solid fa-brain"></i> MBTI 성향 (선택: 십성 교차 분석)</label>
+                <select id="userMbti">
+                  <option value="unknown" selected>MBTI 모름 / 사주 본연으로만 분석</option>
+                  <option value="INTJ">INTJ (용의주도한 전략가)</option>
+                  <option value="INTP">INTP (논리적인 사색가)</option>
+                  <option value="ENTJ">ENTJ (대담한 통솔자)</option>
+                  <option value="ENTP">ENTP (뜨거운 변론가)</option>
+                  <option value="INFJ">INFJ (선의의 옹호자)</option>
+                  <option value="INFP">INFP (열정적인 중재자)</option>
+                  <option value="ENFJ">ENFJ (정의로운 주인공)</option>
+                  <option value="ENFP">ENFP (재기발랄한 활동가)</option>
+                  <option value="ISTJ">ISTJ (청렴결백한 논리주의자)</option>
+                  <option value="ISFJ">ISFJ (용감한 수호자)</option>
+                  <option value="ESTJ">ESTJ (엄격한 관리자)</option>
+                  <option value="ESFJ">ESFJ (사교적인 외교관)</option>
+                  <option value="ISTP">ISTP (만능 재주꾼)</option>
+                  <option value="ISFP">ISFP (호기심 많은 예술가)</option>
+                  <option value="ESTP">ESTP (모험을 즐기는 사업가)</option>
+                  <option value="ESFP">ESFP (자유로운 영혼의 연예인)</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width" style="margin-top: 6px;">
+                <label for="userConcernDetail"><i class="fa-solid fa-comment-dots"></i> 밤잠 설치게 만드는 현실 고민 한 줄 (선택)</label>
+                <input type="text" id="userConcernDetail" placeholder="예: 3년 차 개발자인데 이직이 맞는지, 버텨야 하는지 막막합니다 / 전 연인과 재회 가능할까요" maxlength="120">
+                <span class="info-bubble" style="margin-top: 6px;"><i class="fa-solid fa-feather-pointed"></i> 적어주신 고민은 86p 정밀 감명서의 맞춤 팩트 솔루션 및 실전 비방에 직접 반영됩니다.</span>
               </div>
 
               <div class="form-group full-width">

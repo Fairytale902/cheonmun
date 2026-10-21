@@ -1015,6 +1015,9 @@ function analyzeSaju() {
   const timeStr = document.getElementById('birthTime').value;
   const gender = document.querySelector('input[name="gender"]:checked')?.value || 'female';
   const calendarType = document.querySelector('input[name="calendarType"]:checked')?.value || 'solar';
+  const birthCity = document.getElementById('birthCity')?.value || 'seoul';
+  const userMbti = document.getElementById('userMbti')?.value || 'unknown';
+  const userConcernDetail = document.getElementById('userConcernDetail')?.value.trim() || '';
 
   const formEl = document.getElementById('sajuForm');
   const loaderEl = document.getElementById('analysisLoader');
@@ -1026,7 +1029,7 @@ function analyzeSaju() {
 
   const steps = [
     { text: "천문력 기반 24절기(입춘/절입시각) 및 천간·지지 8글자 정밀 추출 중...", progress: 30 },
-    { text: "궁통보감 120종 조후 문헌 및 남여 순행·역행 10년 대운 시차 보정 중...", progress: 65 },
+    { text: "출생 도시 경도 시차 및 십성-MBTI·고민 키워드 심층 매핑 중...", progress: 65 },
     { text: "천명 AI 촌철살인 명리 독심술과 2026 터닝포인트 작성 완료!", progress: 100 }
   ];
 
@@ -1043,7 +1046,7 @@ function analyzeSaju() {
         formEl.classList.remove('hidden');
         
         // 데이터 계산 및 렌더링
-        renderFullResult(name, year, month, day, timeStr, gender, calendarType);
+        renderFullResult(name, year, month, day, timeStr, gender, calendarType, birthCity, userMbti, userConcernDetail);
         // 화면을 결과 뷰로 전환
         switchView('result');
       }, 400);
@@ -1052,7 +1055,7 @@ function analyzeSaju() {
 }
 
 // 전체 결과 렌더링 (천문력 정밀 계산 & 궁통보감 120종 조후 연동)
-function renderFullResult(name, year, month, day, timeStr, gender = 'female', calendarType = 'solar') {
+function renderFullResult(name, year, month, day, timeStr, gender = 'female', calendarType = 'solar', birthCity = 'seoul', userMbti = 'unknown', userConcernDetail = '') {
   const astro = calculateAstronomicalPillars(year, month, day, timeStr, calendarType);
   const enrichPillar = (p) => {
     if (!p) return null;
@@ -1152,6 +1155,9 @@ function renderFullResult(name, year, month, day, timeStr, gender = 'female', ca
     timeStr,
     gender,
     calendarType,
+    birthCity,
+    userMbti,
+    userConcernDetail,
     solar: astro.solar,
     lunar: astro.lunar,
     ec: astro.ec,
@@ -1717,6 +1723,9 @@ function openSampleDummyReport() {
       timeStr: "09:30",
       gender: "female",
       calendarType: "solar",
+      birthCity: "seoul",
+      userMbti: "INTJ",
+      userConcernDetail: "3년 차 개발자인데 이직이 맞는지, 버텨야 하는지 막막합니다",
       solar: astro.solar,
       lunar: astro.lunar,
       ec: astro.ec,

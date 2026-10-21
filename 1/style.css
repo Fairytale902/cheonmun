@@ -3102,6 +3102,81 @@ body {
   color: #fca5a5;
 }
 
+/* 사건 예고 박스 (앞으로 벌어질 구체적 징조) */
+.event-prediction-box {
+  background: rgba(234, 88, 12, 0.09);
+  border-left: 4px solid #f97316;
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+}
+
+.event-prediction-box h5 {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #fdba74;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-prediction-box p {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #fed7aa;
+}
+
+/* 실전 비방 박스 (황실 비전 개운 비책) */
+.action-secret-box {
+  background: rgba(245, 208, 97, 0.1);
+  border-left: 4px solid #eab308;
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+}
+
+.action-secret-box h5 {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #fde047;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-secret-box p {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #fef08a;
+}
+
+/* 의명학 장부 양생 박스 */
+.medical-care-box {
+  background: rgba(16, 185, 129, 0.09);
+  border-left: 4px solid #10b981;
+  border-radius: 0 12px 12px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+}
+
+.medical-care-box h5 {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #6ee7b7;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.medical-care-box p {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: #a7f3d0;
+}
+
 /* 1월 ~ 12월 월별 운세 카드 그리드 (모바일 친화적) */
 .monthly-grid-cards {
   display: grid;
@@ -4148,11 +4223,12 @@ body {
     break-before: page !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    min-height: 278mm !important;
-    max-height: 278mm !important;
+    min-height: 274mm !important;
+    max-height: 274mm !important;
     box-sizing: border-box !important;
-    padding: 11mm 11mm 9mm 11mm !important;
+    padding: 8mm 10mm 7mm 10mm !important;
     margin: 0 !important;
+    overflow: hidden !important;
     background-color: #f3e8d2 !important;
     background-image: 
       /* 1. 네 모서리 고서 손때와 세월의 산화 얼룩 */
@@ -4253,9 +4329,9 @@ body {
   .chapter-prose p {
     color: #181008 !important;
     font-family: 'Gowun Batang', 'Noto Serif KR', serif !important;
-    font-size: 9.8pt !important;
-    line-height: 1.80 !important;
-    margin-bottom: 10px !important;
+    font-size: 8.9pt !important;
+    line-height: 1.62 !important;
+    margin-bottom: 6px !important;
     text-align: justify !important;
   }
 
@@ -4270,7 +4346,7 @@ body {
     background: #fffefb !important;
     border: 2px solid #4a240a !important;
     border-collapse: collapse !important;
-    margin: 10px 0 !important;
+    margin: 8px 0 !important;
     width: 100% !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
@@ -4281,37 +4357,124 @@ body {
     color: #2b1204 !important;
     border: 1px solid #8c6032 !important;
     font-family: 'Gowun Batang', 'Noto Serif KR', serif !important;
-    font-size: 9pt !important;
+    font-size: 8.8pt !important;
     font-weight: 900 !important;
-    padding: 7px 10px !important;
+    padding: 5px 8px !important;
   }
   .medical-organ-table td,
   .report-detail-table td {
     color: #181008 !important;
     border: 1px solid #bf9d72 !important;
     font-family: 'Gowun Batang', 'Noto Serif KR', serif !important;
-    font-size: 8.8pt !important;
-    padding: 7px 10px !important;
+    font-size: 8.4pt !important;
+    padding: 5px 8px !important;
     background: #fbf5e7 !important;
-    line-height: 1.6 !important;
+    line-height: 1.5 !important;
   }
 
-  /* 4대 전통 서지형 박스 (Traditional Scrolls) */
+  /* 전통 서지형 박스 (Traditional Scrolls) */
   .key-point-box {
     background: #fbf3dd !important;
     border: 1.5px solid #8c601c !important;
-    border-left: 5px solid #6d4008 !important;
+    border-left: 4.5px solid #6d4008 !important;
     box-shadow: inset 0 0 0 1px #faeec7 !important;
     color: #231104 !important;
-    padding: 10px 14px !important;
+    padding: 7px 11px !important;
     border-radius: 4px !important;
-    margin: 10px 0 !important;
+    margin: 6px 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
   .key-point-box h5 {
     color: #6d4008 !important;
-    font-size: 9.8pt !important;
+    font-size: 9.2pt !important;
+    font-weight: 900 !important;
+    font-family: 'Gowun Batang', 'Noto Serif KR', serif !important;
+    margin-bottom: 3px !important;
+  }
+  .key-point-box p {
+    font-size: 8.5pt !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+  }
+
+  .event-prediction-box {
+    background: #fff5ee !important;
+    border: 1.5px solid #c2410c !important;
+    border-left: 4.5px solid #9a3412 !important;
+    box-shadow: inset 0 0 0 1px #ffedd5 !important;
+    color: #431407 !important;
+    padding: 7px 11px !important;
+    border-radius: 4px !important;
+    margin: 6px 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .event-prediction-box h5 {
+    color: #9a3412 !important;
+    font-size: 9.2pt !important;
+    font-weight: 900 !important;
+    font-family: 'Gowun Batang', 'Noto Serif KR', serif !important;
+    margin-bottom: 3px !important;
+  }
+  .event-prediction-box p {
+    color: #2b0e04 !important;
+    font-size: 8.5pt !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+  }
+
+  .action-secret-box {
+    background: #fbf7e6 !important;
+    border: 1.5px solid #a16207 !important;
+    border-left: 4.5px solid #78350f !important;
+    box-shadow: inset 0 0 0 1px #fef9c3 !important;
+    color: #451a03 !important;
+    padding: 7px 11px !important;
+    border-radius: 4px !important;
+    margin: 6px 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .action-secret-box h5 {
+    color: #78350f !important;
+    font-size: 9.2pt !important;
+    font-weight: 900 !important;
+    font-family: 'Gowun Batang', 'Noto Serif KR', serif !important;
+    margin-bottom: 3px !important;
+  }
+  .action-secret-box p {
+    color: #2e1002 !important;
+    font-size: 8.5pt !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+  }
+
+  .medical-care-box {
+    background: #f0fdf4 !important;
+    border: 1.5px solid #047857 !important;
+    border-left: 4.5px solid #064e3b !important;
+    box-shadow: inset 0 0 0 1px #dcfce7 !important;
+    color: #022c22 !important;
+    padding: 7px 11px !important;
+    border-radius: 4px !important;
+    margin: 6px 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .medical-care-box h5 {
+    color: #064e3b !important;
+    font-size: 9.2pt !important;
+    font-weight: 900 !important;
+    font-family: 'Gowun Batang', 'Noto Serif KR', serif !important;
+    margin-bottom: 3px !important;
+  }
+  .medical-care-box p {
+    color: #032b21 !important;
+    font-size: 8.5pt !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+  }
     font-weight: 900 !important;
     font-family: 'Gowun Batang', 'Noto Serif KR', serif !important;
   }

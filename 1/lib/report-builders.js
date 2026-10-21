@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * 천문사주 (cheonmun.life) - 80+ 페이지 대백과사전급 정밀 감명서 엔진
+ * 천문사주 (cheonmun.life) - 86p 정통 서책 감명서 엔진 (A4 전면 조판 고도화)
  * ============================================================================
  * 구성:
  * 0. 의명진단학(醫命診斷學: 황제내경 오운육기 · 동의보감 장부론) 정밀 진단 엔진
@@ -232,10 +232,10 @@ function getDynamicSeunContext(user) {
   };
 }
 
+
+
 // ============================================================================
-// 1. 제1권 (newyear) : 세운(歲運) 총운 & 12개월 월별 터닝포인트 (총 21장)
-//    - 제목에서 고정 연도(2026)를 배제하고 생성 시점(new Date) 기준으로 매년 영구 판매 가능
-//    - 구성: 세운 총운(3장) + 향후 12개월 월별 단독 심층 감명서(12장) + 재물/계약/귀인/건강/풍수/3년로드맵(6장) = 21장
+// 1. 제1권 (newyear) : 세운(歲運) 총운 & 향후 12개월 월별 터닝포인트 (총 21장)
 // ============================================================================
 function buildNewYearReportHtml(user, natureName) {
   const dayMaster = user.pillars.day.stemIdx;
@@ -247,6 +247,14 @@ function buildNewYearReportHtml(user, natureName) {
   const yongshin = user.yongshin;
   const seun = getDynamicSeunContext(user);
   const med = diagnoseMedicalSaju(user);
+
+  const userConcern = user.userConcernDetail 
+    ? `<div class="counseling-empathy-box">
+         <h5><i class="fa-solid fa-feather-pointed"></i> 의뢰인 ${user.name}님의 밤잠을 설치게 만드는 현실 고민 진단</h5>
+         <p><strong>의뢰인 호소:</strong> "${user.userConcernDetail}"<br>
+         사주 원국과 당해 세운(${seun.yearHanja})의 흐름을 대조한 결과, 이 고민은 개인의 능력 부족이 아니라 ${seun.yearTenGod}의 기운이 인생의 새로운 국면을 요구하며 안방과 직무궁을 흔들기 때문에 일어나는 구조적 성장통입니다. 본 감명서의 비책에 따라 행동 타이밍을 조율하십시오.</p>
+       </div>`
+    : '';
 
   // 향후 12개월 각 달마다 단독 1페이지 분량의 심층 챕터 생성 (제4장 ~ 제15장, 총 12장)
   const monthlyChaptersHtml = seun.months12.map((m, idx) => {
@@ -262,76 +270,71 @@ function buildNewYearReportHtml(user, natureName) {
       (m.branchIdx === 6 && dayBranch === 7) || (m.branchIdx === 7 && dayBranch === 6)
     );
 
-    let statusTitle = '';
-    let statusCore = '';
+    let incidentTheme = '';
+    let incidentStory = '';
+    let actionStory = '';
+
     if (isClash) {
-      statusTitle = `[일지 정면충(沖) · 환경 대격변의 달]`;
-      statusCore = `이달의 지지 ${m.zhi}(${JIJI[m.branchIdx]})가 ${user.name}님의 안방 자리인 일지 ${JIJI_HANJA[dayBranch]}(${JIJI[dayBranch]})를 정면으로 타격합니다. 가만히 앉아 있어도 주변 환경이 강제로 흔들리는 달입니다. 억지로 과거의 방식이나 인연을 붙잡으려 하면 몸이 아프거나 관재(구설)로 터지므로, 차라리 이직·부서 이동·이사·장거리 출장·낡은 관계 정리 등 내가 먼저 판을 흔들어 기운을 빼내야 대길(大吉)로 전환됩니다.`;
+      incidentTheme = '일지 정면충(沖) — 안방과 거주 환경의 대격변 및 관계 정리';
+      incidentStory = `이달은 이달의 지지 ${m.zhi}(${JIJI[m.branchIdx]})가 ${user.name}님의 뿌리이자 안방인 일지 ${JIJI_HANJA[dayBranch]}(${JIJI[dayBranch]})를 정면으로 충돌(沖)합니다. 가만히 머물러 있으려 해도 주변 환경과 관계가 강제로 흔들리는 징조가 뚜렷합니다. 부부·연인 간의 사소한 서운함이 극단적인 자존심 싸움으로 번지거나, 살고 있는 집의 누수·계약 만료, 또는 조직 내 갑작스러운 부서 이동·출장 이슈가 한꺼번에 몰아닥칩니다. 과거의 미련이나 낡은 방식에 집착하면 신체 통증이나 관재구설로 터지니 주의하십시오.`;
+      actionStory = `충(沖)은 내가 먼저 선제적으로 기운을 빼주면 '대변혁의 기회'로 승화됩니다. 이달에는 방치했던 집안 가구 배치를 바꾸거나, 묵은 짐을 대대적으로 버리고, 장거리 여행이나 출장으로 공간을 이동하십시오. 특히 ${m.month}월에는 중요한 감정적 담판이나 이별 통보를 홧김에 하지 마시고, 결정 전 반드시 48시간의 냉각기를 두어야 뒤탈을 막습니다.`;
     } else if (isMonthClash) {
-      statusTitle = `[월지 사회궁 충(沖) · 직무/사업 재편의 달]`;
-      statusCore = `이달의 지지가 사회적 간판인 월지 ${JIJI_HANJA[user.pillars.month.branchIdx]}와 충돌하여 조직 개편, 상사 교체, 거래처 변동, 주력 매출원의 이동이 발생합니다. 당황하지 말고 플랜 B를 즉시 가동하면 위기가 곧 독점적 기회로 바뀝니다.`;
+      incidentTheme = '월지 사회궁 충(沖) — 직장 내 보직 변경, 상사 마찰, 거래선 재편';
+      incidentStory = `이달의 지지가 ${user.name}님의 사회적 활동 무대인 월지 ${JIJI_HANJA[user.pillars.month.branchIdx]}를 강하게 타격합니다. 상사의 갑작스러운 퇴사나 조직 개편으로 내 업무 영역이 강제로 바뀌거나, 믿었던 거래처와의 계약 조건 변경, 주력 프로젝트의 피벗(Pivot)이 발생합니다. 이는 당신을 밀어내려는 악재가 아니라, 더 큰 물로 나가기 위해 낡은 판을 깨뜨리는 명리학적 환골탈태입니다.`;
+      actionStory = `조직 내 힘겨루기에 직접 휘말리지 마시고 모든 지시와 합의 사항을 문서와 메일로 철저히 남겨 책임을 분산하십시오. 또한 이달은 헤드헌터나 외부에서 솔깃한 이직 제안이 들어오는 달이니, 즉흥적으로 사표를 던지지 말고 이면 조건을 냉정히 저울질하며 몸값을 높이는 협상 카드로 활용하십시오.`;
     } else if (isComb) {
-      statusTitle = `[일지 육합(六合) · 귀인 결속과 계약 성사의 달]`;
-      statusCore = `이달의 지지 ${m.zhi}(${JIJI[m.branchIdx]})가 일지 ${JIJI_HANJA[dayBranch]}와 끈끈한 육합(六合)을 결성합니다. 흩어졌던 사람의 마음과 자금이 하나로 모이는 시기로, 중요한 문서 날인·연봉 협상·신규 파트너십 체결·연인과의 관계 진전에 있어 향후 1년 중 손꼽히는 황금 찬스입니다.`;
+      incidentTheme = '일지 육합(六合) — 귀인 결속, 극적 계약 체결, 애정의 반등';
+      incidentStory = `이달의 지지 ${m.zhi}가 일지 ${JIJI_HANJA[dayBranch]}와 끈끈한 육합(六合)을 이루어 얼어붙었던 기운이 봄눈 녹듯 풀립니다. 흩어졌던 자금과 사람의 마음이 하나로 모이며, 지지부진하던 협상이나 계약이 극적으로 성사되는 징조가 나타납니다. 연인과의 관계에서는 오해가 풀리고 결혼 논의가 급물살을 타며, 솔로인 경우 신뢰할 만한 귀인의 소개로 지적 수준이 맞는 인연과 급격히 가까워집니다.`;
+      actionStory = `기운이 결속되는 황금기이므로 망설였던 제안서 발송, 투자 유치, 연봉 협상, 공식 프로포즈를 이달 안에 밀어붙이십시오. 다만 합(合)의 기운이 과하면 정에 이끌려 맺고 끊음을 분명히 하지 못할 수 있으니, 친밀한 관계일수록 공과 사를 명확히 구분하는 서류를 구비해야 복록이 오래갑니다.`;
     } else {
-      statusTitle = `[${m.tenGod}·${m.branchTenGod} 교차 · 내실과 전략적 도약의 달]`;
-      statusCore = `천간의 ${m.gan}(${m.tenGod}) 기운이 표면적인 과제를 던지고, 지지의 ${m.zhi}(${m.branchTenGod}) 기운이 실질적인 바닥의 흐름을 형성합니다. 감정적 조급함을 내려놓고 ${yongshin.eokbuYongshin}의 원칙에 맞춰 자원을 배분할 때 가장 높은 수익률과 평판을 거두게 됩니다.`;
+      incidentTheme = `${m.tenGod} 투출 — 사회적 명분 획득과 현실적 결실의 수확`;
+      incidentStory = `천간에 ${m.gan}(${m.tenGod})의 기운이 우뚝 솟아 사회적으로 당신의 존재감이 널리 드러납니다. 주도권을 쥐고 프로젝트를 진두지휘하거나 새로운 수익원을 개척할 기회가 주어집니다. 다만 지지의 ${m.zhi}(${m.branchTenGod}) 기운과의 조화를 살피지 않고 과속하면, 월 중순(14일~20일 사이)에 예상치 못한 업무 과부하로 번아웃이 올 수 있으니 완급 조절이 필요합니다.`;
+      actionStory = `혼자 모든 책임을 짊어지려 하지 말고 주변 동료나 외부 파트너에게 역할을 위임하십시오. 이달에는 당장의 단기 현금 차익에 눈멀기보다 장기적인 지분·라이선스·인허가 등 '문서화된 권리'를 확보하는 데 집중할 때 향후 몇 배의 자산으로 돌아옵니다.`;
     }
-
-    // 십신별 재물/직업/연애 세부 전략
-    const wealthGuide = ['정재', '편재', '식신', '상관'].includes(m.tenGod)
-      ? `천간에 <strong>${m.tenGod}</strong>이 투출하여 현금 흐름과 영업·투자 감각이 가장 날카롭게 깨어나는 달입니다. 적극적으로 수익 파이프라인을 넓히고 미수금을 회수하되, 월 중순(13일~19일)에는 충동적인 레버리지 베팅보다 확실한 실물·현금 흐름 위주로 포트폴리오를 압축하십시오.`
-      : `천간에 <strong>${m.tenGod}</strong>이 자리하여 당장의 단기 차익보다는 문서(계약권·자격·지분)를 확보하거나 지출 누수를 막는 수성(守城) 전략이 유리한 달입니다. 특히 지인의 투자 권유나 명분만 앞선 모임 지출을 냉정히 차단하십시오.`;
-
-    const careerGuide = ['정관', '편관', '정인', '편인'].includes(m.tenGod)
-      ? `조직 내 권한 부여, 공식 프로젝트 리드, 시험·승진·인허가 운이 강하게 들어옵니다. 윗사람이나 심사위원에게 나의 논리적 문서와 정량적 지표를 전면 제시하면 경쟁자를 압도합니다.`
-      : `틀에 박힌 보고보다 현장에서 직접 발로 뛰며 실적을 증명해야 빛이 나는 달입니다. 내 아이디어를 구두로만 흘리지 말고 반드시 기록으로 남겨 저작권과 주도권을 선점하십시오.`;
 
     const luckyDays = `${(m.month * 3) % 9 + 2}일, ${(m.month * 5) % 10 + 12}일, ${(m.month * 7) % 8 + 21}일`;
     const cautionDays = `${(m.month * 2) % 7 + 4}일, ${(m.month * 4) % 9 + 16}일`;
+    const luckyDir = (m.branchIdx % 2 === 0) ? '동남쪽 (새로운 생기와 기회가 솟는 방위)' : '북서쪽 (안정과 귀인의 비호를 받는 방위)';
+    const luckyColor = ['wood', 'water'].includes(m.el) ? '네이비 블루 · 다크 그린' : '아이보리 화이트 · 샴페인 골드';
 
     return `
       <div class="report-chapter">
         <div class="chapter-badge">CHAPTER ${String(chapNum).padStart(2, '0')} · 향후 12개월 월별 단독 감명 (제${m.seq}월)</div>
-        <h3 class="chapter-title">${m.year}년 ${m.month}월 [${m.gan}${m.zhi}(${m.kor})월] — ${m.tenGod}의 기운과 월간 행동 비책</h3>
+        <h3 class="chapter-title">${m.year}년 ${m.month}월 [${m.gan}${m.zhi}(${m.kor})월] — ${m.tenGod}·${m.branchTenGod}의 기운과 실전 운명 비책</h3>
         <div class="chapter-prose">
           <p>
-            감명 시점으로부터 <strong>제${m.seq}번째 달인 ${m.year}년 ${m.month}월(${m.gan}${m.zhi}월)</strong>은 ${user.name}님의 일간 ${CHEONGAN_HANJA[dayMaster]}(${CHEONGAN[dayMaster]})을 기준으로 천간에 <strong>${m.tenGod}</strong>, 지지에 <strong>${m.branchTenGod}</strong>의 에너지를 드리웁니다. ${statusTitle}
+            감명 시점으로부터 <strong>제${m.seq}번째 달인 ${m.year}년 ${m.month}월(${m.gan}${m.zhi}월)</strong>은 ${user.name}님의 일간 ${CHEONGAN_HANJA[dayMaster]}(${CHEONGAN[dayMaster]})을 기준으로 천간에 <strong>${m.tenGod}</strong>, 지지에 <strong>${m.branchTenGod}</strong>의 파동을 드리웁니다. ${incidentTheme}.
           </p>
-          <p>${statusCore}</p>
+          <p>
+            이 시기에는 명리학적으로 겉으로 드러나는 명분(${m.gan})과 바닥에서 움직이는 실속(${m.zhi}) 사이에 묘한 온도 차가 발생합니다. 남들의 시선에 그럴듯해 보이는 일보다, 내 손에 실질적인 현금과 권한이 쥐어지는 길을 선택해야 후회가 없습니다.
+          </p>
 
-          <table class="report-detail-table">
-            <thead>
-              <tr>
-                <th style="width:24%;">감명 영역</th>
-                <th>${m.year}년 ${m.month}월 (${m.gan}${m.zhi}월) 세밀 운세 및 실전 행동 지침</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>💰 재물 · 투자운</strong></td>
-                <td>${wealthGuide}</td>
-              </tr>
-              <tr>
-                <td><strong>💼 직장 · 사업운</strong></td>
-                <td>${careerGuide}</td>
-              </tr>
-              <tr>
-                <td><strong>❤️ 애정 · 대인관계</strong></td>
-                <td>일지 배우자궁(${JIJI_HANJA[dayBranch]})과 이달 지지(${m.zhi})의 기류상, 상대방의 사소한 말실수를 자존심 문제로 확대 해석하는 것을 경계해야 합니다. 먼저 경청하고 따뜻한 식사 자리를 마련할 때 뜻밖의 진심과 조력을 얻습니다.</td>
-              </tr>
-              <tr>
-                <td><strong>🌿 이달의 건강 섭생</strong></td>
-                <td>${ELEMENT_KOREAN[m.el]} 기운이 변동함에 따라 <strong>${med.deficientOrgan.zang}·${med.attackedOrgan.zang}</strong> 계통의 피로도를 점검해야 합니다. ${med.deficientOrgan.medicinalFood.split(',').slice(0, 3).join(', ')} 섭취를 늘리십시오.</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="event-prediction-box">
+            <h5><i class="fa-solid fa-bolt"></i> 앞으로 벌어질 구체적 징조와 사건 예고</h5>
+            <p>${incidentStory}</p>
+          </div>
+
+          <div class="action-secret-box">
+            <h5><i class="fa-solid fa-scroll"></i> 천문 황실 비전(秘傳) — 이달의 실전 비방(秘方) 및 개운 행동</h5>
+            <p>
+              • <strong>약속 및 담판 길방(吉方):</strong> 중요한 협상이나 미팅 시 ${luckyDir}에 위치한 회의실이나 좌석을 선점하십시오.<br>
+              • <strong>의상 및 소지품 파장:</strong> 이달에는 ${luckyColor} 계열의 상의나 금속성 소지품을 몸에 지니면 불필요한 구설을 튕겨냅니다.<br>
+              • <strong>실전 행동 강령:</strong> ${actionStory}
+            </p>
+          </div>
+
+          <div class="medical-care-box">
+            <h5><i class="fa-solid fa-leaf"></i> 의명학(醫命學) 장부 양생 및 체질 보양 처방</h5>
+            <p>
+              이달은 ${ELEMENT_KOREAN[m.el]} 기운의 변동으로 ${user.name}님의 취약 장부인 <strong>${med.deficientOrgan.zang}과 ${med.attackedOrgan.fu}</strong>의 피로도가 가중됩니다. 소화불량이나 안구 건조, 만성 피로가 잦아질 수 있으니 식단에 <strong>${med.deficientOrgan.medicinalFood.split(',').slice(0, 4).join(', ')}</strong> 섭취를 늘리고, ${med.deficientOrgan.teaPrescription}을 온수로 틈틈이 음용하십시오.
+            </p>
+          </div>
 
           <div class="key-point-box">
             <h5><i class="fa-solid fa-calendar-check"></i> ${m.year}년 ${m.month}월 핵심 길일(吉日) & 주의일 캘린더</h5>
             <p>
-              • <strong>결단·계약·면접·자금 집행 대길일:</strong> ${m.month}월 <strong>${luckyDays}</strong><br>
-              • <strong>감정 충돌·문서 오기·구설 주의일:</strong> ${m.month}월 <strong>${cautionDays}</strong> (해당일에는 야간 음주 및 즉흥적 송금을 삼가십시오)
+              • <strong>대길일(결단·계약·면접·자금 집행):</strong> ${m.month}월 <strong>${luckyDays}</strong> (우주적 에너지가 집중되는 타이밍)<br>
+              • <strong>주의일(감정 충돌·문서 오기·구설 조심):</strong> ${m.month}월 <strong>${cautionDays}</strong> (야간 음주 및 즉흥적 계좌 송금을 철저히 삼가십시오)
             </p>
           </div>
         </div>
@@ -345,25 +348,32 @@ function buildNewYearReportHtml(user, natureName) {
     <!-- 제1장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 01 · 세운(歲運) 총론 및 천문 기상도</div>
-      <h3 class="chapter-title">${user.name}님의 ${ natureName } 원국과 당해 세운(${seun.yearHanja}·${seun.yearKor})의 대충돌과 조화</h3>
+      <h3 class="chapter-title">${user.name}님의 ${natureName} 원국과 당해 세운(${seun.yearHanja}·${seun.yearKor})의 대충돌과 조화</h3>
       <div class="chapter-prose">
         <p>
-          사주명리학에서 원국(原局) 여덟 글자가 당신이 타고난 ‘자동차의 차체와 엔진’이라면, 해마다 바뀌며 찾아오는 <strong>세운(歲運)</strong>은 당신이 지금 달리고 있는 ‘도로의 기후와 지형’입니다. 본 감명서는 고정된 과거의 연도에 얽매이지 않고, ${user.name}님께서 운명을 조회하신 현재 시점(<strong>${seun.curYear}년 ${seun.curMonth}월</strong>)을 기점으로 당해 <strong>${seun.yearHanja}(${seun.yearKor}) 세운</strong>과 향후 12개월간의 월건(月建) 변화를 천문력 기준으로 정밀 추적합니다.
+          사주명리학에서 원국(原局) 여덟 글자가 당신이 타고난 ‘자동차의 차체와 엔진’이라면, 해마다 바뀌며 찾아오는 <strong>세운(歲運)</strong>은 당신이 지금 달리고 있는 ‘도로의 기후와 지형’입니다. 본 감명서는 과거의 연도에 얽매이지 않고, ${user.name}님께서 운명을 조회하신 현재 시점(<strong>${seun.curYear}년 ${seun.curMonth}월</strong>)을 기점으로 당해 <strong>${seun.yearHanja}(${seun.yearKor}) 세운</strong>과 향후 12개월간의 월건(月建) 변화를 천문력 기준으로 정밀 추적합니다.
         </p>
         <p>
-          현재 하늘을 지배하는 세운의 천간은 <strong>${seun.yearGan}(${ELEMENT_KOREAN[seun.yearEl]})</strong>이며, 지지는 <strong>${seun.yearZhi}(${seun.yearAnimal})</strong>입니다. 이를 ${user.name}님의 일간 <strong>${CHEONGAN_HANJA[dayMaster]}(${CHEONGAN[dayMaster]})</strong>에 대입하면 육친상 <strong>‘${seun.yearTenGod}’</strong>의 거대한 파도가 당신의 삶 전면에 밀려들어 온 형국입니다.
+          현재 하늘을 지배하는 세운의 천간은 <strong>${seun.yearGan}(${ELEMENT_KOREAN[seun.yearEl]})</strong>이며, 지지는 <strong>${seun.yearZhi}(${seun.yearAnimal})</strong>입니다. 이를 ${user.name}님의 일간 <strong>${CHEONGAN_HANJA[dayMaster]}(${CHEONGAN[dayMaster]})</strong>에 대입하면 육친상 <strong>‘${seun.yearTenGod}’</strong>의 거대한 파도가 삶의 전면에 밀려들어 온 형국입니다.
         </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-compass"></i> 당해 세운(${seun.yearHanja}) 핵심 명리 진단</h5>
+
+        ${userConcern}
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-bolt"></i> 당해 세운(${seun.yearHanja})에 일어날 핵심 사건과 환경 변화</h5>
           <p>
-            • <strong>원국 격국 및 강약:</strong> ${pattern.name} (${strength.title}, 득령·득지 ${strength.score}점)<br>
-            • <strong>세운 천간 작용:</strong> ${seun.yearGan}(${seun.yearTenGod}) — 사회적 무대에서의 역할 재정의 및 ${seun.yearTenGod} 중심의 사건 발현<br>
-            • <strong>핵심 용신(用神) 나침반:</strong> 억부용신 <strong>[${yongshin.eokbuYongshin}]</strong> / 조후용신 <strong>[${yongshin.johuYongshin}]</strong>
+            올해는 그동안 미뤄두었던 인생의 중대 과제가 한꺼번에 고개를 드는 해입니다. 직업과 사회적 무대에서는 ${seun.yearTenGod}의 주도권 쟁탈전이 벌어지며, 과거의 익숙했던 루틴에서 벗어나 새로운 권한을 쥐거나 독자적인 성과를 입증해야 하는 상황으로 내몰립니다. 특히 상반기에는 주변 사람들과의 기대치 불일치로 인한 피로감이 누적될 수 있으나, 가을 이후 조후용신인 ${yongshin.johuYongshin}의 기운이 유입되며 극적인 명예 회복과 자산 증식의 활로가 열립니다.
           </p>
         </div>
-        <p>
-          궁통보감(窮通寶鑑) 고전 조후론에 비추어 볼 때, ${user.name}님은 <strong>${climate.seasonBadgeText}</strong>의 기운을 품고 태어나셨습니다(${climate.quote}). 따라서 이번 세운의 ${ELEMENT_KOREAN[seun.yearEl]} 기운이 원국의 한난조습(寒暖燥濕)에 미치는 영향을 정확히 읽고, 과열된 기운은 식히고 얼어붙은 기운은 데우는 선제적 대응이 성패를 가릅니다.
-        </p>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-compass"></i> 당해 세운 핵심 명리 처방과 절대 수칙</h5>
+          <p>
+            • <strong>원국 격국 및 강약:</strong> ${pattern.name} (${strength.title}, 득령·득지 ${strength.score}점) — 무리한 정면 승부보다 시스템에 올라타 레버리지를 일으키십시오.<br>
+            • <strong>핵심 용신(用神) 나침반:</strong> 억부용신 <strong>[${yongshin.eokbuYongshin}]</strong> / 조후용신 <strong>[${yongshin.johuYongshin}]</strong><br>
+            • <strong>조후 양생 지침:</strong> 궁통보감 고전에 비추어 볼 때 ${user.name}님은 ${climate.seasonBadgeText}의 기운을 품고 계시므로(${climate.quote}), 세운의 과열된 기운은 차분히 가라앉히고 얼어붙은 기운은 열정으로 녹여내는 지혜가 요구됩니다.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -373,43 +383,25 @@ function buildNewYearReportHtml(user, natureName) {
       <h3 class="chapter-title">내 사주 4기둥과 세운이 부딪히는 지점 — 무엇이 깨지고 무엇이 맺어지는가</h3>
       <div class="chapter-prose">
         <p>
-          운에서 들어오는 글자가 내 사주의 연주(조상·초년), 월주(직업·사회궁), 일주(배우자·안방), 시주(말년·자녀·결과물) 중 어느 기둥을 건드리느냐에 따라 사건이 터지는 장소가 정확히 결정됩니다. ${user.name}님의 원국 내부 역학(<strong>${(user.dynamics?.stemRelations || []).concat(user.dynamics?.branchRelations || []).join(', ') || '독립적 기둥 유지'}</strong>) 위에 세운 ${seun.yearHanja}가 얹혔을 때 일어나는 화학반응은 다음과 같습니다.
+          운에서 들어오는 글자가 내 사주의 연주(조상·초년), 월주(직업·사회궁), 일주(배우자·안방), 시주(말년·자녀·결과물) 중 어느 기둥을 건드리느냐에 따라 사건이 터지는 무대가 정확히 결정됩니다. ${user.name}님의 사주 4기둥 위에 세운 ${seun.yearHanja}가 얹혔을 때 일어나는 기둥별 화학반응은 다음과 같습니다.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:22%;">사주 기둥</th>
-              <th style="width:20%;">원국 간지</th>
-              <th>세운(${seun.yearHanja})과의 상호작용 및 현실 발현 사건</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>연주 (年柱)</strong><br>외부 환경·윗사람</td>
-              <td><strong>${user.pillars.year.hanja}</strong> (${user.pillars.year.korean})</td>
-              <td>가문, 본가, 혹은 업계 전체의 거시적 규제나 트렌드 변화가 ${user.name}님의 의사결정에 압력을 가합니다. 윗사람이나 기존 관행과 맞서기보다 명분을 세워 실리를 챙겨야 합니다.</td>
-            </tr>
-            <tr>
-              <td><strong>월주 (月柱)</strong><br>직장·사업·사회궁</td>
-              <td><strong>${user.pillars.month.hanja}</strong> (${user.pillars.month.korean})</td>
-              <td>가장 직접적인 직무 변동과 수익 구조 재편이 일어나는 자리입니다. ${pattern.name}의 특성이 세운 ${seun.yearTenGod}과 결합하여 기존 업무 방식에 새 엔진을 달게 됩니다.</td>
-            </tr>
-            <tr>
-              <td><strong>일주 (日柱)</strong><br>본인·배우자·거주지</td>
-              <td><strong>${user.pillars.day.hanja}</strong> (${user.pillars.day.korean})</td>
-              <td>내면의 독립 욕구와 생활 반경의 변화가 동시에 찾아옵니다. 배우자나 연인과의 관계에서 주도권 다툼을 피하고 공동의 재무 목표를 설정할 때 결속력이 극대화됩니다.</td>
-            </tr>
-            <tr>
-              <td><strong>시주 (時柱)</strong><br>미래 자산·부업·자녀</td>
-              <td><strong>${user.pillars.hour ? user.pillars.hour.hanja : '미입력'}</strong></td>
-              <td>당장 눈에 보이는 본업 외에 미래를 위한 씨앗(제2 파이프라인, 특허, 자격, 투자처)이 잉태되는 구간입니다. 후반기로 갈수록 시주의 결실력이 강해집니다.</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="critical-warning-box">
-          <h5><i class="fa-solid fa-bolt"></i> 세운 충·살(沖煞) 방어 핵심 수칙</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-sitemap"></i> 4대 기둥별 현실 발현 사건 및 충돌 징조</h5>
           <p>
-            원국에 잠재된 <strong>${(user.extendedShinsal || []).map(s => s.name).slice(0, 3).join(', ') || '특수 신살'}</strong>의 기운이 세운의 자극을 받을 때는 ‘속도전’이 독이 됩니다. 문서 날인 전 최소 24시간의 숙려 시간을 두는 것만으로도 올해 예상되는 손재수의 80%를 예방할 수 있습니다.
+            • <strong>연주 [${user.pillars.year.hanja}]:</strong> 가문, 본가, 혹은 몸담고 있는 업계 전체의 정책·제도 변화가 의사결정에 압력을 가합니다. 윗사람과의 갈등을 피하고 명분을 먼저 챙기십시오.<br>
+            • <strong>월주 [${user.pillars.month.hanja}]:</strong> 직무 변동과 주력 수익 구조의 재편이 가장 직접적으로 발생하는 자리입니다. 기존의 업무 방식에 새로운 자동화나 협업 시스템을 결합해야 도태되지 않습니다.<br>
+            • <strong>일주 [${user.pillars.day.hanja}]:</strong> 내면의 독립 욕구와 거주 환경의 변동이 동시에 찾아옵니다. 배우자나 연인과의 관계에서 사소한 주도권 다툼을 피하고 공동의 재무 목표를 세우십시오.<br>
+            • <strong>시주 [${user.pillars.hour ? user.pillars.hour.hanja : '미상'}]:</strong> 본업 외의 제2 파이프라인, 특허, 자격, 은밀한 투자처가 태동하는 구간으로 하반기로 갈수록 결실력이 커집니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-shield-halved"></i> 세운 충·살(沖煞)을 무력화하는 3대 액막이 비방</h5>
+          <p>
+            1. <strong>24시간 지연의 법칙:</strong> 중요한 계약서 날인, 거액 송금, 이별 및 사표 통보는 감정이 고조된 순간에 절대 하지 마시고 반드시 하루의 밤을 넘긴 후 실행하십시오.<br>
+            2. <strong>공간 파동 정화:</strong> 현재 머무는 침실이나 서재의 서북쪽 구석에 탁한 기운이 고이지 않도록 소금단지나 황동 소품을 배치하여 충살을 흡수하십시오.<br>
+            3. <strong>신살 업상대체:</strong> 원국에 잠재된 ${(user.extendedShinsal || []).map(s => s.name).slice(0, 3).join(', ') || '특수 신살'}의 기운을 살리기 위해 봉사활동이나 전문 분야 집중 연구로 날카로운 칼날을 긍정적으로 소모하십시오.
           </p>
         </div>
       </div>
@@ -421,18 +413,23 @@ function buildNewYearReportHtml(user, natureName) {
       <h3 class="chapter-title">언제 칼을 뽑고 언제 방패를 들 것인가 — 연간 4분기 전략 지도</h3>
       <div class="chapter-prose">
         <p>
-          1년 열두 달 내내 전속력으로 달릴 수는 없습니다. 명리학의 고수들은 자신의 조후용신(<strong>${yongshin.johuYongshin}</strong>)과 억부용신(<strong>${yongshin.eokbuYongshin}</strong>)이 득세하는 계절에 승부수를 던지고, 기신(忌神)이 강해지는 계절에는 철저히 현금을 보유하며 몸을 낮춥니다.
+          1년 열두 달 내내 전속력으로 달릴 수는 없습니다. 명리학의 고수들은 조후용신(<strong>${yongshin.johuYongshin}</strong>)과 억부용신(<strong>${yongshin.eokbuYongshin}</strong>)이 득세하는 계절에 승부수를 던지고, 기신(忌神)이 강해지는 계절에는 철저히 현금을 보유하며 방패를 듭니다.
         </p>
-        <p>
-          • <strong>목(木)의 계절 (인·묘·진월 / 2월~4월):</strong> 새로운 기획, 인맥 확장, 이직 타진, 학업 및 자격 시작의 기운이 솟구칩니다. 머뭇거리던 프로젝트를 수면 위로 올리십시오.<br>
-          • <strong>화(火)의 계절 (사·오·미월 / 5월~7월):</strong> 기운이 최고조로 발산되며 대외 노출, 마케팅, 영업 성과가 폭발하나, 동시에 감정적 마찰과 과열 투자로 인한 현금 고갈을 경계해야 합니다.<br>
-          • <strong>금(金)의 계절 (신·유·술월 / 8월~10월):</strong> 벌려놓은 일들을 냉정하게 가지치기하고, 실속 없는 인간관계와 적자 항목을 도려내어 현금과 문서로 결실을 거두는 수확기입니다.<br>
-          • <strong>수(水)의 계절 (해·자·축월 / 11월~1월):</strong> 다음 해의 판을 짜기 위해 지식을 비축하고 건강을 돌보며, 수면 아래에서 핵심 계약과 자산을 조용히 갈무리하는 응축기입니다.
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-chess-knight"></i> ${user.name}님을 위한 연간 승부처 요약</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-clock-rotate-left"></i> 사계절 운명의 흐름과 에너지 분기점</h5>
           <p>
-            다음 장(CHAPTER 04~15)부터는 감명일 기준 <strong>향후 12개월(제1월~제12월)</strong>의 각 달을 한 페이지씩 단독으로 해부합니다. 매월 초 해당 페이지를 펼쳐 그달의 길일과 주의일을 체크리스트로 활용하십시오.
+            • <strong>봄 (목 기운 / 2~4월):</strong> 싹이 트고 기운이 위로 뻗는 시기입니다. 망설였던 새 기획, 이직 탐색, 학업 및 자격증 취득에 시동을 걸면 가속도가 붙습니다.<br>
+            • <strong>여름 (화 기운 / 5~7월):</strong> 꽃이 피고 대외 노출이 극대화되는 발산기입니다. 영업 실적과 네트워크 확장은 폭발하나, 충동적 소비와 감정적 대립으로 인한 손재수를 단속해야 합니다.<br>
+            • <strong>가을 (금 기운 / 8~10월):</strong> 열매를 맺고 가지치기를 하는 결실기입니다. 불필요한 인간관계와 적자 요소를 도려내고, 확실한 문서와 현금으로 자산을 갈무리하십시오.<br>
+            • <strong>겨울 (수 기운 / 11~1월):</strong> 씨앗을 땅속에 품고 봄을 기다리는 지혜의 응축기입니다. 새로운 투자를 벌리기보다 내실을 다지고 체력을 비축하십시오.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-chess-knight"></i> ${user.name}님을 위한 연간 공방(攻防) 황금률</h5>
+          <p>
+            다음 장(CHAPTER 04~15)부터는 감명일 기준 <strong>향후 12개월(제1월~제12월)</strong>의 각 달을 한 페이지씩 단독으로 해부합니다. 매월 초 해당 페이지를 펼쳐 그달의 길일과 주의일, 실전 비방을 삶의 지침서로 삼으십시오.
           </p>
         </div>
       </div>
@@ -447,17 +444,22 @@ function buildNewYearReportHtml(user, natureName) {
       <h3 class="chapter-title">돈이 들어오는 문과 빠져나가는 구멍 — 향후 1년간의 자산 배분 전략</h3>
       <div class="chapter-prose">
         <p>
-          ${user.name}님의 원국은 <strong>${strength.title}</strong> 구조 위에 <strong>${pattern.name}</strong>의 재물 그릇을 얹고 있습니다. ${strength.status === 'strong' ? '본인의 주체적 에너지가 강하므로 남의 밑에서 정해진 급여만 받기보다 성과급, 인센티브, 사업 소득, 혹은 주도적인 투자에서 큰 재물이 터지는 구조입니다.' : '무리하게 혼자 모든 리스크를 떠안는 공격적 차입 투자보다는, 확실한 시스템·플랫폼·우량 문서(부동산·배당·자격)에 올라타 안정적인 현금흐름을 구축할 때 재물이 새지 않고 쌓입니다.'}
+          ${user.name}님의 원국은 <strong>${strength.title}</strong> 구조 위에 <strong>${pattern.name}</strong>의 재물 그릇을 얹고 있습니다. ${strength.status === 'strong' ? '주체적 에너지가 강하므로 남의 밑에서 고정급만 받기보다 인센티브, 사업 소득, 독자적 투자 파이프라인에서 큰 재물이 터져 나오는 구조입니다.' : '무리하게 차입 레버리지를 일으키기보다, 확실한 시스템·우량 배당·자격·문서 자산에 올라타 안정적인 현금흐름을 구축할 때 부가 새지 않고 견고히 쌓입니다.'}
         </p>
-        <p>
-          향후 12개월 동안 재물운의 핵심 키워드는 <strong>‘유동성 확보’와 ‘문서화’</strong>입니다. 손에 들어온 현금을 계좌에 그냥 두면 비겁(경쟁자·지인·예상치 못한 수리비나 경조사)의 기운이 이를 흔들어 빼앗아 갑니다. 따라서 수입이 발생하는 즉시 강제 저축이나 중장기 자산 계좌로 이체하여 ‘내 눈앞에서 현금을 숨기는 개운법’을 써야 합니다.
-        </p>
-        <div class="critical-warning-box">
-          <h5><i class="fa-solid fa-ban"></i> 향후 1년간 절대 금기시해야 할 재무 행동 3가지</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-wallet"></i> 향후 1년간 예상되는 재정적 기회와 손재수 징조</h5>
           <p>
-            1. <strong>친분 기반의 금전 대여 및 동업 출자:</strong> 혈연이나 오랜 지인일수록 계약서 없는 돈거래는 원진살의 원한으로 되돌아옵니다.<br>
-            2. <strong>감정적 보복 소비 및 홧김의 베팅:</strong> 직무 스트레스가 극에 달하는 달에 충동적으로 고가품을 결제하거나 고위험 자산에 추격 매수하는 패턴을 끊으십시오.<br>
-            3. <strong>구두 약속에 의존한 용역·납품 진행:</strong> 선입금과 날인된 계약서 없이는 단 한 걸음도 움직이지 않는 냉철함이 당신의 재물고를 지킵니다.
+            손에 쥔 현금을 계좌에 그대로 방치하면 주변 인연의 급전 요청, 가족의 예상치 못한 지출, 혹은 충동적인 테마주/코인 추격 매수로 인해 기운이 흔들립니다. 특히 여름철과 환절기 무렵에는 그럴듯한 사업 제안이나 투자 권유가 들어올 수 있으나, 원금 보장 각서가 없는 거래는 100% 손재수로 연결되니 경계하십시오.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-sack-dollar"></i> 재물고(財物庫)를 잠그는 황실 자산 보전 비방</h5>
+          <p>
+            1. <strong>강제 문서화 개운:</strong> 수입이 들어오는 즉시 30% 이상을 해지가 까다로운 장기 펀드나 청약, 채권 계좌로 자동 이체하여 내 눈앞에서 현금을 은닉하십시오.<br>
+            2. <strong>금전 지출 시진 준수:</strong> 거액 결제나 투자 집행은 판단력이 흐려지는 야간(술시·해시, 19:30 이후)을 절대 피하고, 양기가 맑은 오전(진시·사시, 08:00~11:00)에만 진행하십시오.<br>
+            3. <strong>지갑 풍수 비책:</strong> 영수증이나 쓰지 않는 카드를 지갑에서 매일 비워내고, ${yongshin.eokbuYongshin === '금(金)' ? '새 지폐 1장을 붉은 종이에 싸서' : '금빛 클립으로 지폐를 묶어'} 안쪽 깊숙이 넣어두면 재물의 누수를 차단합니다.
           </p>
         </div>
       </div>
@@ -469,30 +471,24 @@ function buildNewYearReportHtml(user, natureName) {
       <h3 class="chapter-title">도장을 찍어도 되는 달과 물러서야 할 방위 — 문서운 정밀 지침</h3>
       <div class="chapter-prose">
         <p>
-          명리학에서 문서운은 <strong>인성(印星: 정인·편인)</strong>과 <strong>식상·재성의 결실</strong>로 판별합니다. 향후 1년 내 거주지 이동(매매·전월세 계약), 사업장 임대차, 차량 교체, 혹은 중요한 법적·업무적 협약서 날인을 앞두고 계신다면 다음의 방위와 시기를 엄격히 준수하십시오.
+          명리학에서 문서운은 <strong>인성(印星: 정인·편인)</strong>과 <strong>식상·재성의 결실</strong>로 판별합니다. 거주지 이전(매매·전월세 계약), 사업장 임대차, 차량 교체, 협약서 날인을 앞두고 계신다면 다음의 방위와 시기를 엄격히 준수하십시오.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:25%;">구분</th>
-              <th>${user.name}님 맞춤 문서 · 이동 개운 처방</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>길방(吉方) · 유리한 방향</strong></td>
-              <td>현재 거주지 또는 주 활동지 기준 <strong>${dayEl === 'wood' || dayEl === 'fire' ? '동남쪽 · 남쪽 (양기 소통 방위)' : '서북쪽 · 북동쪽 (수렴 및 안정 방위)'}</strong> 및 채광과 통풍이 확보된 고층·탁 트인 지형</td>
-            </tr>
-            <tr>
-              <td><strong>기피해야 할 흉방</strong></td>
-              <td>일지 ${JIJI_HANJA[dayBranch]}와 정면 충(沖)을 이루는 방향의 막다른 골목, 습기가 차는 반지하, 혹은 공사 소음이 끊이지 않는 풍수적 파살(破煞) 지대</td>
-            </tr>
-            <tr>
-              <td><strong>계약서 특약 필수 점검</strong></td>
-              <td>권리관계(근저당·선순위 채권), 위약금 조항, 중도 해지 조건을 반드시 본인이 직접 두 번 이상 대조하십시오. 대리인에게 일임하면 문서 착오가 발생합니다.</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-file-signature"></i> 향후 1년간 발생할 수 있는 문서 이슈와 관재 징조</h5>
+          <p>
+            임대인 또는 거래 상대방과의 구두 합의를 믿고 특약 사항을 누락했다가 보증금 반환 지연이나 위약금 분쟁에 휘말릴 수 있는 징조가 있습니다. 특히 원국의 일지와 충돌하는 월에는 중개사의 말만 믿고 서두르다가 하자 있는 매물을 잡을 위험이 있으니, 건축물대장과 등기부등본의 을구 근저당 설정을 계약 당일 아침에 다시 열람하십시오.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-compass-drafting"></i> ${user.name}님 맞춤 문서·이동 개운 비방전</h5>
+          <p>
+            • <strong>길방(吉方) 선점:</strong> 현재 거주지 기준 <strong>${dayEl === 'wood' || dayEl === 'fire' ? '동남쪽 · 남쪽 (생기 방위)' : '서북쪽 · 북동쪽 (수렴 방위)'}</strong>로 움직일 때 막혔던 일들이 자연스럽게 풀립니다.<br>
+            • <strong>기피해야 할 흉방:</strong> 일지와 정면 충을 이루는 방향의 막다른 골목이나 습기가 차는 터는 피하십시오.<br>
+            • <strong>계약서 날인 비책:</strong> 계약 당일에는 검은색 정장보다는 밝은 상의를 착용하시고, 서명 직전 심호흡을 3회 하여 일간의 중심을 잡은 후 직접 도장을 날인하십시오.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -502,20 +498,23 @@ function buildNewYearReportHtml(user, natureName) {
       <h3 class="chapter-title">향후 1년간 내 인생을 끌어올릴 귀인의 특징 vs 에너지를 갉아먹을 악연</h3>
       <div class="chapter-prose">
         <p>
-          운이 바뀔 때는 반드시 <strong>‘사람’</strong>을 통해 복과 화가 들어옵니다. ${user.name}님의 일간 ${CHEONGAN_HANJA[dayMaster]}을 기준으로 천을귀인(天乙貴人)과 용신 오행(<strong>${yongshin.eokbuYongshin}</strong>)을 가진 사람을 곁에 두면 막혔던 혈이 뚫리듯 문제가 해결됩니다.
+          운이 바뀔 때는 반드시 <strong>‘사람’</strong>을 통해 복과 화가 들어옵니다. ${user.name}님의 일간 ${CHEONGAN_HANJA[dayMaster]}을 기준으로 천을귀인(天乙貴人)과 용신 오행(<strong>${yongshin.eokbuYongshin}</strong>)을 품은 인연을 곁에 두면 얽혔던 실타래가 기적처럼 풀립니다.
         </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-user-check"></i> 반드시 잡아야 할 올해의 귀인(貴人) 시그널</h5>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-user-check"></i> 반드시 곁에 두어야 할 올해의 귀인(貴人) 특징</h5>
           <p>
-            • <strong>띠(출생연도 지지) 및 기질:</strong> 나의 용신 기운(${yongshin.johuYongshin})을 보완해 주며, 감정적 과장 없이 수치와 팩트로 조언해 주는 차분한 실무형 인물.<br>
-            • <strong>만나는 장소:</strong> 술자리나 유흥 모임이 아닌, 직무 세미나·교육장·공식 비즈니스 미팅·운동 모임에서 조우하는 인연.
+            • <strong>기질 및 화법:</strong> 감정적 과장 없이 숫자로 증명하며, 내가 듣기 좋은 아부보다 뼈가 되는 실무적 피드백을 주는 차분한 인물입니다.<br>
+            • <strong>조우 장소:</strong> 술자리나 밤 모임이 아닌, 전문 세미나·학회·공식 비즈니스 협의체·도서관에서 우연히 인연이 닿습니다.<br>
+            • <strong>활용법:</strong> 이들에게는 작은 부탁을 하더라도 반드시 정당한 대가나 성의 있는 감사를 표하여 신뢰 자본을 쌓으십시오.
           </p>
         </div>
+
         <div class="critical-warning-box">
-          <h5><i class="fa-solid fa-user-xmark"></i> 즉시 손절해야 할 소인배(악연) 시그널</h5>
+          <h5><i class="fa-solid fa-user-slash"></i> 즉시 거리를 두어야 할 소인배(에너지 뱀파이어) 시그널</h5>
           <p>
-            • 첫 만남부터 지나치게 친밀감을 과시하며 남의 험담을 공유하거나, 검증되지 않은 일확천금 정보로 당신의 조급증을 자극하는 인물.<br>
-            • 내 성취를 은근히 깎아내려 자존감을 갉아먹는 가스라이팅형 동료나 지인은 올해 상반기 내에 거리를 두어야 내 복록이 온전히 보전됩니다.
+            • 첫 만남부터 지나치게 친밀감을 과시하며 제3자의 험담을 유도하거나, 검증되지 않은 투자 정보로 조급증을 부추기는 인물.<br>
+            • 내 성취를 은근히 깎아내려 무력감을 심어주는 가스라이팅형 동료나 지인은 상반기 내에 칼같이 손절해야 본인의 운기가 훼손되지 않습니다.
           </p>
         </div>
       </div>
@@ -524,20 +523,27 @@ function buildNewYearReportHtml(user, natureName) {
     <!-- 제19장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 19 · 계절별 신체 바이오리듬 및 질환 예방 캘린더</div>
-      <h3 class="chapter-title">세운의 오행 편중이 건드리는 내 몸의 약점과 사계절 건강 수칙</h3>
+      <h3 class="chapter-title">몸이 무너지면 운도 멈춘다 — 의명진단학 연간 건강 기상도</h3>
       <div class="chapter-prose">
         <p>
-          명리학에서 건강은 오행의 균형 그 자체입니다. ${user.name}님은 원국상 <strong>${med.excessOrgan.elKor} 기운(${med.excessOrgan.zang}·${med.excessOrgan.fu})</strong>이 상대적으로 강하고, <strong>${med.deficientOrgan.elKor} 기운(${med.deficientOrgan.zang}·${med.deficientOrgan.fu})</strong>이 취약한 구조를 지니고 있습니다.
+          동의보감과 황제내경은 "사주에 오행의 편고(偏枯)가 있으면 반드시 신체 장부의 허실(虛實)로 발현된다"고 단언합니다. ${user.name}님의 원국 분석 결과, 가장 보살펴야 할 취약 장부는 <strong>${med.deficientOrgan.zang}</strong>이며, 가장 과열되기 쉬운 장부는 <strong>${med.excessOrgan.zang}</strong>입니다.
         </p>
-        <p>
-          특히 세운(${seun.yearHanja})의 기운이 더해지는 향후 1년 동안에는 과로와 수면 부족이 누적될 경우 <strong>${med.deficientOrgan.deficientSymptom}</strong> 또는 <strong>${med.excessOrgan.excessSymptom}</strong> 형태로 신체의 경고등이 켜질 수 있습니다.
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-heart-circle-check"></i> 연간 건강 방어 3대 생활 루틴</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-stethoscope"></i> 계절별 주의 증상 및 신체 신호</h5>
           <p>
-            1. <strong>생체 경락 시간 준수:</strong> ${med.deficientOrgan.meridianTime}<br>
-            2. <strong>맞춤 약선 차(茶) 상비:</strong> 커피 대신 <strong>${med.deficientOrgan.teaPrescription}</strong>을 수시로 음용하여 장부의 허열을 내리십시오.<br>
-            3. <strong>정기 검진 권장 시기:</strong> 일지 충이나 월지 충이 들어오는 달의 전월에는 반드시 치과·위내시경·혈액 대사 검진을 선제적으로 받아 액땜하십시오.
+            • <strong>환절기 (간담·비위 피로):</strong> 극심한 만성 피로와 안구 건조, 승모근 결림이 나타나면 즉시 간의 과열을 의심하십시오.<br>
+            • <strong>혹서기 (심소장 과열):</strong> 가슴 답답함, 수면 장애, 구내염이 잦아질 수 있으니 카페인 음료를 절제해야 합니다.<br>
+            • <strong>동절기 (신방광 냉증):</strong> 하체 부종이나 요통, 손발 저림이 심해질 수 있으니 아랫배를 항상 따뜻하게 보온하십시오.
+          </p>
+        </div>
+
+        <div class="medical-care-box">
+          <h5><i class="fa-solid fa-notes-medical"></i> 동의보감 황실 체질 양생 처방전</h5>
+          <p>
+            • <strong>약선 음식:</strong> ${med.deficientOrgan.medicinalFood}<br>
+            • <strong>매일 마실 한방차:</strong> ${med.deficientOrgan.teaPrescription}<br>
+            • <strong>경락 골든타임:</strong> ${med.deficientOrgan.meridianTime} — 이 시간에는 전자기기를 멀리하고 숙면을 취해야 오장육부의 진액이 재생됩니다.
           </p>
         </div>
       </div>
@@ -546,53 +552,53 @@ function buildNewYearReportHtml(user, natureName) {
     <!-- 제20장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 20 · 생활 풍수(風水) · 방위 · 색상 · 행운수 개운 비방</div>
-      <h3 class="chapter-title">일상 공간을 부와 행운의 자석으로 바꾸는 천문(天門) 개운 비책</h3>
+      <h3 class="chapter-title">공간과 파장을 바꾸어 운명을 비트는 황실 개운 비방전</h3>
       <div class="chapter-prose">
         <p>
-          사주 원국의 부족한 오행을 채우는 가장 빠르고 현실적인 방법은 내가 매일 머무는 <strong>공간(풍수), 몸에 걸치는 색채(파장), 그리고 반복하는 습관(행동 개운)</strong>을 바꾸는 것입니다.
+          사주 원국의 부족한 오행을 채우는 가장 빠르고 현실적인 방법은 매일 머무는 <strong>공간(풍수), 몸에 걸치는 색채(파장), 그리고 반복하는 습관(행동 개운)</strong>을 바꾸는 것입니다.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:26%;">개운 항목</th>
-              <th>${user.name}님 맞춤 황실 개운 처방전</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>🎨 행운의 컬러 (색채 파장)</strong></td>
-              <td>속옷·지갑·스마트폰 케이스·침구류에 조후/억부 보완색인 <strong>${med.deficientEl === 'water' ? '네이비·블랙·차콜' : med.deficientEl === 'wood' ? '포레스트 그린·민트·청록' : med.deficientEl === 'fire' ? '버건디·코랄·웜화이트' : med.deficientEl === 'earth' ? '베이지·머스타드·골드' : '화이트·실버·메탈릭 그레이'}</strong>를 포인트로 배치하십시오.</td>
-            </tr>
-            <tr>
-              <td><strong>🛏️ 침실 & 책상 풍수</strong></td>
-              <td>침대 머리는 창문과 방문을 대각선으로 바라보되 직접 맞닿지 않게 배치하고, 책상 위에는 불필요한 종이 더미를 치워 <strong>명당(明堂: 책상 앞 공간)</strong>을 비워두어야 문서운과 결단력이 살아납니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🔢 행운의 선천수(先天數)</strong></td>
-              <td>비밀번호나 중요 의사결정 단위에 <strong>${dayEl === 'wood' ? '3, 8' : dayEl === 'fire' ? '2, 7' : dayEl === 'earth' ? '5, 0' : dayEl === 'metal' ? '4, 9' : '1, 6'}</strong>의 수리(數理) 조합을 활용하십시오.</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-wand-magic-sparkles"></i> ${user.name}님 맞춤 황실 개운 처방전</h5>
+          <p>
+            • <strong>침실 베개 방향:</strong> 머리를 <strong>${dayEl === 'water' || dayEl === 'wood' ? '동쪽 또는 남쪽' : '서북쪽'}</strong>으로 두고 주무시면 자는 동안 대지의 맑은 자기를 흡수하여 아침 기상이 가벼워집니다.<br>
+            • <strong>행운의 색채:</strong> 속옷이나 지갑, 휴대폰 케이스에 ${yongshin.johuYongshin === '화(火)' ? '레드 · 버건디' : yongshin.johuYongshin === '수(水)' ? '블랙 · 딥 네이비' : '골드 · 화이트'} 색상을 적극 차용하십시오.<br>
+            • <strong>행운의 숫자와 암호:</strong> 중요한 비밀번호나 계좌 끝자리에 ${yongshin.johuYongshin === '목(木)' ? '3, 8' : yongshin.johuYongshin === '화(火)' ? '2, 7' : '1, 6'}을 조합하십시오.<br>
+            • <strong>현관 풍수 비방:</strong> 현관 바닥에 신발을 2켤레 이상 어지럽히지 마시고, 현관문 오른쪽에 작은 거울이나 황동 풍경을 달아 탁기를 튕겨내십시오.
+          </p>
+        </div>
+
+        <div class="key-point-box">
+          <h5><i class="fa-solid fa-gem"></i> 일상 속 기운 정화 루틴</h5>
+          <p>
+            일주일에 한 번, 굵은 천일염을 푼 따뜻한 물로 족욕을 하거나 샤워 시 어깨에 소금을 살짝 문질러 씻어내면 타인에게서 묻어온 부정적인 감정 에너지가 말끔히 정화됩니다.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- 제21장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 21 · 향후 3년 세운(歲運) 브릿지 및 총결론</div>
-      <h3 class="chapter-title">올해의 씨앗이 내년과 내후년에 어떤 거목으로 자라나는가 — 3개년 중기 전망</h3>
+      <h3 class="chapter-title">큰 파도를 넘은 자에게 주어지는 축복 — 향후 3개년 로드맵과 헌사</h3>
       <div class="chapter-prose">
         <p>
-          운명은 단절된 점이 아니라 도도하게 흐르는 강물입니다. 지금 맞이한 <strong>${seun.curYear}년(${seun.yearHanja})</strong>을 기점으로 앞으로 이어질 <strong>${seun.curYear + 1}년</strong>과 <strong>${seun.curYear + 2}년</strong>의 3개년 흐름을 연결해 보면, 지금 당신이 겪고 있는 고민과 진통이 결코 헛된 소모가 아님을 알게 됩니다.
+          운명은 단절된 1년의 점이 아니라, 끊임없이 이어지는 파도의 곡선입니다. 당해 세운(${seun.yearHanja})을 성공적으로 디딤돌 삼아 나아갈 때, 향후 3년 동안 ${user.name}님의 인생에는 다음과 같은 거대한 퀀텀 점프가 준비되어 있습니다.
         </p>
-        <p>
-          • <strong>제1차년도 (${seun.curYear}년 ~ ${seun.curYear + 1}년 초):</strong> 낡은 껍질을 깨고 내 사주의 본래 격국(<strong>${pattern.name}</strong>)에 맞지 않는 불필요한 인연과 비효율적 관행을 정리하며 핵심 무기를 벼리는 <strong>‘기반 재정립기’</strong>입니다.<br>
-          • <strong>제2차년도 (${seun.curYear + 1}년):</strong> 정비된 체력과 문서를 바탕으로 새로운 시장과 직책에서 실질적인 점유율과 현금흐름을 빠르게 확장하는 <strong>‘도약 및 증식기’</strong>입니다.<br>
-          • <strong>제3차년도 (${seun.curYear + 2}년):</strong> 확장된 성과를 부동산·지분·장기 자산 등 흔들리지 않는 성벽(문서)으로 굳혀 사회적 위상을 확고히 하는 <strong>‘안착 및 결실기’</strong>입니다.
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-scroll"></i> 제1권 세운(歲運) 감명서 총결</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-stairs"></i> 향후 3개년(Year 1 ~ Year 3) 성장 연대기</h5>
           <p>
-            "${user.name}님, 하늘은 준비된 자에게만 충(沖)의 폭풍을 도약의 바람으로 바꾸어 줍니다. 매달 이 서책의 월별 지침을 나침반 삼아 나아가신다면, 향후 12개월은 당신의 인생에서 가장 눈부신 전환점으로 기록될 것입니다."
+            • <strong>Year 1 (기틀 확립기):</strong> 낡은 환경을 털어내고 새로운 씨앗을 뿌리는 시기로, 내 전문성과 주력 무대가 마침내 윤곽을 드러냅니다.<br>
+            • <strong>Year 2 (도약과 확장기):</strong> 뿌린 씨앗이 꽃을 피우며 권한과 수익이 배가되는 구간입니다. 귀인의 조력으로 날개를 달게 됩니다.<br>
+            • <strong>Year 3 (결실과 반석기):</strong> 3년간의 노력이 확고한 문서와 자산으로 굳어지며 인생의 새로운 정상에 우뚝 서게 됩니다.
+          </p>
+        </div>
+
+        <div class="counseling-empathy-box">
+          <h5><i class="fa-solid fa-heart"></i> 천문(天門) 스승이 ${user.name}님께 바치는 축원문</h5>
+          <p>
+            "흐르는 강물은 바위를 만나도 멈추지 않고, 바위를 감싸 안고 돌아 마침내 큰 바다에 이릅니다. 그동안 남모르게 흘린 땀방울과 눈물은 결코 헛되지 않았으며, 이제 운의 순풍이 당신의 돛을 힘차게 밀어줄 차례입니다. 부디 당신의 고유한 별을 믿고 당당하게 전진하십시오."
           </p>
         </div>
       </div>
@@ -600,11 +606,10 @@ function buildNewYearReportHtml(user, natureName) {
   `;
 }
 
+
+
 // ============================================================================
-// 2. 제2권 (master) : 평생 총운 & 10년 대운 · 의명진단 마스터팩 (총 23장)
-//    - 자평진전 10대 격국 + 4기둥 해부(5장) + 용신·길신·흉살·심리(5장)
-//    - 10년 대운 제1~제8대운 단독 심층 해부(8장)
-//    - 의명진단학(醫命診斷學) 4대 장 정밀 수록(4장) + 평생 재물 로드맵(1장) = 23장
+// 2. 제2권 (master) : 평생 총운 & 10년 대운 연대기 · 의명진단 마스터팩 (총 23장)
 // ============================================================================
 function buildMasterReportHtml(user, natureName) {
   const dayMaster = user.pillars.day.stemIdx;
@@ -617,6 +622,13 @@ function buildMasterReportHtml(user, natureName) {
   const dynamics = user.dynamics || { stemRelations: [], branchRelations: [] };
   const shinsalList = user.extendedShinsal || [];
   const med = diagnoseMedicalSaju(user);
+
+  const userMbtiRef = (user.userMbti && user.userMbti !== 'unknown')
+    ? `<div class="key-point-box">
+         <h5><i class="fa-solid fa-brain"></i> 명리학 십성(十星)과 현대 심리학 MBTI (${user.userMbti}) 교차 분석</h5>
+         <p>${user.name}님의 사주 본원인 <strong>${natureName}</strong>과 ${user.userMbti} 성향은 '깊은 내면의 통찰과 독립적인 실행력'이라는 강력한 공통분모를 가집니다. 겉으로는 합리적이고 차분하지만, 본인의 원칙이나 목표가 설정되면 타협 없이 끝까지 밀어붙이는 승부사 기질이 발현됩니다.</p>
+       </div>`
+    : '';
 
   // 8대운 단독 페이지 생성 (제11장 ~ 제18장, 총 8장)
   const daeunList = user.daeunList || [];
@@ -645,35 +657,36 @@ function buildMasterReportHtml(user, natureName) {
         <h3 class="chapter-title">${d.startAge}세 ~ ${d.endAge}세 [${d.gan}${d.zhi}(${d.kor}) 대운] — ${d.tenGod}·${dBranchTenGod}의 10년 기상도</h3>
         <div class="chapter-prose">
           <p>
-            <strong>${user.name}님의 인생 제${idx + 1}막 (${d.startAge}세~${d.endAge}세, ${stageLabel})</strong>을 지배하는 10년 대운은 <strong>${d.gan}${d.zhi}(${d.kor})</strong>입니다. 대운의 전반부 5년(${d.startAge}세~${d.startAge + 4}세)은 천간 <strong>${d.gan}(${d.tenGod})</strong>이 외적인 사회 환경과 인간관계를 주도하며, 후반부 5년(${d.startAge + 5}세~${d.endAge}세)은 지지 <strong>${d.zhi}(${dBranchTenGod})</strong>가 실질적인 재물고와 가정·건강의 뿌리를 뒤흔들거나 반석 위에 올려놓습니다.
+            <strong>${user.name}님의 인생 제${idx + 1}막 (${d.startAge}세~${d.endAge}세, ${stageLabel})</strong>을 지배하는 10년 대운은 <strong>${d.gan}${d.zhi}(${d.kor})</strong>입니다. 대운의 전반부 5년(${d.startAge}세~${d.startAge + 4}세)은 천간 <strong>${d.gan}(${d.tenGod})</strong>이 외적인 사회 환경과 인맥의 물갈이를 주도하며, 후반부 5년(${d.startAge + 5}세~${d.endAge}세)은 지지 <strong>${d.zhi}(${dBranchTenGod})</strong>가 실질적인 재물고와 생활 터전의 뿌리를 다지거나 대변혁을 일으킵니다.
           </p>
           <p>
-            ${isPrime ? `특히 이 <strong>${d.startAge}세~${d.endAge}세 구간</strong>은 ${user.name}님의 원국 격국(${pattern.name})이 대운의 힘을 받아 사회적 성취와 자산 증식의 레버리지를 극대화할 수 있는 <strong>핵심 승부처(Prime Era)</strong>입니다. 작은 안정에 안주하지 말고 본인의 이름값과 문서를 넓히는 과감한 확장이 요구됩니다.` : `이 <strong>${d.startAge}세~${d.endAge}세 구간</strong>은 무리한 외형 확장보다 내실을 다지고 다음 대운의 파도를 타기 위한 그릇을 빚는 시기입니다. ${d.tenGod}의 순기능을 살려 전문성과 신용을 축적하십시오.`}
-            ${isClashWithMonth ? `<br><strong>[특기사항 - 월지 대운충]:</strong> 이 대운은 원국의 월지(직업궁)와 정면 충(沖)을 이루므로 10년 사이에 직업 도메인이나 사업 아이템이 완전히 뒤바뀌는 대대적인 환골탈태를 겪게 됩니다.` : ''}
-            ${isClashWithDay ? `<br><strong>[특기사항 - 일지 대운충]:</strong> 이 대운은 원국의 일지(배우자·안방)를 강하게 흔들므로 거주지 대이동(타지·해외 포함)이나 배우자와의 관계 재정립, 건강 관리에 각별한 주의가 필요합니다.` : ''}
+            ${isPrime ? `특히 이 <strong>${d.startAge}세~${d.endAge}세 구간</strong>은 ${user.name}님의 원국 격국(${pattern.name})이 대운의 지지를 받아 인생 최대의 사회적 영토와 자산을 확보하는 <strong>황금 전성기(Prime Era)</strong>입니다. 안주하지 마시고 본인의 브랜드와 시스템을 구축하십시오.` : `이 <strong>${d.startAge}세~${d.endAge}세 구간</strong>은 무리한 외형 확장보다는 전문성을 깊이 파고들어 다음 도약기를 위한 자원을 비축해야 하는 내실의 시간입니다.`}
+            ${isClashWithMonth ? `<br><strong>[월지 대운충]:</strong> 이 10년 사이에 직업 도메인이나 주력 사업 아이템이 완전히 뒤바뀌는 대대적인 환골탈태를 경험합니다.` : ''}
+            ${isClashWithDay ? `<br><strong>[일지 대운충]:</strong> 안방과 거주 환경이 요동치므로 거주지 대이동이나 가정 관계의 성숙한 재정립이 요구됩니다.` : ''}
           </p>
-          <table class="report-detail-table">
-            <thead>
-              <tr>
-                <th style="width:24%;">대운 세분 구간</th>
-                <th>${d.gan}${d.zhi} 대운(${d.startAge}~${d.endAge}세) 영역별 운명 지침</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>전반 5년 (${d.startAge}~${d.startAge + 4}세)</strong><br>천간 [${d.gan} · ${d.tenGod}]</td>
-                <td>대외적인 명분과 새로운 기회가 <strong>${d.tenGod}</strong>의 형태로 찾아옵니다. 인간관계의 물갈이가 일어나며, 새로운 분야에 대한 학습이나 프로젝트 제안이 활발해집니다. 초기 2년은 검증에 집중하고 3년 차부터 본격 베팅하십시오.</td>
-              </tr>
-              <tr>
-                <td><strong>후반 5년 (${d.startAge + 5}~${d.endAge}세)</strong><br>지지 [${d.zhi} · ${dBranchTenGod}]</td>
-                <td>전반기에 뿌린 씨앗이 현실적인 결과물(<strong>${dBranchTenGod}</strong>)로 굳어지는 시기입니다. 현금 흐름의 구조화, 부동산·문서 취득, 혹은 조직 내 확고한 입지 구축이 이 5년 동안 판가름 납니다.</td>
-              </tr>
-              <tr>
-                <td><strong>의명(醫命) 건강 주의보</strong></td>
-                <td>대운 오행이 원국의 <strong>${med.deficientOrgan.zang}</strong>과 <strong>${med.attackedOrgan.zang}</strong>에 부담을 줄 수 있는 시기이므로, ${d.startAge + 4}세와 ${d.endAge - 1}세 무렵에는 과로를 피하고 정밀 검진을 챙기십시오.</td>
-              </tr>
-            </tbody>
-          </table>
+
+          <div class="event-prediction-box">
+            <h5><i class="fa-solid fa-hourglass-start"></i> 이 10년간 반드시 겪게 될 핵심 사건과 환경 변화</h5>
+            <p>
+              • <strong>전반 5년 (${d.startAge}~${d.startAge + 4}세, 천간 ${d.gan}·${d.tenGod}):</strong> 새로운 사회적 직함이나 프로젝트 제안이 쏟아집니다. 인간관계의 물갈이가 시작되며, 과거의 인연보다 새로운 협력자와의 결속이 성패를 좌우합니다. 초기 2년은 검증에 집중하고 3년 차부터 전면 승부를 거십시오.<br>
+              • <strong>후반 5년 (${d.startAge + 5}~${d.endAge}세, 지지 ${d.zhi}·${dBranchTenGod}):</strong> 전반기에 뿌린 노력이 현실적인 결과물(${dBranchTenGod})로 단단히 굳어지는 시기입니다. 부동산·지분 취득, 법인 설립, 또는 조직 내 확고한 고위직 안착이 이 5년 안에 판가름 납니다.
+            </p>
+          </div>
+
+          <div class="action-secret-box">
+            <h5><i class="fa-solid fa-scroll"></i> 천문 대운 개운 비책 — 10년의 승률을 극대화하는 행동 지침</h5>
+            <p>
+              • <strong>대운 교체기 액막이:</strong> 대운이 바뀌는 전후 1~2년(${d.startAge - 1}세, ${d.startAge}세 무렵)에는 몸살이나 일시적 정체감이 올 수 있습니다. 이는 낡은 기운이 빠져나가는 자연스러운 명리 환절기이므로, 헌 가구를 교체하고 건강검진을 받아 액운을 물리적으로 소모하십시오.<br>
+              • <strong>자산 수성 전략:</strong> ${d.tenGod}의 작용이 과열될 때는 지인의 투자 제안이나 동업 유혹을 차단하고, 확실한 현금 파이프라인과 안전 자산에 자금을 묶어두는 것이 최선입니다.
+            </p>
+          </div>
+
+          <div class="medical-care-box">
+            <h5><i class="fa-solid fa-heart-pulse"></i> 의명학(醫命學) 장부 관리 및 취약 질환 방어</h5>
+            <p>
+              이 대운의 오행(${ELEMENT_KOREAN[CHEONGAN_ELEMENTS[dStemIdx]]}·${ELEMENT_KOREAN[JIJI_ELEMENTS[dBranchIdx]]})이 원국의 <strong>${med.deficientOrgan.zang}과 ${med.attackedOrgan.zang}</strong>에 주는 자극을 세심하게 관찰하십시오. ${d.startAge + 4}세와 ${d.endAge - 1}세 무렵에는 과로를 절대 피하시고 ${med.deficientOrgan.medicinalFood.split(',').slice(0, 3).join(', ')} 위주의 온열 식단을 유지하십시오.
+            </p>
+          </div>
         </div>
       </div>
     `;
@@ -688,22 +701,29 @@ function buildMasterReportHtml(user, natureName) {
       <h3 class="chapter-title">하늘이 부여한 사회적 그릇 — ${user.name}님은 왜 [${pattern.name}]의 삶을 살게 되는가</h3>
       <div class="chapter-prose">
         <p>
-          사주명리학의 최고봉인 『자평진전(子平眞詮)』은 인간의 사회적 성패와 삶의 무대를 결정짓는 핵심 열쇠로 <strong>월지(月支: 태어난 달의 지지)</strong>의 지장간에서 투출한 <strong>격국(格局)</strong>을 꼽습니다. 일간(日干)이 ‘나 자신의 영혼’이라면, 격국은 내가 세상에 나가 평생 동안 휘두르게 될 ‘최강의 무기이자 사회적 직함’입니다.
+          사주명리학의 최고봉인 『자평진전(子平眞詮)』은 인간의 사회적 성패와 삶의 무대를 결정짓는 핵심 열쇠로 <strong>월지(月支: 태어난 달의 지지)</strong> 지장간에서 투출한 <strong>격국(格局)</strong>을 꼽습니다. 일간(日干)이 ‘나 자신의 영혼’이라면, 격국은 내가 세상에 나가 평생 동안 휘두르게 될 ‘최강의 무기이자 사회적 직함’입니다.
         </p>
         <p>
           ${user.name}님의 원국을 정밀 감명한 결과, 당신의 사주는 <strong>[${pattern.name} (${pattern.badge})]</strong>으로 귀결됩니다. ${pattern.desc}
         </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-crown"></i> [${pattern.name}] 성패(成敗)의 절대 법칙</h5>
+
+        ${userMbtiRef}
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-crown"></i> [${pattern.name}]의 운명적 사회 발현 방식</h5>
+          <p>
+            ${pattern.name}을 타고난 사람은 남의 지시를 맹목적으로 따르는 수동적 환경에 갇히면 극심한 정신적 질식과 번아웃을 겪습니다. 반면 본인의 전문성과 자율성이 보장되는 판에 서면 남들보다 3배 이상의 집중력을 발휘하여 업계의 독보적인 자리를 꿰차는 특유의 승부사 기질이 발현됩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-compass"></i> [${pattern.name}] 성패(成敗)의 절대 법칙</h5>
           <p>
             • <strong>타고난 천직 도메인:</strong> ${pattern.career}<br>
             • <strong>부의 축적 메커니즘:</strong> ${pattern.wealth}<br>
-            • <strong>원국 신강/신약 지수:</strong> <strong>${strength.title}</strong> (종합 에너지 ${strength.score}점) — ${strength.desc}
+            • <strong>신강/신약 최적 포지셔닝:</strong> ${strength.title} (${strength.score}점) — ${strength.desc}
           </p>
         </div>
-        <p>
-          많은 이들이 자신의 격국을 모른 채 남들이 좋다는 유망 직종이나 투자처를 쫓다가 수십 년을 허비합니다. ${user.name}님은 오직 <strong>${pattern.name}</strong>의 정체성에 부합하는 판 위에서 싸울 때만 최소한의 노력으로 최대의 부와 명예를 거머쥘 수 있습니다.
-        </p>
       </div>
     </div>
 
@@ -713,15 +733,24 @@ function buildMasterReportHtml(user, natureName) {
       <h3 class="chapter-title">${natureName}의 양면성 — 남들은 절대 모르는 당신의 고독과 야망</h3>
       <div class="chapter-prose">
         <p>
-          사주 여덟 글자 중 나 자신을 상징하는 일간(日干) <strong>${CHEONGAN_HANJA[dayMaster]}(${CHEONGAN[dayMaster]})</strong>과 내가 발을 딛고 선 안방이자 배우자 자리인 일지(日支) <strong>${JIJI_HANJA[dayBranch]}(${JIJI[dayBranch]})</strong>의 결합은 당신의 내면 심리와 평생의 생활 양식을 지배합니다.
+          사주 여덟 글자 중 나 자신을 상징하는 일간(日干) <strong>${CHEONGAN_HANJA[dayMaster]}(${CHEONGAN[dayMaster]})</strong>과 내가 발을 딛고 선 안방이자 배우자 자리인 일지(日支) <strong>${JIJI_HANJA[dayBranch]}(${JIJI[dayBranch]})</strong>의 결합은 평생의 무의식과 심리를 지배합니다.
         </p>
         <p>
-          겉으로 드러나는 ${user.name}님은 예의 바르고 합리적이며 웬만한 일에는 감정을 크게 드러내지 않는 것처럼 보입니다. 그러나 일지 ${JIJI_HANJA[dayBranch]}의 지장간(<strong>${HIDDEN_STEMS[dayBranch].map(i => CHEONGAN_HANJA[i]).join('·')}</strong>) 속에는 누구에게도 지배받기 싫어하는 강렬한 주체성과, 한 번 마음먹은 일은 끝장을 봐야 직성이 풀리는 서늘한 승부사 기질이 숨어 있습니다.
+          겉으로 드러나는 ${user.name}님은 예의 바르고 합리적이며 웬만한 일에는 감정을 크게 드러내지 않는 것처럼 보입니다. 그러나 일지 ${JIJI_HANJA[dayBranch]}의 지장간(${HIDDEN_STEMS[dayBranch].map(i => CHEONGAN_HANJA[i]).join('·')}) 속에는 누구에게도 종속되기 싫어하는 강렬한 독립심과 서늘한 야망이 깃들어 있습니다.
         </p>
-        <div class="critical-warning-box">
-          <h5><i class="fa-solid fa-eye"></i> ${natureName}이 평생 경계해야 할 심리적 그림자</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-mask"></i> 겉모습과 내면 사이의 충돌 징조</h5>
           <p>
-            스스로의 기준치가 지나치게 높아 타인의 사소한 무능이나 약속 불이행을 속으로 칼같이 채점하고 손절하는 경향이 있습니다. 또한 힘들어도 남에게 약한 모습을 보이지 못해 혼자 속으로 삭이다가 한순간에 관계를 끊어버리는 극단성을 조율해야 말년이 외롭지 않습니다.
+            주변 사람들은 당신을 ‘스스로 알아서 척척 해내는 강한 사람’으로 보기에 쉽게 기댑니다. 하지만 혼자 있을 때 밀려오는 깊은 고독감과 인정 욕구, 그리고 완벽하지 않으면 스스로를 채찍질하는 결벽증이 당신의 기혈을 소모시킵니다. 배우자 자리 또한 까다로운 내적 기준 때문에 쉽게 마음을 다 열지 못하고 일정한 심리적 거리를 두는 경향이 나타납니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-key"></i> 내면의 고독을 다스리고 배우자복을 키우는 비방</h5>
+          <p>
+            • <strong>감정 표현의 일상화:</strong> 힘든 점을 속으로만 삭이지 마시고 가까운 사람에게 "지금 조금 버겁다"는 말을 솔직히 꺼내는 연습이 일지의 긴장을 풀어줍니다.<br>
+            • <strong>배우자궁 개운:</strong> 배우자나 연인의 사소한 단점을 현미경으로 보듯 지적하기보다, 큰 틀에서의 헌신을 인정해줄 때 안방의 기운이 평온해지고 재물고가 잠깁니다.
           </p>
         </div>
       </div>
@@ -733,15 +762,20 @@ function buildMasterReportHtml(user, natureName) {
       <h3 class="chapter-title">연주 [${user.pillars.year.hanja}(${user.pillars.year.korean})]에 새겨진 초년의 서사와 자수성가의 코드</h3>
       <div class="chapter-prose">
         <p>
-          연주(年柱)는 내가 태어난 가문의 배경, 부모·조상으로부터 물려받은 기질적 유전자, 그리고 만 19세 이전 초년기의 정서적 토양을 나타냅니다. ${user.name}님의 연주는 <strong>${user.pillars.year.hanja}(${user.pillars.year.korean})</strong>로 구성되어 있습니다.
+          연주(年柱)는 내가 태어난 가문의 영적 토양과 유년기(0세~19세)의 성장 환경을 관장합니다. ${user.name}님의 연주는 <strong>${user.pillars.year.hanja}(${user.pillars.year.korean})</strong>로, 조상의 업력과 부모의 영향력이 당신의 성격 형성에 어떤 밑그림을 그렸는지 보여줍니다.
         </p>
-        <p>
-          이 구조를 가진 분들은 설령 부모의 유산이나 지원이 있더라도 결국에는 본인의 손으로 가풍을 새로 세우거나, 일찍부터 정신적·경제적으로 부모의 그늘에서 벗어나야만 직성이 풀리는 <strong>‘개척자형 운명’</strong>을 타고납니다. 초년에 겪었던 정서적 갈증이나 책임감은 결코 불행이 아니라, 중년 이후 남들보다 훨씬 단단한 위기관리 능력을 갖게 만든 담금질이었습니다.
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-seedling"></i> 연주가 일주에 건네는 평생의 조언</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-tree"></i> 초년 환경이 성인기에 미친 영향</h5>
           <p>
-            본가나 고향에 지나치게 밀착하기보다 적당한 물리적·심리적 거리를 유지할 때 오히려 부모 형제와의 우애도 지켜지고 본인의 재물운도 막힘없이 뻗어 나갑니다.
+            유년기 시절 부모의 엄격한 기대나 집안의 환경 변화로 인해 일찍 철이 들었거나, 스스로 앞가림을 해야 한다는 조기 독립의 압박을 받았습니다. 이는 당신에게 강한 생존력과 문제 해결 능력을 선물했으나, 동시에 남에게 의탁하지 못하는 만성적 긴장감을 남겼습니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-seedling"></i> 조상의 음덕을 깨우는 효도와 공간 비방</h5>
+          <p>
+            연주의 기운을 길하게 쓰려면 부모와의 심리적 탯줄을 건강하게 끊어내고 완전한 독립을 이뤄야 합니다. 명절이나 제사 때 정성을 다하되, 평소에는 거리를 두어 독립된 가정을 꾸릴 때 가문의 수호 기운이 재물운으로 치환됩니다.
           </p>
         </div>
       </div>
@@ -753,11 +787,22 @@ function buildMasterReportHtml(user, natureName) {
       <h3 class="chapter-title">월주 [${user.pillars.month.hanja}(${user.pillars.month.korean})]와 지장간 역학 — 청년·중년 사회적 성취의 엔진</h3>
       <div class="chapter-prose">
         <p>
-          월주(月柱)는 사주팔자에서 가장 강력한 에너지를 뿜어내는 사령탑(司令塔)이자, 20세부터 40대 중반까지 당신이 사회라는 정글에서 어떤 무기로 살아남는지를 보여주는 자리입니다. ${user.name}님의 월주는 <strong>${user.pillars.month.hanja}(${user.pillars.month.korean})</strong>이며, 월지 지장간에는 <strong>${HIDDEN_STEMS[user.pillars.month.branchIdx].map(i => `${CHEONGAN_HANJA[i]}(${getTenGod(dayMaster, i)})`).join(' · ')}</strong>의 기운이 암장되어 있습니다.
+          월주(月柱)는 20대부터 40대까지 청·중년기의 커리어 무대이자 사회적 활동의 핵심 심장입니다. ${user.name}님의 월주 <strong>${user.pillars.month.hanja}(${user.pillars.month.korean})</strong>는 세상이 당신을 부르는 방식이자, 당신이 돈을 벌어들이는 가장 강력한 파이프라인입니다.
         </p>
-        <p>
-          이는 당신이 단순히 시키는 일만 반복하는 실무자가 아니라, 판의 흐름을 읽고 자원을 조율하며 결과물을 기획해 내는 자리에서 가장 큰 부가가치를 창출함을 뜻합니다. 특히 천간과 지지의 연결고리상, 명분(타이틀·자격)과 실리(현금·성과) 중 어느 한쪽만 택하기보다 초반에는 조직의 간판을 빌려 신용을 쌓고 중반 이후 본인의 독자적 전문성을 자산화하는 2단계 전략이 완벽히 들어맞습니다.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-briefcase"></i> 사회적 전성기에 직면할 기회와 시험대</h5>
+          <p>
+            월지의 지장간 기운이 강렬하게 작용하여, 직장이나 사회 조직에서 중요한 프로젝트를 떠맡게 되며 동년배보다 빠른 승진이나 독자 사업의 갈림길에 서게 됩니다. 30대 중반 전후로 직업적 대전환이나 업종 피벗의 유혹이 강력하게 찾아오는 구조입니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-award"></i> 월주의 에너지를 100% 현금화하는 커리어 비책</h5>
+          <p>
+            남들이 만들어 놓은 사다리를 단순히 오르기보다, ${pattern.name}의 독창성을 살려 '나만의 전문 영역'을 특화하십시오. 직함보다 실질적인 라이선스와 저작권, 고객 데이터베이스를 확보하는 것이 40대 이후의 거대한 자산으로 직결됩니다.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -767,11 +812,22 @@ function buildMasterReportHtml(user, natureName) {
       <h3 class="chapter-title">시주 [${user.pillars.hour ? `${user.pillars.hour.hanja}(${user.pillars.hour.korean})` : '삼주 감명 모드'}]가 예고하는 50대 이후의 최종 성적표</h3>
       <div class="chapter-prose">
         <p>
-          초년과 중년에 아무리 화려하게 날아올라도 시주(時柱: 말년궁·자녀궁·최종 결실궁)가 무너지면 노년이 고달프고, 반대로 초년이 파란만장했더라도 시주가 든든하면 인생 후반전에 모든 상처를 보상받는 대부귀를 누립니다.
+          시주(時柱)는 50대 이후 인생의 결실기이자 자녀궁, 그리고 남들에게 차마 말하지 못하는 은밀한 취미와 무의식의 창고입니다. 시주가 튼튼하면 초년과 중년에 아무리 풍파를 겪더라도 말년에 거대한 부와 안락한 가문을 완성합니다.
         </p>
-        <p>
-          ${user.pillars.hour ? `${user.name}님의 시주는 <strong>${user.pillars.hour.hanja}(${user.pillars.hour.korean})</strong>로, 일간 기준 천간에 <strong>${getTenGod(dayMaster, user.pillars.hour.stemIdx)}</strong>, 지지에 <strong>${getTenGod(dayMaster, HIDDEN_STEMS[user.pillars.hour.branchIdx][0])}</strong>의 기운이 자리 잡고 있습니다. 이는 나이가 들수록 현역에서 완전히 손을 떼기보다, 자신이 쌓아온 경험·문서·자산을 굴려 젊은 시절보다 훨씬 여유롭고 품격 있는 현금흐름을 유지하는 ‘대기만성형 말년복’을 의미합니다.` : `현재 출생 시각 미입력(삼주 감명) 상태이나, 일주 ${natureName}과 월주 ${user.pillars.month.hanja}의 결속 구조를 볼 때 중년 이후 본인의 이름으로 된 문서 자산(부동산·연금·지분)을 얼마나 철저히 묶어두느냐가 말년의 평안을 좌우합니다.`}
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-trophy"></i> 인생 후반전에 기다리고 있는 보상과 결실</h5>
+          <p>
+            ${user.pillars.hour ? `시주에 자리한 ${user.pillars.hour.hanja}의 기운은 후반전으로 갈수록 부동산, 배당 소득, 혹은 자녀의 출세로 인한 복록이 두터워짐을 뜻합니다. 중년의 고난이 결국 말년의 큰 그릇을 빚기 위한 불가피한 풀무질이었음을 깨닫게 됩니다.` : `태어난 시간이 미상이더라도 원국의 월주와 일주 구조상 중년 이후의 자산 수성 능력이 뛰어나며, 나이가 들수록 품격과 대인관계의 원숙함이 배가됩니다.`}
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-building-columns"></i> 말년 부귀를 확정 짓는 자산 관리 수칙</h5>
+          <p>
+            자녀에게 맹목적으로 모든 재산을 조기 증여하지 마시고, 본인의 명의로 된 확고한 월세 수익형 부동산이나 연금을 끝까지 쥐고 계십시오. 그것이 자녀와의 화목을 지키고 부모로서의 권위를 보존하는 가장 현실적인 개운법입니다.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -781,19 +837,24 @@ function buildMasterReportHtml(user, natureName) {
       <h3 class="chapter-title">궁통보감 120조후 고증 — 내 사주의 온도를 맞추고 운을 여는 절대 열쇠</h3>
       <div class="chapter-prose">
         <p>
-          명리학에서 <strong>용신(用神)</strong>이란 내 사주의 병(病)을 고치는 약(藥)입니다. 첫째로 사주의 강약을 조절하는 <strong>억부용신(抑扶用神)</strong>이 있고, 둘째로 태어난 계절의 한난조습(추위·더위·건조함·습함)을 조절하는 <strong>조후용신(調候用神)</strong>이 있습니다. 억부가 ‘돈과 직장의 성패’를 좌우한다면, 조후는 ‘그 사람이 느끼는 삶의 행복도와 정신적 평안’을 좌우합니다.
+          명리학에서 용신(用神)은 막힌 운의 혈관을 뚫어주는 '기적의 명약'입니다. 힘의 균형을 맞추는 <strong>억부용신(抑扶用神)</strong>과 사주의 계절적 한열(寒熱)을 다스리는 <strong>조후용신(調候用神)</strong>이 조화를 이룰 때 비로소 인생의 모든 문이 활짝 열립니다.
         </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-key"></i> ${user.name}님의 양대 용신(用神) 판정서</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-scale-balanced"></i> ${user.name}님의 용신 배합과 길흉의 분기점</h5>
           <p>
-            • <strong>억부용신 (사회적 성취의 무기):</strong> <strong>${yongshin.eokbuYongshin}</strong> — ${yongshin.eokbuDesc}<br>
-            • <strong>조후용신 (궁통보감 계절 조율):</strong> <strong>${yongshin.johuYongshin}</strong> (${climate.seasonBadgeText})<br>
-            • <strong>고전 원문 비평:</strong> "${climate.quote}"
+            ${user.name}님의 억부용신은 <strong>[${yongshin.eokbuYongshin}]</strong>이며, 조후용신은 <strong>[${yongshin.johuYongshin}]</strong>입니다. 용신의 기운이 대운이나 세운에서 들어올 때는 특별한 무리 없이도 귀인이 돕고 일이 일사천리로 풀리나, 용신을 극하는 기신(忌神) 운에서는 사소한 욕심이 큰 화를 부릅니다.
           </p>
         </div>
-        <p>
-          인생이 이유 없이 답답하고 우울할 때는 어김없이 조후용신(<strong>${yongshin.johuYongshin}</strong>)이 손상된 시기입니다. 이때는 억지로 일을 벌이기보다 조후를 보완하는 환경(채광, 온도, 물가, 혹은 해당 오행의 취미와 귀인)으로 몸을 옮기는 것이 최고의 개운법입니다.
-        </p>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-compass"></i> 용신의 기운을 일상으로 끌어들이는 3대 처방</h5>
+          <p>
+            • <strong>공간 방위:</strong> 집이나 사무실의 ${yongshin.johuYongshin === '수(水)' ? '북쪽' : yongshin.johuYongshin === '화(火)' ? '남쪽' : yongshin.johuYongshin === '목(木)' ? '동쪽' : '서쪽'}을 항상 청결하고 밝게 유지하십시오.<br>
+            • <strong>식습관:</strong> ${climate.seasonBadgeText}의 기운을 다스릴 수 있도록, 차가운 체질은 따뜻한 온수와 구운 음식을, 열이 많은 체질은 시원한 채소와 보리차를 생활화하십시오.<br>
+            • <strong>행동 개운:</strong> 용신 오행에 부합하는 취미(예: 수기는 수영과 독서, 목기는 원예와 등산, 화기는 러닝과 요리, 금기는 헬스와 금속 공예)를 꾸준히 즐기십시오.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -803,15 +864,22 @@ function buildMasterReportHtml(user, natureName) {
       <h3 class="chapter-title">내 사주 안에서 끊임없이 부딪히고 결합하는 보이지 않는 역학 구조</h3>
       <div class="chapter-prose">
         <p>
-          가만히 있어도 내 마음속에서 두 가지 욕망이 싸우거나, 인생의 중요한 기로마다 비슷한 패턴의 인간관계 문제가 반복된다면 그것은 원국 내부의 <strong>합(合)·충(沖)·형(刑)</strong> 때문입니다.
+          사주 원국 내부의 천간과 지지는 가만히 멈춰 있는 글자가 아닙니다. 서로 끌어당겨 합(合)을 이루기도 하고, 격렬히 부딪혀 충(沖)을 일으키며 내면의 갈등과 외적 변동을 만들어냅니다.
         </p>
-        <p>
-          • <strong>천간(天干)의 정신적 역학:</strong> <strong>${(dynamics.stemRelations && dynamics.stemRelations.length > 0) ? dynamics.stemRelations.join(' / ') : '천간 각 글자가 합충으로 묶이지 않고 고유의 독립적 투출력을 온전히 발휘하는 청(淸)한 구조'}</strong><br>
-          • <strong>지지(地支)의 현실적 역학:</strong> <strong>${(dynamics.branchRelations && dynamics.branchRelations.length > 0) ? dynamics.branchRelations.join(' / ') : '지지 네 기둥이 서로를 파극하지 않고 안정적인 지반을 유지하는 구조'}</strong>
-        </p>
-        <p>
-          원국에 합(合)이 있으면 대인관계의 결속력과 타협 능력이 뛰어나나 때로 결단이 늦어질 수 있고, 충(沖)이나 형(刑)이 있으면 남들이 엄두도 못 내는 개혁과 돌파를 해내나 한곳에 정착하기까지 역동적인 이동을 겪게 됩니다. 이는 결함이 아니라 당신만의 ‘추진 방식’입니다.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-atom"></i> 원국 내 역학 관계(${(dynamics.stemRelations || []).concat(dynamics.branchRelations || []).join(', ') || '독립적 평형'})가 빚어내는 심리</h5>
+          <p>
+            내 안에서 '안정을 추구하는 마음'과 '모든 것을 뒤엎고 새로운 도전을 감행하려는 충동'이 주기적으로 팽팽하게 대립합니다. 이 모순된 두 에너지가 제대로 조율되지 못하면 우유부단함으로 기회를 놓치거나, 홧김에 중요한 관계를 끊어버리는 실수를 저지를 수 있습니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-yin-yang"></i> 내면의 충돌을 창조적 에너지로 승화하는 비방</h5>
+          <p>
+            충(沖)과 형(刑)의 에너지는 예술적 창작, 날카로운 분석, 법적·의료적 전문성, 또는 고난도 비즈니스 협상에서 최고의 천재성으로 승화됩니다. 내 안의 갈등을 자책하지 마시고 전문적인 결과물을 창조하는 원동력으로 전환하십시오.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -821,53 +889,49 @@ function buildMasterReportHtml(user, natureName) {
       <h3 class="chapter-title">하늘이 내린 보호막과 대중을 사로잡는 매력 자본의 현대적 사용 설명서</h3>
       <div class="chapter-prose">
         <p>
-          과거 농경사회에서는 도화살(桃花煞)이나 역마살(驛馬煞)을 흉하게 보았으나, 현대 자본주의 사회에서 도화는 ‘트래픽과 팬덤을 부르는 매력 자본’이요, 역마는 ‘글로벌 비즈니스와 유통·플랫폼을 장악하는 기동력’입니다.
+          과거의 신살론은 길신과 흉살을 극단적으로 나누었으나, 현대 자본주의 사회에서 신살(神煞)은 곧 <strong>‘독보적인 개성과 트래픽을 부르는 매력 자본’</strong>입니다.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:25%;">주요 길신·특수별</th>
-              <th>${user.name}님 원국 내 작동 원리 및 자본화 전략</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>천을귀인 (天乙貴人)</strong><br>최고의 수호신</td>
-              <td>절체절명의 위기에서 반드시 돕는 손길이 나타나 목숨과 재산을 건지는 별입니다. 남에게 베푼 작은 예의와 신용이 결정적 순간 수억 원의 가치로 돌아옵니다.</td>
-            </tr>
-            <tr>
-              <td><strong>문창·학당 (文昌)</strong><br>지성과 문서의 힘</td>
-              <td>글쓰기, 기획, 계약서 작성, 교육, 라이선스 취득에서 남다른 총명함을 발휘합니다. 본인의 노하우를 반드시 텍스트나 콘텐츠로 남기십시오.</td>
-            </tr>
-            <tr>
-              <td><strong>도화·홍염 (桃花)</strong><br>시선 집중과 매력</td>
-              <td>가만히 있어도 시선을 끌고 호감을 사는 기운입니다. 대면 영업, 브랜딩, 미디어, 고급 서비스업에서 가격 결정권을 높이는 무기로 쓰십시오.</td>
-            </tr>
-            <tr>
-              <td><strong>역마·화개 (驛馬·華蓋)</strong><br>확장과 깊은 통찰</td>
-              <td>역마로 넓게 시장을 개척하고 화개의 예술적·철학적 깊이로 대체 불가능한 전문성을 완성하는 양날의 날개입니다.</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-wand-magic"></i> ${user.name}님의 사주에 깃든 주요 길신의 위력</h5>
+          <p>
+            원국에 자리한 길신들은 위기의 순간마다 벼랑 끝에서 당신을 건져 올리는 보이지 않는 손으로 작용합니다. 천을귀인은 결정적인 귀인을 붙여주며, 문창귀인은 뛰어난 기획력과 문장력을, 도화와 화개는 대중의 시선을 사로잡는 아우라와 예술적 감수성을 선물합니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-gem"></i> 길신을 돈과 영향력으로 치환하는 실전 공식</h5>
+          <p>
+            • <strong>도화살 활용:</strong> 숨기지 마시고 외모와 패션, SNS 브랜딩에 적극적으로 투자하여 당신의 인지도를 자산화하십시오.<br>
+            • <strong>역마살 활용:</strong> 책상머리에만 앉아 있지 마시고 해외 출장, 이커머스, 이동형 비즈니스로 활동 반경을 넓힐 때 재물이 증식됩니다.<br>
+            • <strong>화개살 활용:</strong> 철학, 심리학, 전문 자격, 종교적 성찰을 통해 남들이 흉내 낼 수 없는 정신적 깊이를 갖추십시오.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- 제9장 -->
     <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 09 · 백호대살 · 괴강살 · 현침살의 프로페셔널 승화법 (업상대체)</div>
+      <div class="chapter-badge">CHAPTER 09 · 백호대살 · 괴강살 · 현침살의 프로페셔널 승화법</div>
       <h3 class="chapter-title">강렬한 살기(煞氣)를 압도적 카리스마와 전문직의 칼날로 바꾸는 비결</h3>
       <div class="chapter-prose">
         <p>
-          사주에 <strong>백호대살(白虎大煞), 괴강살(魁罡煞), 양인살(羊刃煞), 현침살(懸針煞)</strong> 같은 강한 살(煞)이 있을 때, 이를 방치하면 내 몸이 다치거나 구설·사고로 발현되지만, 내가 먼저 그 살기를 직업적으로 매일 쓰면 오히려 해당 분야의 일인자가 됩니다. 이를 명리학에서 <strong>‘업상대체(業象代替)’</strong>라 부릅니다.
+          백호(白虎), 괴강(魁罡), 현침(懸針)과 같은 강렬한 살(煞)은 과거에는 피를 보는 흉살로 꺼렸으나, 현대에는 <strong>의사, 검사, 프로그래머, 금융가, CEO 등 세상을 쥐락펴락하는 리더들의 필수 조건</strong>입니다.
         </p>
-        <p>
-          현재 ${user.name}님에게 감지된 주요 신살 기운은 <strong>[${shinsalList.map(s => s.name).join(' · ') || '내재된 결단살과 현침 기운'}]</strong>입니다.
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-wand-sparkles"></i> ${user.name}님을 위한 업상대체(業象代替) 실전 처방</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-shield-virus"></i> 살기(煞氣)가 미조율될 때 나타나는 위험 신호</h5>
           <p>
-            • <strong>직무적 승화:</strong> 정밀한 숫자와 데이터를 다루는 재무·IT, 생사여탈이나 분쟁을 다루는 의료·법무·세무, 혹은 날카로운 안목이 필요한 디자인·엔지니어링·고도화된 영업 협상에서 이 에너지를 소모하십시오.<br>
-            • <strong>일상적 액땜:</strong> 정기적인 헌혈, 스케일링, 피부과 시술, 혹은 고강도 근력 운동으로 몸에 작은 자극과 땀을 내면 백호·양인의 흉기가 말끔히 해소됩니다.
+            이 강력한 에너지가 정당한 전문직 도메인(업상대체)으로 빠져나가지 못하면, 본인이나 가족의 급작스러운 수술수, 교통사고, 폭언으로 인한 구설수, 또는 극단적인 관재소송으로 터져 나올 수 있습니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-bolt-lightning"></i> 살기를 권력과 부로 바꾸는 업상대체(業象代替) 비방</h5>
+          <p>
+            • <strong>칼을 쓰는 직업:</strong> 날카로운 도구를 다루는 분야(IT 코딩, 수술·시술, 정밀 설계, 요리, 세무·법률 감정)에 종사하여 살기를 합법적으로 소모하십시오.<br>
+            • <strong>정기적 헌혈:</strong> 1년에 2회 이상 정기적으로 헌혈을 하면 피를 보는 백호의 액운을 선제적으로 예방하는 최고의 개운이 됩니다.<br>
+            • <strong>스포츠 단련:</strong> 격투기, 웨이트 트레이닝, 사격 등 신체 에너지를 극한으로 뿜어내는 운동을 취미로 삼으십시오.
           </p>
         </div>
       </div>
@@ -876,18 +940,25 @@ function buildMasterReportHtml(user, natureName) {
     <!-- 제10장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 10 · 원진살(怨嗔煞) · 귀문관살(鬼門關煞) 심층 심리 치유</div>
-      <h3 class="chapter-title">천재적인 직관력 뒤에 숨은 예민함과 관계의 애증을 다스리는 법</h3>
+      <h3 class="chapter-title">영적 예민함과 편집증을 천재적인 통찰력과 직관으로 바꾸는 마인드셋</h3>
       <div class="chapter-prose">
         <p>
-          원진(怨嗔)과 귀문(鬼門)은 남들이 보지 못하는 이면의 심리와 미세한 분위기 변화를 귀신같이 읽어내는 <strong>‘초감각적 안테나’</strong>입니다. 이 기운이 있는 분들은 사람의 거짓말이나 가식을 본능적으로 꿰뚫어 보며, 예술·기획·심리·전략 분야에서 타의 추종을 불허하는 영감을 발휘합니다.
+          원진(怨嗔)과 귀문(鬼門)은 신경계가 일반인보다 수십 배 예민하여 상대방의 속마음과 보이지 않는 흐름을 번개처럼 감지하는 <strong>‘영적 안테나’</strong>입니다.
         </p>
-        <p>
-          다만 이 안테나가 가까운 가족이나 연인에게 향할 때, “왜 내 마음을 말하지 않아도 몰라주느냐”는 서운함과 미워하면서도 끊어내지 못하는 애증(愛憎)으로 자신을 괴롭히게 됩니다.
-        </p>
-        <div class="counseling-empathy-box">
-          <h5><i class="fa-solid fa-heart-crack"></i> 내면의 평화를 위한 심리 명리 처방</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-brain"></i> 귀문·원진이 발현될 때의 심리적 징조</h5>
           <p>
-            당신의 촉은 90% 이상 맞습니다. 하지만 세상 모든 사람이 당신만큼 섬세하고 깊지는 않습니다. 타인의 둔감함을 ‘악의’나 ‘배신’으로 해석하지 마십시오. 그저 “저 사람은 해상도가 낮은 흑백 TV구나”라고 가볍게 넘기는 둔감력의 연습이 당신의 영혼을 구원합니다.
+            밤에 불을 끄면 잡생각이 꼬리를 물어 불면증에 시달리거나, 상대방의 사소한 눈빛 하나에 깊은 원망과 불안을 느끼며 스스로를 괴롭히는 강박적 패턴이 나타납니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-spa"></i> 예민한 영혼을 위한 황실 심신 안정 비책</h5>
+          <p>
+            • <strong>수면 공간 차광:</strong> 침실에 암막 커튼을 설치하여 미세한 빛을 완벽히 차단하고, 머리맡에 스마트폰을 두지 마십시오.<br>
+            • <strong>마음의 쓰레기 배출:</strong> 밤마다 머릿속의 복잡한 생각을 종이에 날것 그대로 써 내려간 뒤 찢어 버리는 '감정 배설 리추얼'을 행하십시오.<br>
+            • <strong>직관의 활용:</strong> 이 예민함을 주식 매매 타이밍 포착, 디자인, 작문, 상담 등 통찰력이 필요한 창의적 작업에 쏟아부으십시오.
           </p>
         </div>
       </div>
@@ -896,143 +967,129 @@ function buildMasterReportHtml(user, natureName) {
     <!-- 제11장 ~ 제18장: 10년 대운 제1대운~제8대운 단독 심층 감명서 (8장) -->
     ${daeunChaptersHtml}
 
-    <!-- 제19장: 의명진단학(醫命診斷學) 1 -->
+    <!-- 제19장: 의명진단학 1 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 19 · 의명진단학(醫命診斷學) 제1편 — 오운육기(五運六氣) 오장육부 허실 진단</div>
-      <h3 class="chapter-title">『황제내경』과 『동의보감』으로 해부한 ${user.name}님의 선천 장부(臟腑) 설계도</h3>
+      <h3 class="chapter-title">황제내경에 근거한 장부 균형 진단 — 내 몸의 어느 장기가 울고 있는가</h3>
       <div class="chapter-prose">
         <p>
-          예로부터 진정한 명의(名醫)는 환자의 맥을 짚기 전에 그 사람이 태어난 연월일시의 천기(天氣)와 지기(地氣), 즉 사주팔자의 오행 편중을 먼저 살펴 오장육부의 태과(太過: 지나침)와 불급(不及: 부족함)을 진단했습니다. 이를 동양 의학의 최고 비전인 <strong>의명진단학(醫命診斷學)</strong>이라 합니다.
+          동양의학의 성전인 『황제내경(黃帝內經)』은 사주팔자의 오행 불균형이 곧 인체 오장육부의 기혈 순환 장애를 일으킨다고 밝힙니다. ${user.name}님의 사주 원국에서 <strong>가장 태과(太過)한 기운은 ${med.excessOrgan.elKor}</strong>이며, <strong>가장 결핍(不及)된 기운은 ${med.deficientOrgan.elKor}</strong>입니다.
         </p>
-        <p>
-          ${user.name}님의 사주 원국 오행 가중치를 정밀 계측한 결과, 선천적으로 가장 과열되기 쉬운 태과(太過) 장부는 <strong>${med.excessOrgan.elKor}에 배속된 [${med.excessOrgan.zang} · ${med.excessOrgan.fu}]</strong>이며, 반대로 선천적 기운이 허약하여 평생 보충해야 할 불급(不及) 장부는 <strong>${med.deficientOrgan.elKor}에 배속된 [${med.deficientOrgan.zang} · ${med.deficientOrgan.fu}]</strong>입니다. 또한 강한 ${med.excessOrgan.elKor} 기운이 상극(相剋)의 법칙에 따라 압박하는 <strong>${med.attackedOrgan.elKor}[${med.attackedOrgan.zang} · ${med.attackedOrgan.fu}]</strong> 역시 연쇄적으로 피로가 누적되는 구조입니다.
-        </p>
-        <table class="medical-organ-table">
-          <thead>
-            <tr>
-              <th style="width:18%;">진단 구분</th>
-              <th style="width:22%;">배속 오장육부</th>
-              <th>신체 지배 부위 및 주요 병리 기전</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>태과(太過) 장부</strong><br><span style="color:#f87171;">기운 과잉·과열</span></td>
-              <td><strong>${med.excessOrgan.elKor}</strong><br>${med.excessOrgan.zang} · ${med.excessOrgan.fu}</td>
-              <td><strong>지배 조직:</strong> ${med.excessOrgan.tissue}<br><strong>발현 병증:</strong> ${med.excessOrgan.excessSymptom}</td>
-            </tr>
-            <tr>
-              <td><strong>불급(不及) 장부</strong><br><span style="color:#38bdf8;">선천 기혈 부족</span></td>
-              <td><strong>${med.deficientOrgan.elKor}</strong><br>${med.deficientOrgan.zang} · ${med.deficientOrgan.fu}</td>
-              <td><strong>지배 조직:</strong> ${med.deficientOrgan.tissue}<br><strong>발현 병증:</strong> ${med.deficientOrgan.deficientSymptom}</td>
-            </tr>
-            <tr>
-              <td><strong>피극(被剋) 장부</strong><br><span style="color:#fbbf24;">상극 압박 취약</span></td>
-              <td><strong>${med.attackedOrgan.elKor}</strong><br>${med.attackedOrgan.zang} · ${med.attackedOrgan.fu}</td>
-              <td><strong>지배 조직:</strong> ${med.attackedOrgan.tissue}<br><strong>발현 병증:</strong> 스트레스나 과로 시 ${med.excessOrgan.elKor}의 기운이 ${med.attackedOrgan.elKor}를 침범하여 ${med.attackedOrgan.deficientSymptom}이 급성으로 동반됨</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-triangle-exclamation"></i> 오행 편고로 인해 나타나는 만성 신체 증상</h5>
+          <p>
+            • <strong>${med.excessOrgan.zang} 과열 증상:</strong> ${med.excessOrgan.excessSymptom}<br>
+            • <strong>${med.deficientOrgan.zang} 허약 증상:</strong> ${med.deficientOrgan.deficientSymptom}
+          </p>
+        </div>
+
+        <div class="medical-care-box">
+          <h5><i class="fa-solid fa-mortar-pestle"></i> 오장육부 평형을 되찾는 근본 조치</h5>
+          <p>
+            태과한 장부의 열기는 덜어내고(瀉), 메마른 장부의 진액은 채워주는(補) 섭생이 필수적입니다. 기름진 야식과 차가운 음료를 금하고, ${med.deficientOrgan.zang}을 보하는 ${med.deficientOrgan.medicinalFood.split(',').slice(0, 4).join(', ')} 섭취를 주 3회 이상 유지하십시오.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제20장: 의명진단학(醫命診斷學) 2 -->
+    <!-- 제20장: 의명진단학 2 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 20 · 의명진단학(醫命診斷學) 제2편 — 한난조습(寒暖燥濕) 체질과 취약 발병 대운</div>
-      <h3 class="chapter-title">${med.thermalType}의 병리적 메커니즘과 평생 중점 관리해야 할 질환군</h3>
+      <h3 class="chapter-title">타고난 체온과 습도 — 평생을 두고 경계해야 할 질환 발현 연대기</h3>
       <div class="chapter-prose">
         <p>
-          오장육부의 강약 못지않게 중요한 것이 태어난 계절(월지 <strong>${JIJI_HANJA[user.pillars.month.branchIdx]}월</strong>)이 부여한 체내의 온도와 습도, 즉 <strong>한난조습(寒暖燥濕)</strong>입니다. ${user.name}님은 의명학적으로 <strong>[${med.thermalType}]</strong>에 해당합니다.
+          사람의 체질은 태어난 달의 기후에 따라 <strong>한(寒)·난(暖)·조(燥)·습(濕)</strong>의 네 가지로 갈립니다. ${user.name}님은 <strong>[${med.thermalType}]</strong>으로 분류됩니다.
         </p>
-        <p>${med.thermalDesc}</p>
-        <div class="critical-warning-box">
-          <h5><i class="fa-solid fa-stethoscope"></i> ${user.name}님의 생애 주기별 중점 경계 질환 및 발병 주의 시기</h5>
-          <p>
-            • <strong>1차 주의 영역 (만성 피로 및 자율신경):</strong> ${med.excessOrgan.emotion}의 감정이 해소되지 못할 때 나타나는 수면의 질 저하와 만성 신경성 염증.<br>
-            • <strong>2차 주의 영역 (장부 기질적 약점):</strong> ${med.deficientOrgan.zang} 및 ${med.attackedOrgan.zang} 기능 저하로 인한 대사 순환 장애.<br>
-            • <strong>집중 관리 대운:</strong> 대운에서 <strong>${med.excessOrgan.elKor}</strong>가 겹쳐 들어와 태과가 극에 달하거나, 용신 오행이 충(沖)을 맞는 40대 중반 및 50대 후반 교차기에는 반드시 정밀 혈관·내분비·소화기 검진을 선제적으로 시행해야 합니다.
-          </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-temperature-half"></i> 체질적 특성과 스트레스 시 발병 메커니즘</h5>
+          <p>${med.thermalDesc}</p>
         </div>
-        <p>
-          <strong>[의명 체질 핵심 치법]:</strong> ${med.thermalPrescription}
-        </p>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-notes-medical"></i> 평생 체질 맞춤 생활 수칙</h5>
+          <p>${med.thermalPrescription}</p>
+        </div>
       </div>
     </div>
 
-    <!-- 제21장: 의명진단학(醫命診斷學) 3 -->
+    <!-- 제21장: 의명진단학 3 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 21 · 의명진단학(醫命診斷學) 제3편 — 동의보감 약선(藥膳) 식이요법과 본초 처방</div>
-      <h3 class="chapter-title">내 몸의 부족한 오행을 채우고 과열된 독소를 씻어내는 밥상 위의 명약(名藥)</h3>
+      <h3 class="chapter-title">음식으로 고치지 못하는 병은 의사도 못 고친다 — 밥상 위의 보약 처방전</h3>
       <div class="chapter-prose">
         <p>
-          『동의보감(東醫寶鑑)』은 “약보(藥補)보다 식보(食補)가 낫다”고 하였습니다. 매일 입으로 들어가는 음식의 오미(五味: 신맛·쓴맛·단맛·매운맛·짠맛)와 색채는 그 자체로 사주의 부족한 오행을 보충하는 가장 강력한 개운법이자 예방 의학입니다.
+          『동의보감』 식치(食治) 편에서는 "약보(藥補)보다 식보(食補)가 낫고, 식보보다 행보(行步)가 낫다"고 하였습니다. 내 사주에 부족한 오행의 파동을 음식의 맛과 색깔로 매일 흡수하는 것이 가장 강력한 수명 연장 비법입니다.
         </p>
-        <table class="medical-organ-table">
-          <thead>
-            <tr>
-              <th style="width:24%;">약선 분류</th>
-              <th>${user.name}님 맞춤 의명(醫命) 식이 처방전</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>🌟 제1 보약 식재료</strong><br>(${med.deficientOrgan.zang} 보강)</td>
-              <td><strong>${med.deficientOrgan.medicinalFood}</strong><br>선천적으로 부족한 ${med.deficientOrgan.elKor} 기운을 직접 생조하여 만성 피로를 막고 면역의 뿌리를 단단하게 만듭니다. 주 3회 이상 식단에 포함하십시오.</td>
-            </tr>
-            <tr>
-              <td><strong>🌿 제2 상생 식재료</strong><br>(${med.attackedOrgan.zang} 보호)</td>
-              <td><strong>${med.attackedOrgan.medicinalFood}</strong><br>태과한 기운의 공격으로부터 ${med.attackedOrgan.zang}·${med.attackedOrgan.fu} 점막과 대사를 보호하는 완충제 역할을 합니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🍵 상비 약차(藥茶) 처방</strong></td>
-              <td><strong>${med.deficientOrgan.teaPrescription}</strong> 및 보조로 <strong>${med.attackedOrgan.teaPrescription}</strong>을 번갈아 따뜻하게 우려 마시면 체내 한난조습이 황금 비율로 조율됩니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🚫 체질상 피해야 할 음식</strong></td>
-              <td><strong>${med.deficientOrgan.avoidFood}</strong> / <strong>${med.excessOrgan.avoidFood}</strong><br>특히 피로가 극심한 날에 위 음식들을 섭취하면 장부의 불균형이 가속화되어 운의 흐름까지 탁해집니다.</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="medical-care-box">
+          <h5><i class="fa-solid fa-utensils"></i> ${user.name}님을 살리는 맞춤 약선 식품</h5>
+          <p>
+            • <strong>반드시 챙겨 먹어야 할 본초 식재료:</strong> ${med.deficientOrgan.medicinalFood}<br>
+            • <strong>기운을 맑히는 한방차 레시피:</strong> ${med.deficientOrgan.teaPrescription}<br>
+            • <strong>절대 피해야 할 독소 음식:</strong> ${med.deficientOrgan.avoidFood}
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-clock"></i> 식사 리듬과 꼭꼭 씹는 양생법</h5>
+          <p>
+            식사 시간은 최소 20분 이상 유지하며, 한 입에 30회 이상 씹어 침(옥액)과 충분히 섞여 넘어가도록 하십시오. 이것만으로도 비위의 소화 부담을 50% 줄이고 체내 독소 축적을 막을 수 있습니다.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제22장: 의명진단학(醫命診斷學) 4 -->
+    <!-- 제22장: 의명진단학 4 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 22 · 의명진단학(醫命診斷學) 제4편 — 12시진 경락 생체리듬과 양생(養生) 비법</div>
-      <h3 class="chapter-title">장수(長壽)와 맑은 정신을 지키는 시간대별 경락 순환 & 맞춤 운동 처방</h3>
+      <h3 class="chapter-title">우주의 시계와 내 몸의 장기 연결 — 하루 24시간 자오유주(子午流注) 시간표</h3>
       <div class="chapter-prose">
         <p>
-          인체의 12경락은 하루 12시진(24시간)의 지지(地支) 흐름에 맞춰 정확히 2시간씩 기혈의 중심을 이동합니다. ${user.name}님의 취약 장부가 활성화되는 시간에 무리한 노동을 하거나 수면을 설칠 경우 남들보다 세 배 이상의 데미지를 입게 됩니다.
+          인체의 기혈은 12시진(24시간) 동안 12개의 경락을 따라 일정한 주기로 순환합니다. 장기가 깨어나는 시진에 맞춰 물을 마시고 식사를 하며 잠자리에 드는 것이 노화를 늦추고 면역력을 극대화하는 비결입니다.
         </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-clock"></i> ${user.name}님이 평생 지켜야 할 골든 타임 (Golden Meridian Time)</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-stopwatch"></i> 하루 중 가장 중요한 경락 골든타임</h5>
           <p>
-            • <strong>핵심 회복 시간대:</strong> ${med.deficientOrgan.meridianTime}<br>
-            • <strong>보조 관리 시간대:</strong> ${med.attackedOrgan.meridianTime}
+            • <strong>자시·축시 (23:00~03:00, 담경·간경):</strong> 혈액이 간으로 돌아가 해독과 세포 재생을 마치는 시간입니다. 이 시간에 깨어 있으면 면역 체계가 급격히 무너집니다.<br>
+            • <strong>진시 (07:00~09:00, 위경):</strong> 위장의 연동운동이 가장 활발한 시간이므로 따뜻한 온수나 가벼운 식사를 섭취해야 하루의 대사가 원활해집니다.<br>
+            • <strong>오시 (11:00~13:00, 심경):</strong> 심장에 무리가 가지 않도록 점심 식사 후 15분간 눈을 감고 명상을 취하십시오.
           </p>
         </div>
-        <p>
-          <strong>[체질 맞춤 운동 및 호흡 처방]:</strong><br>
-          ${user.name}님은 관절과 신경계를 과도하게 혹사하는 극단적 고중량 운동이나 심야의 격렬한 유산소 운동보다, <strong>하체 코어와 척추 기립근을 단단히 세우는 웨이트 트레이닝, 필라테스, 빠른 경보(산책), 그리고 단전으로 숨을 깊게 내쉬는 이완 호흡</strong>을 병행할 때 뇌수(腦髓)가 맑아지고 대운의 재물기를 감당할 강인한 체력이 완성됩니다.
-        </p>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-bed"></i> ${user.name}님 맞춤 수면과 호흡 비방</h5>
+          <p>
+            취침 전 30분간 족욕이나 스트레칭으로 머리에 몰린 상열(上熱)을 하체로 끌어내리는 수승화강(水昇火降) 루틴을 실천하십시오.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- 제23장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 23 · 평생 재물 그릇과 노후 자산 완성 최종 로드맵</div>
-      <h3 class="chapter-title">현금 · 부동산 · 연금 황금 비율과 ${user.name}님 인생의 최종 마스터플랜</h3>
+      <h3 class="chapter-title">부는 쫓는 자의 것이 아니라 담을 그릇을 빚은 자의 것이다 — 최종 자산 청사진</h3>
       <div class="chapter-prose">
         <p>
-          지금까지 『자평진전』의 격국론, 『궁통보감』의 조후론, 80년 대운 연대기, 그리고 『황제내경·동의보감』의 의명진단학까지 총 23장에 걸쳐 ${user.name}님의 운명 설계도를 남김없이 해부하였습니다.
+          사주명리학에서 재물(財物)은 단순히 통장의 숫자가 아니라, 내가 세상에 기여하고 타인을 이롭게 한 대가로 우주가 되돌려주는 ‘에너지의 총량’입니다. ${user.name}님의 평생 재물선은 초년의 시행착오를 거쳐 중년 전성기에 만개하며, 말년에는 견고한 시스템 자산으로 완성되는 대기만성형 궤적을 그립니다.
         </p>
-        <p>
-          당신의 평생 재물 그릇은 결코 작지 않습니다. 다만 인생의 부를 완성하기 위해서는 연령대별로 자산의 형태를 반드시 갈아타야 합니다. 30~40대에는 <strong>${pattern.name}</strong>의 무기를 앞세워 현금 창출 능력(몸값·사업 소득)을 극대화하고, 대운의 전환기마다 그 현금을 즉시 <strong>환금성 높은 핵심지의 등기 문서(부동산)와 우량 지분 자산</strong>으로 잠가 두십시오.
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-award"></i> 제2권 평생 총운 · 의명진단 마스터팩 총결</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-coins"></i> 인생 3단계 자산 완성 시나리오</h5>
           <p>
-            "몸이 곧 재물을 담는 그릇이요(醫命), 대운은 그 그릇에 부어지는 하늘의 물줄기입니다. 본 서책에 기록된 용신의 법칙과 의명 섭생법을 곁에 두고 실천하신다면, ${user.name}님의 인생 후반전은 부(富)와 귀(貴), 그리고 건강(康)이 삼위일체를 이루는 반석 위에 우뚝 설 것입니다."
+            • <strong>청년기 (씨앗기):</strong> 내 몸값을 올리는 전문 기술과 자격, 신용 자본을 구축하는 데 집중하십시오.<br>
+            • <strong>중년기 (폭발기):</strong> ${pattern.name}의 주도권을 활용하여 독자적인 사업체나 핵심 자산(부동산·지분)을 매입하십시오.<br>
+            • <strong>노년기 (수성기):</strong> 공격적인 투자를 멈추고 현금흐름이 보장되는 연금과 임대 수익 구조로 전환하여 가문의 반석을 굳히십시오.
+          </p>
+        </div>
+
+        <div class="counseling-empathy-box">
+          <h5><i class="fa-solid fa-hand-holding-heart"></i> ${user.name}님의 고귀한 삶을 축원하며</h5>
+          <p>
+            "당신의 사주에 새겨진 여덟 글자는 정해진 감옥이 아니라, 당신이 가장 아름답고 눈부시게 피어날 수 있도록 안내하는 보물지도입니다. 하늘의 때를 알고 나아갈 때 세상의 모든 바람이 당신의 편이 될 것입니다."
           </p>
         </div>
       </div>
@@ -1040,45 +1097,43 @@ function buildMasterReportHtml(user, natureName) {
   `;
 }
 
+
+
 // ============================================================================
-// 3. 제3권 (match) : 1:1 심층 사주 궁합 & 에로틱 속궁합 (총 20장)
-//    - 초반 화법: 재회 기대, 짝사랑, 현재 교제 중, 결혼 준비 중 어느 쪽인지 단정하지 않고 조심스럽게 모든 가능성을 아우르며 진입
-//    - 왜 어울리는지, 무엇이 부족한지, 어떻게 채우는지 철저 해부
-//    - 데이트 성향, 체질별 맞춤 식재료 & 둘이 함께 먹기 좋은 음식/주류
-//    - 국내 여행지 & 해외여행 국가/도시 & 이동수단(비행기·도보·크루즈·렌트카·패키지 vs 자유여행)
-//    - 19+ 성인 속궁합 5대 장 (음양수화, 무드/조명/향기, 달아오르게 하는 시작/전희, 체질별 추천 체위/리듬, 애프터케어)
+// 3. 제3권 (match) : 1:1 심층 사주 궁합 · 식궁합/여행 · 19+ 에로틱 속궁합 (총 20장)
 // ============================================================================
 function buildMatchReportHtml(user, natureName) {
   const dayMaster = user.pillars.day.stemIdx;
   const dayBranch = user.pillars.day.branchIdx;
   const dayEl = CHEONGAN_ELEMENTS[dayMaster];
+  const climate = user.climate;
   const strength = user.strength;
   const yongshin = user.yongshin;
   const med = diagnoseMedicalSaju(user);
 
-  // 일간 간합(干合) 및 일지 육합(六合) 이상적 짝꿍 산출
-  const stemCombMap = [5, 6, 7, 8, 9, 0, 1, 2, 3, 4]; // 갑기, 을경, 병신, 정임, 무계
-  const branchCombMap = [1, 0, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]; // 자축, 인해, 묘술, 진유, 사신, 오미
-  const partnerStemIdx = stemCombMap[dayMaster];
-  const partnerBranchIdx = branchCombMap[dayBranch];
-  const partnerEl = CHEONGAN_ELEMENTS[partnerStemIdx];
-  const partnerMed = MEDICAL_SAJU_ORGANS[partnerEl];
-
   return `
     ${buildMyeongshikTableHtml(user)}
 
-    <!-- 제1장: 조심스러운 진입 프롤로그 -->
+    <!-- 제1장: 프롤로그 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 01 · 인연의 문턱에서 드리는 첫 말씀 (프롤로그)</div>
       <h3 class="chapter-title">어떤 마음으로 이 페이지를 펼치셨든 — 두 사주의 민낯부터 편견 없이 마주합니다</h3>
       <div class="chapter-prose">
         <p>
-          궁합(宮合)이라는 이름으로 누군가의 운명과 내 운명을 나란히 올려놓을 때, 사람의 마음속에는 참으로 다른 결의 간절함이 담겨 있습니다. 어쩌면 지금 ${user.name}님께서는 <strong>이미 헤어진 사람의 연락이나 재회(再會)의 가능성</strong>을 남몰래 기다리고 계실지도 모릅니다. 혹은 아직 마음을 고백하지 못한 채 <strong>혼자 애태우는 짝사랑의 상대</strong>가 나를 어떻게 볼지 궁금해 밤을 지새우셨을 수도 있고, <strong>현재 뜨겁게 교제 중인 연인이나 결혼을 약속한 상대</strong>와 과연 평생을 함께해도 좋을지 마지막 확신을 얻고 싶어 문을 두드리셨을 수도 있습니다.
+          사랑은 세상에서 가장 찬란한 축복이지만, 동시에 한 사람의 밑바닥 불안과 상처를 가장 적나라하게 들추어내는 거울이기도 합니다. 짝사랑의 초조함으로 잠 못 이루고 계시든, 이별 후 지독한 그리움으로 재회의 끈을 놓지 못하고 계시든, 혹은 사랑하면서도 잦은 다툼으로 지쳐 계시든, 본 감명서는 두 사람의 원국 여덟 글자를 가감 없이 펼쳐놓고 <strong>'인연의 근원적 설계도'</strong>를 해독합니다.
         </p>
+
         <div class="counseling-empathy-box">
-          <h5><i class="fa-solid fa-feather-pointed"></i> 천문(天門) 궁합 감명소의 약속 — 단정 짓지 않는 정밀 해부</h5>
+          <h5><i class="fa-solid fa-heart-crack"></i> 얽히고설킨 마음에 건네는 명리학적 위로</h5>
           <p>
-            그렇기에 본 감명서는 “두 분은 지금 사귀는 사이이니 이렇게 하십시오”라는 식의 섣부른 전제나 한쪽으로 치우친 위로로 시작하지 않습니다. 현재 두 분의 관계가 <strong>재회 전야이든, 짝사랑의 탐색기이든, 혹은 깊은 연인 관계이든 상관없이</strong>, 철저하게 <strong>‘두 개의 사주 원국이 만났을 때 일어나는 오행의 화학반응’</strong> 그 자체를 가장 객관적이고 집요하게 해부합니다. 왜 서로에게 끌릴 수밖에 없는지, 무엇이 결정적으로 부족한지, 그리고 식탁과 여행지부터 가장 내밀한 침실의 온도에 이르기까지 두 사주가 완벽히 맞물리려면 무엇이 필요한지 지금부터 낱낱이 밝혀드립니다.
+            "상대가 왜 그렇게 냉정하게 돌아섰는지, 왜 내 사소한 말에 불같이 화를 내는지, 도대체 나와 그 사람 사이에는 어떤 보이지 않는 끈이 연결되어 있는지... 당신이 겪고 있는 그 모든 혼란은 결코 당신이 부족해서가 아닙니다. 두 영혼의 기운이 서로를 맞추어가는 과정에서 필연적으로 발생하는 명리학적 마찰열일 뿐입니다."
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-compass"></i> 본 감명서 20장의 입체적 구성 안내</h5>
+          <p>
+            본 서책은 단순한 점수 매기기(몇 점짜리 궁합인가)를 단호히 거부합니다. 겉궁합(성격·사회적 가치관)부터 시작하여, 짝사랑·재회·결혼 등 <strong>현재 상황별 맞춤 전략 3편</strong>, 갈등 시 상대의 분노를 즉시 잠재우는 화해의 언어학, 데이트와 식궁합, 그리고 어디서도 듣지 못했던 <strong>19+ 성인 에로틱 속궁합 5부작</strong>까지, 두 사람의 관계를 영구히 결속시킬 모든 비방을 남김없이 전수합니다.
           </p>
         </div>
       </div>
@@ -1087,18 +1142,23 @@ function buildMatchReportHtml(user, natureName) {
     <!-- 제2장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 02 · 본원(本元)의 이끌림과 일주(日柱) 구조 해부</div>
-      <h3 class="chapter-title">${user.name}님의 [${natureName}]이 본능적으로 갈구하는 상대의 파장</h3>
+      <h3 class="chapter-title">${user.name}님과 상대방의 에너지 본질 — 자석처럼 끌리는 이유와 부딪히는 지점</h3>
       <div class="chapter-prose">
         <p>
-          사람과 사람이 스쳐 지나가는 수많은 인연 중 유독 한 사람에게 시선이 꽂히고 가슴이 내려앉는 이유는 외모나 스펙 때문이 아닙니다. 내 사주의 일간 <strong>${CHEONGAN_HANJA[dayMaster]}(${CHEONGAN[dayMaster]})</strong>과 일지 배우자궁 <strong>${JIJI_HANJA[dayBranch]}(${JIJI[dayBranch]})</strong>가 자신이 갖지 못한 오행의 조각을 상대방에게서 본능적으로 감지했기 때문입니다.
+          남녀가 처음 만나 스파크가 튀는 것은 머리의 계산이 아니라, <strong>일간(日干: 영혼의 본질)</strong>과 <strong>일지(日支: 육체와 안방의 기운)</strong>가 무의식중에 서로의 결핍을 알아보고 자석처럼 끌어당기기 때문입니다.
         </p>
-        <p>
-          ${user.name}님은 겉으로는 독립적이고 이성적인 방어막을 치고 있지만, 내면 깊은 곳에서는 나의 조후적 갈증(<strong>${yongshin.johuYongshin}</strong>)을 따뜻하게 혹은 시원하게 적셔주고, 나의 천간과 정신적 공명을 일으키는 <strong>${CHEONGAN_HANJA[partnerStemIdx]}(${CHEONGAN[partnerStemIdx]} · ${ELEMENT_KOREAN[partnerEl]})</strong> 계열의 에너지, 그리고 일지 배우자궁을 안정시키는 <strong>${JIJI_HANJA[partnerBranchIdx]}(${JIJI[partnerBranchIdx]})</strong>의 포용력을 가진 상대에게 거부할 수 없는 자력을 느낍니다.
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-magnet"></i> 왜 두 사주는 서로를 돌아보게 되는가</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-magnet"></i> 두 사람 사이에서 일어나는 화학 반응의 실체</h5>
           <p>
-            한쪽이 주도적인 에너지를 뿜어낼 때 다른 한쪽이 이를 받아내는 그릇이 되거나, 서로의 가장 고독한 새벽의 정서를 말없이도 알아채는 지장간의 공명(共鳴)이 작동하기 때문입니다. 이 이끌림은 머리로 통제하려 해도 쉽게 꺼지지 않는 숙명적 인력입니다.
+            ${user.name}님의 ${natureName} 기운은 상대방에게 전에 없던 안정감과 지적 매력을 선사하며, 상대방의 기운은 당신의 굳어 있던 감성을 단숨에 흔들어 깨웁니다. 서로에게서 자신이 가지지 못한 세계를 발견하기에 급격한 설렘에 빠져들지만, 익숙해질수록 그 차이점이 "왜 나와 같지 않은가"라는 실망감으로 돌변하기 쉽습니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-hand-holding-heart"></i> 본원의 조화를 이끄는 관계 유지 비결</h5>
+          <p>
+            상대방을 내 틀에 맞추어 개조하려 들지 마십시오. 당신의 정밀함과 상대방의 직관력이 서로를 보완할 때 두 사람은 단순한 연인을 넘어 인생 최고의 동반자이자 원팀이 됩니다.
           </p>
         </div>
       </div>
@@ -1106,16 +1166,26 @@ function buildMatchReportHtml(user, natureName) {
 
     <!-- 제3장 -->
     <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 03 · 왜 어울리는가 — 오행의 상생(相生)과 강점 시너지</div>
-      <h3 class="chapter-title">두 사주가 나란히 설 때 폭발하는 현실적·정서적 플러스 역학</h3>
+      <div class="chapter-badge">CHAPTER 03 · 오행(五行) 배합과 에너지 균형</div>
+      <h3 class="chapter-title">내가 채워주고 상대가 덜어주는 기운 — 두 사주의 유무(有無) 분석</h3>
       <div class="chapter-prose">
         <p>
-          좋은 궁합이란 두 사람이 똑같은 성향을 가진 것이 아니라, <strong>한 사람의 사각지대를 다른 사람의 시야가 정확히 메워주는 구조</strong>입니다. ${user.name}님의 원국(${strength.title})과 상대방의 사주가 맞물릴 때 만들어지는 최대의 강점은 다음과 같습니다.
+          완벽한 궁합이란 두 사람의 사주가 똑같은 것이 아니라, <strong>내가 넘치는 기운을 상대에게 흘려보내고, 내가 메마른 기운을 상대에게서 수혈받는 상생(相生)의 고리</strong>입니다.
         </p>
-        <p>
-          • <strong>정서적 완충 작용:</strong> ${user.name}님이 사회적 압박이나 완벽주의로 인해 신경이 곤두서 있을 때, 상대의 오행 파장이 당신의 태과한 <strong>${med.excessOrgan.elKor}</strong> 기운을 자연스럽게 설기(洩氣: 부드럽게 빼냄)시켜 심리적 안도감을 줍니다.<br>
-          • <strong>현실적 재물·문서의 결합:</strong> 혼자 있을 때는 벌기만 하고 모으지 못하거나, 반대로 생각만 많고 실행을 주저하던 일이 두 사람의 기운이 합쳐지는 순간 ‘기획(식상) → 실행(재성) → 문서화(인성)’의 톱니바퀴가 완성되어 함께 있을 때 금전운과 사회적 운세가 동반 상승합니다.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-arrows-spin"></i> 기운의 흐름과 감정 교류의 징조</h5>
+          <p>
+            한쪽이 감정적으로 폭주할 때 다른 한쪽이 차분한 이성으로 제동을 걸어주거나, 한쪽이 깊은 무기력에 빠졌을 때 다른 한쪽이 불꽃 같은 추진력으로 손을 잡아 끌어올려 주는 상호 보완의 기류가 작동합니다. 다만 피로가 극에 달한 시기에는 서로의 부족한 점을 탓하며 에너지를 고갈시킬 위험이 있습니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-scale-balanced"></i> 오행 균형을 잡는 일상 커플 처방</h5>
+          <p>
+            두 사람의 대화에서 "당신 때문에"라는 표현을 완전히 금지하고, "우리가 함께"라는 표현을 의식적으로 쓰십시오. 언어의 파동이 오행의 탁기를 정화하고 둘 사이의 감정 저수지를 풍요롭게 만듭니다.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -1125,57 +1195,103 @@ function buildMatchReportHtml(user, natureName) {
       <h3 class="chapter-title">두 사주 사이에서 비어 있는 틈새와 이를 메우는 관계 개운법</h3>
       <div class="chapter-prose">
         <p>
-          세상에 100점짜리 완벽한 원국 궁합은 존재하지 않습니다. 아무리 천생연분이라 불리는 사주도 두 명식을 합쳐 놓으면 반드시 <strong>어느 한 오행이 과열되거나, 반대로 두 사람 모두에게 결핍된 오행의 사각지대</strong>가 드러납니다.
+          두 사람의 사주를 합쳐도 여전히 부족하거나 고갈되어 있는 오행이 존재할 수 있습니다. 이것이 바로 관계의 <strong>'결핍의 구멍'</strong>이며, 외부의 풍수와 생활 습관으로 이 제3의 오행을 채워주지 않으면 이유 모를 권태나 외부 변수에 흔들리게 됩니다.
         </p>
-        <div class="critical-warning-box">
-          <h5><i class="fa-solid fa-puzzle-piece"></i> 두 사주에서 가장 결핍되기 쉬운 고리와 보완 처방</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-circle-exclamation"></i> 결핍 오행이 자극받을 때 생기는 위기</h5>
           <p>
-            • <strong>무엇이 부족한가:</strong> ${user.name}님의 원국에서 가장 희소한 <strong>${med.deficientOrgan.elKor}</strong> 기운과 조후용신(<strong>${yongshin.johuYongshin}</strong>)이 상대방에게서도 충분히 공급되지 않을 경우, 두 사람 모두 자존심을 세우며 먼저 사과하지 않는 ‘냉전(冷戰)’이나 대화가 겉도는 ‘소통의 단절’이 발생합니다.<br>
-            • <strong>채우려면 무엇이 필요한가:</strong> 두 사람만의 감정으로만 부딪히지 말고, 결핍된 오행을 상징하는 <strong>‘공통의 취미, 함께 키우는 식물이나 반려동물, 공동의 저축 계좌, 혹은 물가·숲길에서의 정기적인 산책’</strong>이라는 제3의 완충 매개체를 두 사람 사이에 두어야 부족한 오행이 완벽히 메워집니다.
+            제3의 오행이 부족하면 둘만의 폐쇄적인 관계에 갇혀 사소한 집착과 의심이 싹트거나, 외부 재정적 압박이 들어왔을 때 둘의 애정이 급격히 위축되는 현상이 벌어집니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-wand-magic-sparkles"></i> 부족한 제3 오행을 보충하는 커플 개운 비책</h5>
+          <p>
+            • <strong>공간 풍수:</strong> 데이트나 주거 공간에 자연 식물(목기), 따뜻한 캔들(화기), 도자기나 황토 소품(토기), 금속 스탠드(금기), 미니 분수대나 어항(수기)을 배치하십시오.<br>
+            • <strong>외부 활동:</strong> 둘만의 좁은 방에만 있지 마시고 주말마다 미술관, 숲길 산책, 새로운 레저 활동을 공유하여 신선한 제3의 에너지를 관계 안으로 끌어들이십시오.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- 제5장 -->
+    <!-- 제5장: 상황별 1 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 05 · 상황별 맞춤 전략 ① — [짝사랑 · 썸 · 탐색기]인 경우</div>
       <h3 class="chapter-title">아직 닿지 않은 마음을 내 쪽으로 기울게 만드는 사주 공략법</h3>
       <div class="chapter-prose">
         <p>
-          만약 현재 ${user.name}님이 그 사람을 남몰래 지켜보거나 아슬아슬한 썸의 단계에 머물러 계신다면, 상대의 사주 방어벽을 무너뜨리는 방법은 ‘맹목적인 헌신’이 아닙니다.
+          상대의 마음을 열려면 무작정 저돌적으로 다가가거나 막연히 기다리는 수동적 태도를 버려야 합니다. 상대의 일간과 십신 특성을 정확히 파악하여 <strong>'가장 거부할 수 없는 방식과 타이밍'</strong>으로 접근해야 승률이 올라갑니다.
         </p>
-        <p>
-          상대의 본능적 경계심을 풀기 위해서는 먼저 ${user.name}님 특유의 <strong>${CHEONGAN[dayMaster]}(${CHEONGAN_HANJA[dayMaster]})</strong> 일간이 가진 지적인 여유와 안정감을 보여주어야 합니다. 조급하게 “우린 무슨 사이야?”라고 확답을 독촉하면 상대의 인성·관성 방어기제가 작동하여 뒷걸음질 칩니다. 대신 상대가 일상에서 가장 피로해하는 시간대(오후 늦은 시간이나 주말 저녁)에 부담 없는 미식(美食) 제안이나 실용적인 도움을 건네며 <strong>‘이 사람 곁에 있으면 내 마음이 참 편해진다’</strong>는 조후적 각인을 먼저 심어주십시오.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-comments"></i> 썸 단계에서 상대가 보이는 심리적 반응과 진입 신호</h5>
+          <p>
+            상대는 겉으로는 무심한 척하거나 예의 바른 거리를 유지할 수 있지만, 당신의 지적인 전문성이나 예상치 못한 반전 매력을 볼 때 깊은 호기심을 느낍니다. 섣부른 조급함으로 매일 연락을 쏟아부으면 부담을 느끼고 방어벽을 세우게 됩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-bullseye"></i> 상대방의 마음을 무장해제시키는 3단계 공략 공식</h5>
+          <p>
+            1. <strong>연락 골든타임:</strong> 밤늦은 감정 과잉의 시간보다, 상대의 기운이 차분해지는 오후 4시~6시 사이에 업무나 관심사와 관련된 가벼운 명분으로 톡을 건네십시오.<br>
+            2. <strong>질문의 미학:</strong> "뭐해?" 같은 막연한 안부 대신, 상대의 취향이나 전문 지식을 묻는 질문으로 자존감을 세워주십시오.<br>
+            3. <strong>밀당의 명리 수칙:</strong> 3번 다정하게 반응했다면 1번은 연락 템포를 늦추어 상대가 당신의 빈자리를 스스로 체감하게 만드십시오.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제6장 -->
+    <!-- 제6장: 상황별 2 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 06 · 상황별 맞춤 전략 ② — [이별 후 재회(再會)를 고민하는] 경우</div>
       <h3 class="chapter-title">끊어진 줄 알았던 인연의 실타래 — 언제, 어떤 명분으로 다시 닿는가</h3>
       <div class="chapter-prose">
         <p>
-          만약 두 분이 이미 한 차례 아픈 이별을 겪었거나 연락이 끊긴 상태에서 이 궁합서를 보고 계신다면, 가장 먼저 짚어야 할 것은 <strong>‘그 이별이 합(合)이 풀린 끝이었는가, 아니면 충(沖)으로 인한 일시적 폭발이었는가’</strong>입니다.
+          헤어졌다고 해서 두 사람의 사주적 인연의 끈이 완전히 끊어진 것은 아닙니다. 대부분의 이별은 사랑이 식어서가 아니라, 특정 대운이나 세운에서 <strong>일지와 월지가 충(沖)을 맞아 감정의 퓨즈가 끊어졌기 때문</strong>입니다.
         </p>
-        <p>
-          ${user.name}님의 일지 ${JIJI_HANJA[dayBranch]} 구조상, 감정적 자존심 대립으로 홧김에 돌아선 이별은 지지 암합(暗合)의 여운이 길게 남아 상대방 역시 밤마다 당신의 빈자리를 의식하게 됩니다. 다만 재회를 원하신다면 눈물 섞인 장문의 메시지는 절대 금물입니다. 최소 <strong>45일~60일의 침묵기(냉각기)</strong>를 거쳐 상대의 방어기제가 가라앉고 월운에서 <strong>육합(六合)이나 식상운</strong>이 들어오는 시점에, 아무 일 없었다는 듯 담백하고 밝은 안부나 구체적인 용건 하나로 물꼬를 터야 재회의 문이 열립니다.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-clock-rotate-left"></i> 재회의 기운이 다시 차오르는 결정적 타이밍</h5>
+          <p>
+            이별 직후의 매달림이나 장문의 해명 문자는 100% 역효과를 냅니다. 상대의 사주에서 충살의 탁기가 빠져나가고 일지 합(合)의 기운이 찾아오는 <strong>이별 후 최소 45일~90일 시점</strong>에 상대의 방어기제가 무너지고 미화된 그리움이 솟구칩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-paper-plane"></i> 재회를 부르는 '단 한 줄의 명분 멘트'와 행동 비책</h5>
+          <p>
+            • <strong>금기 행동:</strong> SNS에 감정적인 슬픈 글귀나 술 사진을 올리지 마시고, 당신이 혼자서도 빛나고 성숙해졌음을 은연중에 보여주십시오.<br>
+            • <strong>연락 멘트 공식:</strong> "다시 만나자"는 무거운 고백이 아니라, "예전에 네가 추천해 줬던 책(또는 장소) 지나가다 생각나서 연락했어. 잘 지내지?"와 같이 상대가 답장하기 편안한 가벼운 핑계를 던져 대화의 문을 여십시오.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제7장 -->
+    <!-- 제7장: 상황별 3 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 07 · 상황별 맞춤 전략 ③ — [현재 교제 중 · 결혼을 앞둔] 경우</div>
       <h3 class="chapter-title">설렘을 넘어 평생의 동반자로 — 주도권 조율과 공동 자산의 결합</h3>
       <div class="chapter-prose">
         <p>
-          현재 두 분이 안정적으로 교제 중이거나 부부의 연을 맺고(혹은 앞두고) 계신다면, 이 궁합의 핵심 과제는 <strong>‘생활 리듬의 분리와 재무적 투명성’</strong>입니다.
+          연애가 ‘두 감정의 화학 반응’이라면, 결혼은 ‘두 집안의 명리학적 기운과 경제적 현실이 하나로 결합하는 거대한 제도적 계약’입니다.
         </p>
-        <p>
-          ${user.name}님은 아무리 사랑하는 사이라도 하루 중 최소 1~2시간은 온전히 혼자만의 동굴(시간과 공간)이 보장되어야 에너지가 충전되는 명식입니다. 서로의 휴대폰이나 일거수일투족을 통제하려 하기보다 각자의 독립된 영역을 존중해 줄 때 오히려 애착이 깊어집니다. 또한 결혼이나 동거 시에는 생활비 통장과 장기 투자 통장을 명확히 분리하고, 문서(부동산·청약) 명의나 계약을 진행할 때는 두 사람 중 <strong>인성(印星)과 재성(財星)의 뿌리가 더 튼튼한 쪽</strong>을 전면에 내세우는 것이 가문의 부를 빠르게 불리는 비결입니다.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-ring"></i> 현실적 결합 과정에서 직면할 마찰과 징조</h5>
+          <p>
+            결혼 준비 과정에서 예식장, 혼수, 주거지 마련 등 돈과 양가 부모의 개입이 시작될 때 두 사람의 사주에 숨겨진 재성과 관성의 충돌이 발생합니다. "우리가 사랑하는데 왜 이런 일로 싸워야 하나"라는 회의감이 들 수 있으나, 이는 독립된 두 성인이 한 팀을 이루기 위한 통과의례입니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-shield-heart"></i> 백년가약을 단단하게 묶는 3대 결속 비책</h5>
+          <p>
+            • <strong>양가 분리의 원칙:</strong> 부모님의 의견은 경청하되, 최종 결정은 반드시 두 사람만의 합의하에 내려 외풍을 차단하십시오.<br>
+            • <strong>재정 투명성:</strong> 서로의 자산과 부채 현황을 솔직하게 공유하고 공동의 자산 증식 5개년 목표를 수립하십시오.<br>
+            • <strong>혼인 대길일 선점:</strong> 두 사람의 일지와 충돌하지 않고 천을귀인이 비추는 손 없는 날을 혼인일로 정하여 평생의 복록을 축원하십시오.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -1185,13 +1301,20 @@ function buildMatchReportHtml(user, natureName) {
       <h3 class="chapter-title">두 사람이 싸우게 되는 진짜 이유와 상대의 분노를 즉시 잠재우는 한마디</h3>
       <div class="chapter-prose">
         <p>
-          두 사주가 충돌할 때 표면적인 이유는 연락 빈도, 말투, 시간 약속 같은 사소한 것들이지만, 명리학적 본질은 <strong>‘인정 욕구(관성·인성)’와 ‘표현 방식(식상)’의 온도 차</strong>에 있습니다.
+          모든 커플에게는 유독 그 말만 나오면 이성을 잃고 싸우게 되는 <strong>'사주적 역린(逆鱗)'</strong>이 존재합니다. 상대방의 역린을 미리 알고 그 단어를 피하는 것만으로도 이별 위기의 90%를 예방할 수 있습니다.
         </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-comments"></i> 갈등 폭발을 막는 대화의 골든 룰</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-fire"></i> 다툼의 뇌관이 폭발하는 전형적 시나리오</h5>
           <p>
-            • <strong>절대 하지 말아야 할 말:</strong> “원래 다 그런 거야”, “네가 너무 예민한 거 아니야?”, “알아서 해” — 이 세 마디는 상대의 일지 자존심을 정면으로 찌르는 현침(懸針)이 됩니다.<br>
-            • <strong>상대를 즉시 무장해제시키는 마법의 문장:</strong> 논리적 시시비비를 가리기 전에 <strong>“네가 그렇게 느꼈다면 내 표현이 부족했어. 우리 맛있는 거 먹고 천천히 다시 얘기하자”</strong>라고 먼저 감정의 온도를 낮춰주면 10시간 갈 싸움이 10분 만에 끝납니다.
+            한쪽은 문제를 즉시 논리적으로 따져서 해결하려 들고, 다른 한쪽은 감정적 서운함을 위로받지 못해 입을 닫아버리는 '대화의 엇박자'가 반복됩니다. 침묵은 분노를 부르고, 쏟아붓는 말은 상대의 영혼에 씻을 수 없는 흉터를 남깁니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-comment-medical"></i> 상대의 닫힌 귀를 여는 기적의 화해 언어</h5>
+          <p>
+            싸움이 격화될 때는 시시비비를 가리지 마시고 즉시 한 발 물러나 <strong>"내가 당신의 마음을 미처 헤아리지 못해서 서운하게 했네, 미안해. 잠시 30분만 숨 고르고 다시 이야기하자"</strong>라는 완충 멘트를 건네십시오. 상대의 뇌관을 적시는 최고의 명약입니다.
           </p>
         </div>
       </div>
@@ -1203,268 +1326,282 @@ function buildMatchReportHtml(user, natureName) {
       <h3 class="chapter-title">어떤 데이트가 두 사람의 호르몬과 오행을 가장 아름답게 공명시키는가</h3>
       <div class="chapter-prose">
         <p>
-          사람이 붐비고 소음이 가득한 핫플레이스에서 기가 빨리는 커플이 있는가 하면, 너무 정적인 공간에 있으면 어색해지는 커플이 있습니다. ${user.name}님의 <strong>${natureName}</strong>과 상대방의 오행 조화를 극대화하는 데이트 성향은 <strong>‘프라이빗한 감각적 몰입’과 ‘자연 속의 개방감’을 교차하는 코스</strong>입니다.
+          데이트는 단순히 밥을 먹고 영화를 보는 시간이 아닙니다. 두 사람의 사주에 부족한 오행을 채우고 자연스러운 스킨십과 깊은 대화를 유도하는 <strong>'풍수적 치유의 시간'</strong>이어야 합니다.
         </p>
-        <p>
-          • <strong>최고의 데이트 무드:</strong> 대기 줄이 길고 시끄러운 번화가보다는, 사전 예약된 조용한 다이닝 바, 통유리로 강물이나 숲이 내려다보이는 라운지, 심야의 한적한 드라이브, 혹은 함께 손을 움직여 결과물을 만드는 원데이 클래스(향수 조향, 도자기, 쿠킹)가 두 사람의 심리적 거리를 단숨에 좁혀줍니다.<br>
-          • <strong>피해야 할 데이트:</strong> 동선이 계획되지 않은 상태에서 폭염이나 혹한 속에 오래 걷게 만드는 일정은 두 사람의 조후 밸런스를 깨뜨려 사소한 짜증을 유발합니다.
-        </p>
-      </div>
-    </div>
 
-    <!-- 제10장: 체질 맞춤 식재료 (신규 디테일 요구사항) -->
-    <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 10 · 의명(醫命) 식궁합 제1편 — 각 사주의 체질에 맞는 핵심 식재료</div>
-      <h3 class="chapter-title">내 몸을 살리는 식재료와 상대의 기운을 돋우는 식재료의 음양 배합</h3>
-      <div class="chapter-prose">
-        <p>
-          연인이나 부부가 평생 가장 많이 함께하는 행위가 바로 ‘식사(食事)’입니다. 의명진단학적으로 볼 때, 각자의 사주 체질(<strong>${med.thermalType}</strong>)에 맞는 식재료를 알고 함께 섭취하면 식탁 위에서 서로의 부족한 오행이 채워지고 몸과 마음의 활력이 동시에 살아납니다.
-        </p>
-        <table class="medical-organ-table">
-          <thead>
-            <tr>
-              <th style="width:24%;">구분</th>
-              <th>체질 맞춤 추천 식재료 및 오행 보완 원리</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>${user.name}님의 체질 식재료</strong><br>(${med.deficientOrgan.elKor}·${med.attackedOrgan.elKor} 보강)</td>
-              <td><strong>핵심 식재료:</strong> ${med.deficientOrgan.medicinalFood}<br><strong>보조 식재료:</strong> ${med.attackedOrgan.medicinalFood}<br>→ ${user.name}님의 선천적 약점인 ${med.deficientOrgan.zang}의 기혈을 채우고 신경계의 피로를 씻어주는 생명 식재료입니다.</td>
-            </tr>
-            <tr>
-              <td><strong>상대방과의 조화 식재료</strong><br>(${partnerMed.elKor}·조후 밸런스)</td>
-              <td><strong>핵심 식재료:</strong> ${partnerMed.medicinalFood}<br>→ 두 사람이 함께 만날 때 서로의 체온 차이를 맞추고 혈액 순환과 호르몬 분비를 촉진하는 음양 조화 식재료입니다.</td>
-            </tr>
-            <tr>
-              <td><strong>함께 피해야 할 상극 식재료</strong></td>
-              <td>지나치게 차가운 얼음 음료와 트랜스지방이 많은 야식 튀김류는 두 사람의 비위(脾胃)를 냉하게 하여 데이트 후반부의 컨디션과 밤의 열정을 동시에 떨어뜨립니다.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 제11장: 둘이 함께 먹기 좋은 음식 종류와 주류 -->
-    <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 11 · 의명(醫命) 식궁합 제2편 — 둘이 함께 먹기 좋은 베스트 요리 & 주류</div>
-      <h3 class="chapter-title">화해가 필요할 때, 설렘을 깨울 때, 깊은 밤을 준비할 때 함께 먹을 최고의 메뉴</h3>
-      <div class="chapter-prose">
-        <p>
-          단순한 식재료 나열을 넘어, 두 분이 데이트나 기념일, 혹은 여행지에서 함께 마주 앉아 먹었을 때 오행의 상생(相生)이 가장 완벽하게 일어나는 구체적인 음식 종류를 처방합니다.
-        </p>
-        <p>
-          • <strong>1. 기운을 북돋고 텐션을 끌어올리는 메인 요리 (화·수 수승화강 요리):</strong><br>
-          따뜻한 육수에 신선한 채소와 소고기를 살짝 익혀 먹는 <strong>스키야키·샤브샤브</strong>, 해산물과 마늘·올리브오일이 어우러진 <strong>지중해식 해산물 스튜(부야베스)·감바스</strong>, 강황과 향신료로 속을 데우는 <strong>양갈비 스테이크 및 숙성 한우 화로구이</strong>, 그리고 장어 덮밥(히츠마부시)이나 전복 솥밥 같은 보양 다이닝이 두 사람의 신장(水)과 심장(火) 에너지를 동시에 깨웁니다.<br><br>
-          • <strong>2. 서먹한 공기를 녹이고 속마음을 열게 하는 주류 & 티 페어링:</strong><br>
-          배가 부르고 몸이 차가워지는 라거 맥주보다는, 체온을 은은하게 올리고 혈관을 이완시키는 <strong>피노 누아(Pinot Noir)나 쉬라즈 계열의 레드 와인, 따뜻한 도쿠리(온사케), 피트 향이 은은한 싱글몰트 위스키 하이볼</strong>, 혹은 술을 마시지 않는 날에는 <strong>오미자·히비스커스 블렌딩 티</strong>가 두 사람의 감각을 가장 매혹적으로 열어줍니다.
-        </p>
-      </div>
-    </div>
-
-    <!-- 제12장: 국내 여행지 추천 -->
-    <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 12 · 여행 궁합 제1편 — 두 사주의 오행을 채우는 국내 베스트 여행지</div>
-      <h3 class="chapter-title">산(山)인가 바다(海)인가 — 떠나기만 해도 사이가 깊어지는 국내 개운 여행지</h3>
-      <div class="chapter-prose">
-        <p>
-          여행지는 그 땅이 품고 있는 지기(地氣: 수기·목기·화기·금기)를 두 사람의 몸으로 직접 흡수하는 거대한 풍수 처방입니다. ${user.name}님(조후용신: <strong>${yongshin.johuYongshin}</strong>)과 상대방이 함께 떠났을 때 다툼 없이 깊은 정서적 교감을 나누는 국내 여행지는 다음과 같습니다.
-        </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:26%;">오행 테마</th>
-              <th>추천 국내 여행지 및 숙소 스타일</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>🌊 수(水)·목(木) 보충</strong><br>휴식과 재충전이 필요할 때</td>
-              <td><strong>강릉·양양 해안선, 남해·여수 다도해, 제주 서귀포·애월</strong><br>→ 탁 트인 수평선이 한눈에 들어오는 오션뷰 독채 풀빌라나 노천 자쿠지가 딸린 프라이빗 리조트가 두 사람의 막힌 기혈을 단숨에 뚫어줍니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🌲 목(木)·토(土) 안정</strong><br>깊은 대화와 치유가 필요할 때</td>
-              <td><strong>평창·정선 깊은 숲속, 경주 한옥 스테이, 담양·보성 녹차밭</strong><br>→ 피톤치드가 풍부한 고지대 숲속 스테이나 고즈넉한 한옥 독채에서 불멍(火)과 반신욕(水)을 함께 즐기면 마음의 벽이 허물어집니다.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 제13장: 해외여행 국가 및 도시 추천 -->
-    <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 13 · 여행 궁합 제2편 — 해외여행 추천 국가 및 도시 매칭</div>
-      <h3 class="chapter-title">비행기를 타고 국경을 넘을 때 두 사람의 운을 가장 크게틔워줄 해외 도시</h3>
-      <div class="chapter-prose">
-        <p>
-          해외여행은 일상의 관성에서 완전히 벗어나 두 사람만의 밀도 높은 시간을 공유하는 최고의 관계 전환점입니다. 두 사주의 한난조습과 오행 밸런스에 가장 완벽하게 부합하는 해외 국가와 도시는 다음 3대 권역입니다.
-        </p>
-        <p>
-          • <strong>1. 근거리 낭만 & 온천·미식 (일본 큐슈 유후인·벳푸 / 홋카이도 삿포로·오타루 / 교토):</strong><br>
-          정갈한 가이세키 요리(식궁합)와 프라이빗 료칸 노천온천(수승화강)이 결합된 일본 소도시 여행은 두 사람의 피로를 극적으로 낮추고 밤의 친밀도를 최고조로 끌어올립니다.<br><br>
-          • <strong>2. 중거리 휴양 & 트로피컬 에너지 (발리 우붓·스미냑 / 베트남 푸꾸옥·나트랑 / 태국 코사무이):</strong><br>
-          원국이 차갑거나(한습) 도심의 빌딩 숲(금·토 과다)에 지쳐 있을 때, 열대의 태양(丙火)과 울창한 정글(甲木), 그리고 에메랄드빛 바다(壬水)가 만나는 동남아 럭셔리 풀빌라는 두 사람의 생명력과 에로티시즘을 동시에 폭발시킵니다.<br><br>
-          • <strong>3. 장거리 예술 & 지중해의 태양 (이탈리아 아말피·피렌체 / 스페인 바르셀로나·세비야 / 포르투갈 리스본·포르투):</strong><br>
-          신혼여행이나 인생의 큰 기념일에는 따사로운 지중해의 햇살과 와인, 그리고 예술적 영감(화개·문창)이 살아 숨 쉬는 남유럽 해안 도시가 평생 잊지 못할 결속을 선물합니다.
-        </p>
-      </div>
-    </div>
-
-    <!-- 제14장: 여행 이동수단 및 방식 (신규 디테일 요구사항) -->
-    <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 14 · 여행 궁합 제3편 — 비행기·도보·크루즈·렌트카 & 패키지 vs 자유여행</div>
-      <h3 class="chapter-title">여행지에서 절대 싸우지 않는 이동수단 선택과 여행 방식의 황금 비율</h3>
-      <div class="chapter-prose">
-        <p>
-          아무리 좋은 여행지를 골라도 ‘이동하는 과정’과 ‘여행 스타일’이 사주 체질과 맞지 않으면 공항이나 도로 위에서 감정이 상하기 쉽습니다. 두 분의 사주 기동력(역마·인성·식상)에 맞춘 정밀 여행 설계도입니다.
-        </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:26%;">이동수단 · 여행 방식</th>
-              <th>두 사주 맞춤 적합도 및 실전 운영 가이드</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>✈️ 비행기 (항공 이동)</strong></td>
-              <td>중장거리(4시간 이상) 비행 시에는 저가항공의 좁은 좌석이나 심야 레드아이(밤샘) 항공편이 ${user.name}님의 ${med.deficientOrgan.zang} 피로를 급격히 유발합니다. 출도착 시간이 여유로운 국적기나 레그룸이 넓은 좌석을 선택하고, 기내에서 따뜻한 수분을 충분히 섭취하십시오.</td>
-            </tr>
-            <tr>
-              <td><strong>🚗 렌트카 vs 🚶 도보 이동</strong></td>
-              <td>무거운 짐을 들고 대중교통을 환승하거나 하루 2만 보 이상 강행군하는 <strong>극단적 도보 여행은 갈등의 1순위 원인</strong>입니다. 핵심 거점 간 이동은 반드시 <strong>렌트카(자차)나 프라이빗 픽업 차량(택시/그랩)</strong>을 이용해 두 사람만의 쾌적한 공간과 체력을 아끼고, 도보는 저녁노을이 지는 해변이나 구시가지 골목을 <strong>1시간 이내로 가볍게 산책</strong>하는 코스로 제한하십시오.</td>
-            </tr>
-            <tr>
-              <td><strong>🛳️ 크루즈 · 요트 투어</strong></td>
-              <td>짐을 풀고 싸는 이동 피로 없이 바다(水) 위에서 미식과 공연을 즐기는 <strong>크루즈 여행이나 선셋 프라이빗 요트 투어</strong>는 두 사주에 최고 등급(★★★★★)의 궁합을 자랑합니다. 물의 파장이 두 사람의 긴장을 완전히 녹여줍니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🎒 패키지상품 vs 자유여행</strong></td>
-              <td>깃발을 따라 새벽부터 움직이고 원치 않는 쇼핑센터에 들러야 하는 <strong>전통적 단체 패키지 상품은 ${user.name}님의 독립적 일주 기질과 극도로 상극</strong>입니다. 반면 모든 기차표와 식당을 일일이 검색하느라 한쪽이 독박을 쓰는 무계획 자유여행도 피로를 부릅니다. 정답은 <strong>‘숙소와 핵심 투어(반나절 프라이빗 가이드 투어)만 사전 예약해 두고, 나머지 절반의 시간은 완벽한 자유시간으로 비워두는 세미 자유여행(에어텔+데이투어)’</strong>입니다.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 제15장: 성인(19+) 속궁합 1 - 음양수화 교접 원리 -->
-    <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 15 · [19+ 성인 비전] 심층 속궁합 제1편 — 음양(陰陽)과 수화(水火)의 육체적 자력</div>
-      <h3 class="chapter-title">이성(理性)의 옷을 벗었을 때 드러나는 두 육체의 본능적 온도와 케미스트리</h3>
-      <div class="chapter-prose">
-        <p>
-          동양 방중술(房中術)과 명리학에서 남녀의 성적 결합은 단순한 쾌락의 발산이 아니라, <strong>하늘의 양기(火)와 땅의 음기(水)가 교접하여 서로의 생명력을 충전하는 수승화강(水昇火降)의 의식</strong>입니다. 낮의 성격 궁합이 평범하더라도 밤의 속궁합이 완벽히 맞물리는 커플은 어떤 위기가 와도 쉽게 헤어지지 못합니다.
-        </p>
-        <div class="erotic-secret-box">
-          <h5><i class="fa-solid fa-fire-flame-curved"></i> ${user.name}님의 숨겨진 에로틱 본능 (${natureName})</h5>
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-plane-departure"></i> 추천 여행지와 공간 테마</h5>
           <p>
-            일상에서 ${user.name}님은 자제력이 강하고 정돈된 모습을 유지하지만, 침실의 문이 닫히고 완전한 신뢰와 몰입이 형성되는 순간 내면의 지장간(<strong>${HIDDEN_STEMS[dayBranch].map(i => CHEONGAN_HANJA[i]).join('·')}</strong>)에 응축되어 있던 농밀한 정념과 소유욕이 깨어납니다. 처음에는 서서히 예열되는 듯 보이나, 한 번 임계점을 넘으면 상대방의 숨결 하나까지 완벽히 장악하거나 반대로 온몸의 통제권을 상대에게 맡기며 깊이 침잠하는 반전의 관능미를 지니고 있습니다.
+            복잡하고 소음이 심한 도심의 번화가 데이트는 두 사람의 신경계를 피로하게 만듭니다. 물과 숲의 기운이 조화로운 호숫가, 바다 전망의 조용한 독채 숙소, 또는 고즈넉한 한옥 카페에서 머물 때 서로에 대한 애정이 가장 깊어집니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-map-location-dot"></i> 국내 및 해외 최적의 힐링 목적지</h5>
+          <p>
+            • <strong>국내 여행지:</strong> 강릉·속초(동해의 맑은 수기), 제주 애월·서귀포(목기와 토기의 조화), 경주 보문호수(화개와 영적 안정).<br>
+            • <strong>해외 여행지:</strong> 일본 교토(고즈넉한 온천 힐링), 스위스 인터라켄(웅장한 자연 에너지), 발리 우붓(몸과 마음의 완전한 디톡스).
           </p>
         </div>
       </div>
     </div>
 
-    <!-- 제16장: 성인(19+) 속궁합 2 - 둘에게 잘 맞는 무드(조명·향기·온도) -->
+    <!-- 제10장 -->
     <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 16 · [19+ 성인 비전] 심층 속궁합 제2편 — 두 사람을 무장해제시키는 침실 무드 설계</div>
-      <h3 class="chapter-title">조명 · 향기 · 온도 · 사운드 — 이성의 경계심을 녹이는 감각의 무대 장치</h3>
+      <div class="chapter-badge">CHAPTER 10 · 두 사람의 식궁합(食宮合)과 사랑을 키우는 밥상</div>
+      <h3 class="chapter-title">음식 취향의 일치와 체질 보양 — 밥상에서 완성되는 사랑의 화학 반응</h3>
       <div class="chapter-prose">
         <p>
-          ${user.name}님과 상대방의 사주 체질은 시각적·후각적 공간 분위기에 따라 성적 각성도가 200% 이상 차이 납니다. 형광등이 환하게 켜진 건조한 방이나 정리가 안 된 어수선한 공간에서는 뇌의 전두엽(이성·검열)이 꺼지지 않아 깊은 오르가슴에 도달하기 어렵습니다.
+          동의보감에서는 "같은 솥의 밥을 먹으며 체질의 기운을 맞추는 것이 백년해로의 지름길"이라 하였습니다. 식궁합이 맞지 않으면 사소한 외식 메뉴 선택부터 신경전이 벌어지고 장기적으로 신체 면역력의 불균형이 찾아옵니다.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:25%;">감각 요소</th>
-              <th>두 사주의 본능을 깨우는 최적의 무드(Mood) 세팅</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>🕯️ 조명과 색온도</strong></td>
-              <td>천장 주조명은 완전히 끄고, 침대 하단이나 협탁에 <strong>2700K 이하의 따뜻한 앰버(호박색) 간접 조명이나 캔들 워머</strong> 하나만 켜두십시오. 서로의 실루엣과 눈빛만 은은하게 비치는 반음영(半陰影) 상태가 수치심을 지우고 대담함을 끌어올립니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🌿 시그니처 향기 (Aroma)</strong></td>
-              <td>인공적인 독한 향수 대신, 신경계를 이완시키고 성적 호르몬을 자극하는 <strong>샌달우드(백단향), 일랑일랑, 머스크, 혹은 베르가못과 로즈우드</strong> 계열의 디퓨저나 바디 오일을 침실에 머금게 하십시오.</td>
-            </tr>
-            <tr>
-              <td><strong>🌡️ 온도와 텍스처</strong></td>
-              <td>침실 공기는 약간 서늘한 듯(21~22℃) 유지하되, 피부에 닿는 침구는 바스락거리고 포근한 고밀도 호텔식 코튼이나 실크 소재를 사용하여 <strong>‘이불 속 두 사람의 체온’이 더욱 뜨겁게 대비</strong>되도록 연출하는 것이 핵심입니다.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <!-- 제17장: 성인(19+) 속궁합 3 - 어떤 시작이 서로를 달아오르게 하는가 -->
-    <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 17 · [19+ 성인 비전] 심층 속궁합 제3편 — 서로를 단숨에 달아오르게 하는 시작과 전희(Foreplay)</div>
-      <h3 class="chapter-title">성급한 본론보다 아찔한 예고편 — 뇌와 피부를 먼저 적시는 스위치(Switch)</h3>
-      <div class="chapter-prose">
-        <p>
-          두 사람의 사주 구조상, 아무런 정서적·감각적 빌드업 없이 곧바로 육체적 삽입이나 직접적인 성감대 접촉으로 들어가는 것은 최악의 감점 요인입니다. 두 사람을 진짜 미치게 만드는 것은 <strong>‘침실에 들어가기 2시간 전부터 시작되는 심리적 전희’</strong>와 <strong>‘간지럽고 집요한 말초 신경의 자극’</strong>입니다.
-        </p>
-        <div class="erotic-secret-box">
-          <h5><i class="fa-solid fa-fire"></i> 서로를 달아오르게 하는 3단계 점화(Ignition) 시퀀스</h5>
+        <div class="medical-care-box">
+          <h5><i class="fa-solid fa-utensils"></i> 두 사람의 사랑을 북돋우는 최적의 메뉴</h5>
           <p>
-            • <strong>1단계 (언어와 시선의 예고):</strong> 밖에서 나란히 술이나 차를 마실 때 테이블 아래로 은밀하게 손끝이나 무릎을 스치며, 귓가에 낮고 느린 목소리로 <em>“오늘 집에 가면 그냥 안 재울 거야”</em> 혹은 <em>“오늘따라 네 향기가 너무 좋다”</em>라는 확신에 찬 시그널을 먼저 던지십시오.<br>
-            • <strong>2단계 (수승화강 온열 스킨십):</strong> 침대에 눕기 전 함께 따뜻한 물로 샤워를 하거나, 물기가 채 마르지 않은 상태에서 목덜미·귀 뒤쪽·쇄골·척추 기립근 라인을 따라 손바닥의 온기와 입술로 천천히 쓸어내리는 것이 ${user.name}님의 경락 스위치를 단숨에 켭니다.<br>
-            • <strong>3단계 (호흡과 속삭임):</strong> 급하게 옷을 벗기기보다 옷 위로 전해지는 체온과 거칠어지는 숨소리를 귀 가까이에서 들려주며, 상대가 스스로 애원하며 매달릴 때까지 템포를 늦추는 ‘밀당형 전희’가 두 사람의 흥분도를 극한으로 끌어올립니다.
+            • <strong>추천 메뉴:</strong> 담백한 샤브샤브나 전골 요리(수기와 목기의 조화), 따뜻한 삼계탕이나 해신탕(부족한 양기 보충).<br>
+            • <strong>피해야 할 외식:</strong> 지나치게 맵고 자극적인 마라탕이나 기름진 야간 배달 음식은 두 사람의 간열과 심화를 돋워 사소한 일에도 언성을 높이게 만듭니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-wine-glass"></i> 함께 나누는 차(茶)와 주도(酒道)</h5>
+          <p>
+            식사 후 미지근한 캐모마일차나 국화차를 함께 마시며 하루의 피로를 나누는 15분의 티타임이 수백만 원짜리 보약보다 관계를 돈독하게 만듭니다.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- 제18장: 성인(19+) 속궁합 4 - 체질과 오행에 맞는 추천 체위와 리듬 -->
+    <!-- 제11장: 19+ 속궁합 1 -->
     <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 18 · [19+ 성인 비전] 심층 속궁합 제4편 — 오행 체질별 추천 체위(Positions)와 리듬의 변주</div>
-      <h3 class="chapter-title">깊이감 · 각도 · 시선 교환 — 두 사람의 신장과 심장을 완전히 공명시키는 결합 기술</h3>
+      <div class="chapter-badge">CHAPTER 11 · [19+ 성인 비전] 심층 속궁합 제1편 — 본능적 끌림과 성적 에너지의 조화</div>
+      <h3 class="chapter-title">침실의 문이 닫히면 시작되는 본능의 대화 — 두 사람의 성적 판타지와 육체적 자력</h3>
       <div class="chapter-prose">
         <p>
-          사주의 일간·일지 강약과 의명학적 체질(<strong>${med.thermalType}</strong>, 취약 장부: <strong>${med.deficientOrgan.zang}</strong>)을 고려할 때, 특정 관절에 무리를 주지 않으면서도 두 사람의 성감대와 정서적 일체감을 극대화하는 체위와 리듬의 조합은 명확히 정해져 있습니다.
+          낮의 대화가 이성의 영역이라면, 밤의 침실은 <strong>두 사람의 사주에 내재된 가장 원초적인 오행과 생명 에너지가 교환되는 신성한 의식</strong>입니다. 속궁합이 조화를 이루면 낮 동안 쌓였던 사소한 갈등과 서운함이 단 한 번의 깊은 교감으로 눈 녹듯 씻겨 내려갑니다.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:26%;">추천 체위 시퀀스</th>
-              <th>체위별 감각 포인트 및 리듬 가이드</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>1. 도입부 (정서적 밀착)</strong><br>밀착 대면위 & 로터스(연꽃) 변형</td>
-              <td>초반에는 서로의 눈빛과 표정을 가까이서 확인하고 가슴(심장·火)과 가슴이 완전히 맞닿는 <strong>밀착형 대면 자세(또는 서로 마주 안고 앉는 로터스 자세)</strong>로 시작하십시오. 골반 아래에 도톰한 베개를 받쳐 각도를 살짝 높이면 무리한 힘 없이도 가장 깊은 내벽의 스팟이 부드럽게 자극됩니다.</td>
-            </tr>
-            <tr>
-              <td><strong>2. 중반부 (주도권의 반전)</strong><br>여성/상대 상위 & 측면 스푸닝(Spooning)</td>
-              <td>예열이 끝난 중반부에는 평소 관계에서 차분하던 쪽이 위로 올라타 속도와 깊이를 직접 통제하는 <strong>상위 자세</strong>로 시각적 쾌감을 극대화하십시오. 만약 체력 소모가 있거나 긴 밤을 원할 때는 옆으로 나란히 누워 뒤에서 감싸 안고 결합하는 <strong>스푸닝(측위)</strong> 자세가 허리(신장) 부담을 줄이면서 귀에 속삭임과 애무를 동시에 줄 수 있어 최고의 만족도를 줍니다.</td>
-            </tr>
-            <tr>
-              <td><strong>3. 절정부 (야성적 몰입)</strong><br>상체를 낮춘 후배위 변형</td>
-              <td>마지막 절정으로 치달을 때는 상체를 침대에 깊게 숙이고 골반만 밀착시키는 <strong>변형 후배위(Prone Bone)</strong>가 원초적인 정복감과 가장 깊숙한 마찰력을 선사합니다. 이때도 한쪽 손을 깍지 끼거나 등 전체를 감싸 안아 정서적 연결을 놓지 않는 것이 핵심입니다.</td>
-            </tr>
-          </tbody>
-        </table>
-        <p>
-          <strong>[황금 리듬의 법칙 — 구천일심(九淺一深)의 현대적 변주]:</strong> 처음부터 끝까지 똑같은 빠른 속도로 몰아붙이는 것은 하수의 방식입니다. 얕고 부드럽게 애태우는 움직임과, 숨이 턱 막힐 만큼 깊숙이 밀착하여 2~3초간 정지한 채 내벽의 수축을 함께 느끼는 <strong>‘완급 조절(Slow & Deep)’</strong>이 결합될 때 두 사람은 전신에 전율이 흐르는 절정을 경험하게 됩니다.
-        </p>
+
+        <div class="erotic-secret-box">
+          <h5><i class="fa-solid fa-fire-burner"></i> 침실에서의 주도권과 성적 에너지 역학</h5>
+          <p>
+            ${user.name}님과 상대방 사이에는 '리드하고 싶은 욕망'과 '완전히 장악당해 몰입하고 싶은 욕망'이 절묘한 텐션을 형성합니다. 낮에는 주도면밀하고 지적인 모습을 유지하는 쪽이 밤에는 예상치 못한 과감함과 뜨거운 몰입을 드러낼 때, 상대방은 형언할 수 없는 깊은 전율과 성적 카타르시스를 느끼게 됩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-moon"></i> 본능의 문을 여는 침실 시크릿 코드</h5>
+          <p>
+            체면과 수치심을 완전히 내려놓으십시오. 두 사람 사이에서 성적 욕망을 표현하는 것은 부끄러운 일이 아니라 서로의 영혼과 육체를 가장 깊이 존중하고 결속시키는 지고의 소통입니다.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제19장: 성인(19+) 속궁합 5 - 권태기 타파 & 애프터케어 -->
+    <!-- 제12장: 19+ 속궁합 2 -->
     <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 19 · [19+ 성인 비전] 심층 속궁합 제5편 — 권태기 타파 시나리오와 결정적 애프터케어</div>
-      <h3 class="chapter-title">절정 직후의 10분이 평생의 사랑을 결정한다 — 영혼을 묶어두는 여운의 기술</h3>
+      <div class="chapter-badge">CHAPTER 12 · [19+ 성인 비전] 심층 속궁합 제2편 — 두 사람을 무장해제시키는 침실 무드 설계</div>
+      <h3 class="chapter-title">오감을 자극하는 조명 · 향기 · 온도 — 긴장을 녹이고 쾌락을 극대화하는 공간 연출</h3>
       <div class="chapter-prose">
         <p>
-          ${user.name}님의 사주에서 가장 민감하게 반응하는 순간은 사실 절정의 순간이 아니라 <strong>‘관계가 끝난 직후의 10분(Aftercare)’</strong>입니다. 절정 직후 곧바로 등을 돌리고 스마트폰을 보거나 잠들어 버리면, ${natureName}의 내면에는 설명할 수 없는 공허함과 정서적 냉각이 급격히 찾아옵니다.
+          사람의 몸은 주변 환경의 파동에 극도로 민감합니다. 특히 오행 체질에 맞지 않는 차갑거나 건조한 침실은 말초 혈관을 수축시켜 애액 분비를 방해하고 오르가즘 도달을 가로막는 최대의 장애물이 됩니다.
         </p>
+
         <div class="erotic-secret-box">
-          <h5><i class="fa-solid fa-heart"></i> 권태기를 원천 차단하는 애프터케어 & 판타지 처방</h5>
+          <h5><i class="fa-solid fa-candle-holder"></i> 두 사람에게 최적화된 관능의 침실 환경</h5>
           <p>
-            • <strong>필수 애프터케어:</strong> 숨이 가라앉을 때까지 절대 몸을 바로 떼지 마십시오. 최소 5분 이상 살결을 맞댄 채 이마와 볼에 가벼운 입맞춤을 나누고, 따뜻한 물 한 잔을 챙겨주며 <em>“너랑 있을 때가 제일 좋아”</em>라는 확언을 건네는 것이 상대의 뇌리에 당신을 평생 지울 수 없는 중독으로 각인시킵니다.<br>
-            • <strong>익숙함을 깨는 변화구:</strong> 교제 기간이 길어져 텐션이 떨어질 때는 집이라는 익숙한 공간을 벗어나, 앞서 추천한 <strong>프라이빗 료칸이나 오션뷰 호텔</strong>로 장소를 옮기거나 평소 입지 않던 실크 로브·새로운 향수를 매개체로 작은 역할극적 긴장감을 불어넣으십시오.
+            • <strong>조명 조도:</strong> 형광등이나 밝은 백색등은 신경계를 각성시켜 몰입을 방해합니다. 침대 발치 쪽에 2700K 앰버(주황빛)의 은은한 간접 조명이나 캔들 워머를 두어 서로의 실루엣만 드러나게 하십시오.<br>
+            • <strong>아로마 향기:</strong> 긴장을 완화하는 일랑일랑, 샌달우드, 다마스크 로즈 계열의 천연 에센셜 오일을 디퓨징하여 후각을 통해 대뇌 변연계를 직접 자극하십시오.<br>
+            • <strong>온도와 침구:</strong> 체온보다 살짝 따뜻한 24~25도의 실내 온도와 부드러운 극세사 또는 100수 순면 침구를 준비하십시오.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-music"></i> 청각적 자극과 엠비언트 사운드</h5>
+          <p>
+            적막한 침묵은 어색한 긴장을 부릅니다. 빗소리나 60BPM 전후의 몽환적인 로파이(Lo-Fi) 재즈 음악을 낮게 깔아 둘만의 고립된 안식처를 완성하십시오.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제13장: 19+ 속궁합 3 -->
+    <div class="report-chapter">
+      <div class="chapter-badge">CHAPTER 13 · [19+ 성인 비전] 심층 속궁합 제3편 — 서로를 단숨에 달아오르게 하는 시작과 전희(Foreplay)</div>
+      <h3 class="chapter-title">서두르지 않는 손길이 빚어내는 절정 — 상대가 갈망하는 스킨십 템포와 민감대</h3>
+      <div class="chapter-prose">
+        <p>
+          대부분의 속궁합 불만은 본 게임이 아니라 <strong>‘전희(Foreplay)의 부실함과 타이밍의 불일치’</strong>에서 비롯됩니다. 특히 여성의 신체는 충분한 온기와 이완이 선행되어야 골반저근이 부드럽게 열리며 깊은 교감이 가능해집니다.
+        </p>
+
+        <div class="erotic-secret-box">
+          <h5><i class="fa-solid fa-hand-holding-heart"></i> 단계별 관능 애무 프로토콜</h5>
+          <p>
+            1. <strong>목덜미와 쇄골의 워밍업:</strong> 직접적인 성감대를 바로 건드리지 마시고, 귀 뒤쪽과 목덜미, 쇄골 라인을 따라 부드러운 입맞춤과 따뜻한 숨결을 불어넣으십시오.<br>
+            2. <strong>손끝의 온도 전달:</strong> 척추를 따라 손가락 끝으로 미끄러지듯 등을 쓸어내리며 신체 긴장을 완전히 풀어주십시오.<br>
+            3. <strong>골반과 허벅지 안쪽의 빌드업:</strong> 허벅지 안쪽에서 시작하여 점진적으로 핵심 부위로 좁혀 들어가는 '밀당의 손길'이 상대방의 갈증을 최고조로 끌어올립니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-feather"></i> 감각의 차단과 맹점 자극</h5>
+          <p>
+            가끔은 부드러운 안대나 실크 스카프로 상대의 시야를 차단해 보십시오. 시각이 닫히는 순간 청각과 촉각이 5배 이상 예민해져 평소 느끼지 못했던 극한의 쾌감을 맛보게 됩니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제14장: 19+ 속궁합 4 -->
+    <div class="report-chapter">
+      <div class="chapter-badge">CHAPTER 14 · [19+ 성인 비전] 심층 속궁합 제4편 — 오행 체질별 추천 체위(Positions)와 리듬의 변주</div>
+      <h3 class="chapter-title">깊이와 각도의 미학 — 두 사람의 신체 구조에 가장 완벽히 밀착되는 체위</h3>
+      <div class="chapter-prose">
+        <p>
+          신체 골반의 각도와 장부의 한열에 따라 두 사람이 결합했을 때 가장 자극이 극대화되는 <strong>'명리학적 황금 체위'</strong>가 존재합니다. 획일적인 자세를 벗어나 리듬의 변주를 줄 때 관계의 지루함이 사라집니다.
+        </p>
+
+        <div class="erotic-secret-box">
+          <h5><i class="fa-solid fa-venus-mars"></i> 추천 체위 매트릭스와 골반 각도</h5>
+          <p>
+            • <strong>심층 밀착 변형 정상위:</strong> 여성의 골반 아래에 단단한 베개나 쿠션을 받쳐 허리를 15도 들어 올리는 자세입니다. 각도가 좁혀지면서 질 입구와 G스팟에 깊고 지속적인 마찰을 주어 가장 안정적이고 황홀한 오르가즘을 유도합니다.<br>
+            • <strong>관능적 후배위(후배위 변형):</strong> 완전히 엎드리지 않고 상체를 살짝 세운 상태에서 골반을 밀착시키는 자세로, 시각적 자극과 함께 깊은 삽입감을 극대화합니다.<br>
+            • <strong>여성 상위의 리듬 제어:</strong> 여성이 상체에 손을 짚고 스스로 삽입 깊이와 원을 그리는 회전 리듬을 제어할 때, 남성은 평소 경험하지 못한 색다른 쾌감과 복종의 희열을 느낍니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-water"></i> 템포와 수분(윤활) 관리</h5>
+          <p>
+            처음부터 빠른 속도로 달리지 마시고, 느리고 깊은 호흡과 함께 3번 천천히 밀착하고 1번 얕게 빼내는 리듬의 강약을 조절하십시오. 필요하다면 수용성 워밍 젤을 아낌없이 활용하는 것이 마찰 통증을 없애고 쾌감을 높이는 배려입니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제15장: 19+ 속궁합 5 -->
+    <div class="report-chapter">
+      <div class="chapter-badge">CHAPTER 15 · [19+ 성인 비전] 심층 속궁합 제5편 — 오르가즘 타이밍 일치와 결정적 애프터케어</div>
+      <h3 class="chapter-title">관계의 끝에서 완성되는 진짜 사랑 — 절정의 여운과 영혼을 녹이는 포옹</h3>
+      <div class="chapter-prose">
+        <p>
+          사정이나 절정이 끝난 직후 등을 돌리고 잠에 빠져들거나 곧바로 스마트폰을 보는 행동은 관계의 만족도를 한순간에 바닥으로 추락시킵니다. 여운이 지속되는 <strong>'애프터케어 10분'</strong>이야말로 두 사람의 옥시토신 호르몬을 최고치로 끌어올리는 시간입니다.
+        </p>
+
+        <div class="erotic-secret-box">
+          <h5><i class="fa-solid fa-heart-pulse"></i> 오르가즘 타이밍의 일치를 위한 신호 체계</h5>
+          <p>
+            절정에 도달하는 속도가 다를 때는 솔직한 숨소리와 손짓으로 서로의 속도를 조율하십시오. "지금 너무 좋아", "조금만 천천히"와 같은 짧은 피드백이 서로를 가장 배려하는 침실의 언어입니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-hands-holding"></i> 여운을 완성하는 10분 백허그와 수분 보충</h5>
+          <p>
+            관계가 끝난 후 미지근한 물 한 잔을 건네고, 이불 속에서 상대의 심장 소리를 들으며 최소 10분간 따뜻하게 안아주십시오. "오늘 당신과 함께해서 정말 행복했어"라는 한마디가 상대의 영혼을 당신에게 영원히 귀속시킵니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제16장 -->
+    <div class="report-chapter">
+      <div class="chapter-badge">CHAPTER 16 · 두 사람의 재물 궁합과 경제권 배분</div>
+      <h3 class="chapter-title">돈 때문에 깨지는 사랑은 없다, 원칙이 없어 깨질 뿐이다 — 공동 자산 관리</h3>
+      <div class="chapter-prose">
+        <p>
+          궁합에서 재물운은 단순한 돈 문제가 아니라, <strong>두 사람의 가치관과 미래 생존력이 맞물리는 현실의 척도</strong>입니다.
+        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-coins"></i> 경제권 갈등이 터지는 취약 지점</h5>
+          <p>
+            한쪽은 미래를 위해 소비를 극도로 아끼려 하고, 다른 한쪽은 현재의 삶의 질과 체면을 중시할 때 재정적 마찰이 시작됩니다. 각자의 소비 방식을 비난하기 시작하면 감정의 파탄으로 이어집니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-vault"></i> 재물을 불리는 커플 경제권 황금 분할</h5>
+          <p>
+            • <strong>경제권 일원화:</strong> 둘 중 꼼꼼하고 숫자에 밝은 쪽에 가계부와 고정 자산 운용을 일임하십시오.<br>
+            • <strong>노터치 개인 용돈:</strong> 서로에게 묻지도 따지지도 않는 순수 개인 용돈 통장을 매월 일정액 보장하여 자존감을 지켜주십시오.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제17장 -->
+    <div class="report-chapter">
+      <div class="chapter-badge">CHAPTER 17 · 시댁/처가 및 양가 가족과의 역학 관계 조율</div>
+      <h3 class="chapter-title">보이지 않는 외풍(外風)을 막아라 — 양가 가족 간의 기운 충돌 방어벽</h3>
+      <div class="chapter-prose">
+        <p>
+          부부 싸움의 절반은 둘 사이의 문제가 아니라 <strong>양가 부모나 형제자매의 기운이 개입하면서 증폭</strong>됩니다.
+        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-users"></i> 외풍이 불어닥칠 때의 위험 신호</h5>
+          <p>
+            본가나 처가의 지나친 간섭, 금전 지원 요구, 혹은 명절 제사 문제로 인해 "왜 당신은 내 편을 들어주지 않는가"라는 원망이 싹트는 순간 부부의 신뢰가 금이 갑니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-shield"></i> 단단한 부부 방어벽 구축 공식</h5>
+          <p>
+            각자의 집안에서 나오는 쓴소리는 본인이 직접 완충하고, 배우자의 공로만 부모님께 전달하는 '소통의 필터링'을 철저히 지키십시오. 부부는 언제나 양가 집안보다 최우선 순위여야 합니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제18장 -->
+    <div class="report-chapter">
+      <div class="chapter-badge">CHAPTER 18 · 바람기, 도화살, 외부 유혹 방어 비책</div>
+      <h3 class="chapter-title">흔들리는 눈빛을 제압하라 — 도화의 살기를 매력으로 가두는 개운술</h3>
+      <div class="chapter-prose">
+        <p>
+          사주에 도화살이나 역마살이 강하면 매력적이고 인기가 많아 외부의 이성 유혹에 노출되기 쉽습니다. 이를 의심과 감시로 막으려 들면 오히려 역마의 반발심만 키우게 됩니다.
+        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-eye"></i> 외부 유혹이 파고드는 취약 시기</h5>
+          <p>
+            원국의 일지가 세운이나 월운에서 충(沖)을 맞거나 비겁(比劫)이 강해지는 달에 일시적인 권태와 외부의 달콤한 유혹이 교차합니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-lock"></i> 외도를 원천 차단하는 침실 풍수와 신뢰 비방</h5>
+          <p>
+            • <strong>침실 거울 차단:</strong> 침대 정면에 부부의 모습이 비치는 거울은 제3자의 기운을 끌어들이므로 치우거나 천으로 덮으십시오.<br>
+            • <strong>매력의 내부 소비:</strong> 둘만의 여행과 새로운 데이트로 도화의 에너지를 파트너에게 쏟아붓게 만드십시오.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제19장 -->
+    <div class="report-chapter">
+      <div class="chapter-badge">CHAPTER 19 · 권태기 타파 시나리오와 관계 리셋 솔루션</div>
+      <h3 class="chapter-title">익숙함이라는 덫을 깨부숴라 — 첫 만남의 심장박동을 되살리는 리셋 의식</h3>
+      <div class="chapter-prose">
+        <p>
+          오래된 연인에게 찾아오는 권태기는 사랑이 끝난 것이 아니라, <strong>두 사람 사이의 자극과 에너지가 정체되어 뇌의 도파민 분비가 멈춘 상태</strong>입니다.
+        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-battery-half"></i> 권태기가 부르는 위험한 무관심</h5>
+          <p>
+            대화가 단답형으로 줄어들고, 스킨십이 사라지며, 서로를 당연하게 여기는 순간 관계는 서서히 죽어갑니다. 이때 판을 흔들어주지 않으면 사소한 계기로 파국을 맞이합니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-arrows-rotate"></i> 관계를 180도 리셋하는 충격 요법 3선</h5>
+          <p>
+            1. <strong>각자의 시공간 분리:</strong> 일주일간 연락을 최소화하고 각자의 취미와 친구들에게 몰입하여 그리움의 공간을 확보하십시오.<br>
+            2. <strong>완전히 낯선 공간으로의 일탈:</strong> 둘 다 한 번도 가보지 않은 낯선 도시나 해외로 즉흥 여행을 떠나 새로운 생존 도파민을 분비시키십시오.<br>
+            3. <strong>역할 체인지 데이트:</strong> 하루 동안 완전히 다른 콘셉트의 옷을 입고 처음 만난 남남처럼 상황극 데이트를 즐겨보십시오.
           </p>
         </div>
       </div>
@@ -1473,15 +1610,23 @@ function buildMatchReportHtml(user, natureName) {
     <!-- 제20장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 20 · 두 사람의 인연이 결실을 맺는 대길(大吉) 시기와 에필로그</div>
-      <h3 class="chapter-title">고백 · 재회 · 프러포즈 · 혼인신고의 길일과 두 운명의 최종 축복</h3>
+      <h3 class="chapter-title">하늘이 맺어준 인연의 완성 — 백년해로를 축원하는 천문(天門) 축원문</h3>
       <div class="chapter-prose">
         <p>
-          아무리 좋은 씨앗도 땅이 얼어붙은 날에 뿌리면 싹을 틔우지 못합니다. 두 분의 관계에서 중요한 전환점(고백, 재회 연락, 양가 상견례, 동거 시작, 결혼식 및 혼인신고)을 결행하기에 가장 좋은 시기는 ${user.name}님의 일지 <strong>${JIJI_HANJA[dayBranch]}</strong>와 육합(<strong>${JIJI_HANJA[partnerBranchIdx]}월·일</strong>) 또는 삼합을 이루는 날이며, 천간에 <strong>정재·정관·정인</strong>의 바른 기운이 뜨는 달입니다.
+          수천억 개의 별이 빛나는 우주에서 두 영혼이 같은 시공간에 태어나 서로의 눈을 바라보게 된 것은 기적 그 자체입니다. 두 사람의 사주는 부족한 점을 채우고 넘치는 점을 덜어내며 함께 더 큰 세상을 향해 나아갈 수 있는 귀한 인연입니다.
         </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-ring"></i> 제3권 심층 사주 궁합 & 속궁합 총결</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-champagne-glasses"></i> 관계가 비약적으로 결실을 맺는 대길의 달</h5>
           <p>
-            "사랑은 서로의 완벽함을 확인하는 과정이 아니라, 서로의 사주에 비어 있는 오행의 구멍을 기꺼이 내 체온과 식탁과 숨결로 메워주는 여정입니다. 이 서책에 담긴 지혜가 ${user.name}님의 간절한 인연을 가장 찬란한 현실로 이어주기를 축원합니다."
+            향후 12개월 중 두 사람의 일지와 삼합(三合) 또는 육합(六合)을 이루는 시기에는 결혼, 임신, 공동 주택 매입 등 인생의 가장 큰 경사가 찾아옵니다.
+          </p>
+        </div>
+
+        <div class="counseling-empathy-box">
+          <h5><i class="fa-solid fa-heart"></i> ${user.name}님과 소중한 인연께 바치는 천문 헌사</h5>
+          <p>
+            "비바람이 몰아쳐도 깊이 뿌리내린 두 그루의 나무는 땅속에서 서로의 뿌리를 얽어 넘어지지 않습니다. 사랑은 상대의 완벽함을 찾는 것이 아니라, 상대의 불완전함을 나의 사랑으로 감싸 안는 용기입니다. 두 분의 앞날에 늘 하늘의 은총과 깊은 평화가 깃들기를 진심으로 축원합니다."
           </p>
         </div>
       </div>
@@ -1489,112 +1634,95 @@ function buildMatchReportHtml(user, natureName) {
   `;
 }
 
+
+
 // ============================================================================
-// 4. 제4권 (career) : 이직 · 취업 · 창업 커리어 천직 비서 (총 20장)
-//    - 간절함이 담긴 영역이므로 정신과 상담(심리치유·통찰)의 느낌으로 진입
-//    - 이직, 취업, 창업/사업, 조직생존 모든 상황을 다 담아주되, 각 상황에 따른 비책이니 현재 자신의 상황에 맞게 찾아보길 바라며 나머지도 향후 나침반으로 삼으라고 안내
-//    - 판에 박힌 "만약 ~한다면" 금지! 사주 원국(취업 못 할 사주가 아닌 경우 vs 신약/인성과다 vs 괴강/백호/상관 등)에 맞춰 말투와 접근 방식을 완전히 다르게 분기
+// 4. 제4권 (career) : 정신과 상담형 이직 · 취업 · 창업 커리어 천직 비서 (총 20장)
 // ============================================================================
 function buildCareerPersonaProse(user) {
   const dayMaster = user.pillars.day.stemIdx;
   const dayBranch = user.pillars.day.branchIdx;
-  const strength = user.strength;
+  const dayEl = CHEONGAN_ELEMENTS[dayMaster];
   const pattern = user.pattern || SAJU_PATTERNS['정관격'];
-  const shinsals = (user.extendedShinsal || []).map(s => s.name);
+  const strength = user.strength;
 
-  const hasFierce = shinsals.some(n => n.includes('백호') || n.includes('괴강') || n.includes('양인')) || ['상관격', '칠살격', '양인격'].includes(pattern.name);
-  const isResourceHeavy = (strength.status === 'weak') || ['정인격', '편인격'].includes(pattern.name);
-
-  // 1) 이직(Job Change) 진입 화법 — "만약 ~한다면" 배제, 사주 맞춤형 본심 간파
-  let jobChangeOpening = '';
-  let jobChangeCore = '';
-
-  if (hasFierce) {
-    jobChangeOpening = `${user.name}님, 솔직히 말씀드리겠습니다. 당신의 사주 원국(<strong>${pattern.name} · ${user.pillars.day.hanja}일주</strong>)은 애초에 무능하거나 게을러서 조직에서 밀려날 사주가 결코 아닙니다. 오히려 남들보다 일머리가 너무 빠르고 판이 돌아가는 모순이 한눈에 보이다 보니, 비효율적인 상사나 답답한 조직의 그릇이 당신의 성에 차지 않아 속으로 천불이 나는 형국입니다.`;
-    jobChangeCore = `지금 이직을 고민하며 이 페이지를 펼치신 진짜 마음도 마찬가지 아닙니까? 당장 먹고살 길이 막막해서가 아니라, <strong>“내 실력과 에너지에 비해 지금 이 우물이 너무 좁고 보상도 정체되어 있는데, 이 밖의 더 넓은 무대로 나가면 훨씬 더 높은 확률과 대우가 있지 않을까?”</strong> 하는 갈증과 확인받고 싶은 본심 말입니다. 먼저 그 답답했던 마음부터 토닥여 드리고 싶습니다. 당신이 예민하거나 참을성이 없어서가 아니라, 사주에 장착된 엔진 배기량 자체가 지금 앉아 있는 자리보다 크기 때문에 생기는 당연한 진동입니다.`;
-  } else if (!isResourceHeavy) {
-    jobChangeOpening = `${user.name}님의 사주 여덟 글자를 가만히 들여다보면, 여태껏 사회에서 내 밥그릇 하나 못 챙기거나 취업을 못 할 팔자가 전혀 아닙니다. 책임감도 강하고 맡은 바를 기어이 해내는 <strong>${pattern.name}(${strength.title})</strong>의 탄탄한 골격을 가지고 계십니다.`;
-    jobChangeCore = `그런데도 지금 이직의 기로에서 밤잠을 설치고 계신 이유는 무엇이겠습니까? 능력이 부족해서 도망치려는 게 아닙니다. 그동안 남 좋은 일만 시키며 내 에너지를 갈아 넣었는데 정작 돌아오는 인정과 연봉은 그에 미치지 못하니, <strong>지친 마음을 달래고 지금 이 울타리 바깥에 나를 진짜 귀하게 써줄 더 나은 확률과 자리가 있을지 내다보고 싶으신 것</strong> 아닙니까. 그 간절하고도 합리적인 갈증을 누가 비난할 수 있겠습니까.`;
-  } else {
-    jobChangeOpening = `${user.name}님, 그동안 참 많이 참고 견뎌오셨습니다. 당신의 사주 원국은 남에게 싫은 소리 한마디 하는 것보다 내가 조금 더 손해 보고 야근하며 완벽하게 해내는 쪽을 택하는 <strong>섬세한 책임감(${pattern.name})</strong>의 구조를 지니고 있습니다.`;
-    jobChangeCore = `당신이 지금 이직을 떠올리는 건 결코 배부른 투정이 아닙니다. 내 영혼과 자존감이 더 이상 깎여 나가기 전에 나를 지켜내려는 건강한 생존 신호이자, <strong>“과연 내가 지금보다 덜 상처받고 내 가치를 온전히 인정받을 수 있는 더 나은 확률의 무대가 어디에 있을까”</strong>를 확인하고 싶은 절실한 마음입니다.`;
-  }
-
-  // 2) 취업(Job Seeking) 진입 화법 — "만약 ~한다면" 배제, 정신 번쩍 들게 하는 촌철살인 팩폭 + 사주 맞춤 해법
-  let jobSeekOpening = '';
-  let jobSeekCore = '';
-
-  if (!isResourceHeavy) {
-    jobSeekOpening = `지금 아직 소속된 곳 없이 취업이나 시험을 준비하고 계신 상태라면, ${user.name}님은 이 대목에서 정말 <strong>정신 바짝 차리셔야 합니다.</strong> 제가 만세력 원국을 아무리 뒤집어 봐도, 당신은 여태껏 취업을 ‘못’ 할 사주가 절대 아닙니다. 사지육신 멀쩡하고 일간 <strong>${CHEONGAN_HANJA[dayMaster]}</strong>의 기세와 <strong>${pattern.name}</strong>의 무기까지 쥐고 있는데 왜 아직 문밖에서 서성이고 계십니까?`;
-    jobSeekCore = `가슴에 손을 얹고 냉정하게 되돌아보십시오. 정말 세상이 당신을 안 뽑아줘서 <strong>‘못’ 들어가는 것입니까, 아니면 내심 실패할까 봐 두렵고 남들 보기에 그럴듯한 간판이 아니면 싫다는 은밀한 자존심 뒤에 숨어 본인이 ‘안’ 들어가고 있는 것입니까?</strong> 머릿속으로만 완벽한 직장을 시뮬레이션하며 지원서 넣기를 주저하는 그 방어기제만 깨부수면, 당신은 당장 다음 분기에라도 현장에 뛰어들어 밥값을 해낼 사주입니다.`;
-  } else {
-    jobSeekOpening = `지금 취업이나 자격 시험의 문턱 앞에서 마음이 무거우시다면, ${user.name}님께 꼭 드리고 싶은 말씀이 있습니다. 당신의 사주는 능력이 없어서 떨어지는 사주가 아니라, <strong>인성(생각·걱정·자격 준비)의 무게가 식상(행동·일단 부딪혀 보는 투기)을 짓눌러 시작선에서 에너지를 다 써버리는 사주</strong>입니다.`;
-    jobSeekCore = `정신 차리고 스스로에게 물어보셔야 합니다. 정말 내 스펙이 모자라서 세상에 <strong>‘못’ 들어가는 건지, 아니면 “조금만 더 준비해서 완벽해지면 지원해야지”라는 핑계로 실전의 평가가 두려워 본인이 문고리를 잡고도 ‘안’ 들어가고 있는 건지</strong> 말입니다. 당신 사주에 필요한 건 자격증 한 줄이 더 아니라, 오늘 당장 불완전한 상태로라도 면접장에 내 몸을 던지는 행동력입니다.`;
-  }
-
-  return {
-    jobChangeOpening,
-    jobChangeCore,
-    jobSeekOpening,
-    jobSeekCore
+  const proseMap = {
+    wood: {
+      title: '개척자이자 추진력 있는 전략가형',
+      summary: '새로운 영역에 깃발을 꽂고 남들이 가지 않은 길을 개척할 때 가장 큰 도파민과 성취감을 느끼는 원형입니다.',
+      careerTrait: '기존 시스템의 반복 업무에 갇히면 에너지가 급속도로 고갈되며, 신규 사업 기획이나 독립된 프로젝트를 이끌 때 압도적 성과를 냅니다.'
+    },
+    fire: {
+      title: '대중을 매료시키는 브랜더이자 커뮤니케이터형',
+      summary: '사람의 마음을 움직이고 트렌드를 읽어내며 조직의 비전을 전파하는 데 탁월한 화려한 직업적 오라를 가집니다.',
+      careerTrait: '보이지 않는 곳에서 서류만 만지는 일보다, 대외 협상, 마케팅, 방송, 강의, 세일즈 등 사람과 직접 마주하는 무대에서 몸값이 폭발합니다.'
+    },
+    earth: {
+      title: '조직의 척추이자 신뢰를 엮는 플랫폼 오거나이저형',
+      summary: '모든 사람과 자원이 모여드는 중심 허브 역할을 하며, 갈등을 중재하고 시스템을 안정화하는 중후한 아우라를 지닙니다.',
+      careerTrait: '경영 관리, 부동산, 금융 인프라, 조직 운영 등 판을 떠받치는 핵심 요직에서 대체 불가능한 권한을 쥐게 됩니다.'
+    },
+    metal: {
+      title: '완벽을 추구하는 칼잡이형 스페셜리스트',
+      summary: '오류를 용납하지 않는 날카로운 분석력과 단호한 결단력으로 업계의 기준과 규율을 세우는 프로페셔널입니다.',
+      careerTrait: '법률, IT 아키텍처, 감사, 의료, 금융 공학 등 한 끗 차이로 승패가 갈리는 고도의 전문직에서 최고의 자산 가치를 인정받습니다.'
+    },
+    water: {
+      title: '보이지 않는 판을 짜는 지혜로운 책사형 전략가',
+      summary: '남들이 보지 못하는 이면의 수 싸움과 미래 트렌드를 꿰뚫어 보며, 은밀하게 자금을 굴리고 판을 설계하는 지략가입니다.',
+      careerTrait: '빅데이터, 투자 전략, 연구 개발, 글로벌 비즈니스 등 심도 있는 통찰력이 요구되는 분야에서 시대를 앞서갑니다.'
+    }
   };
+
+  return proseMap[dayEl] || proseMap.wood;
 }
 
 function buildCareerReportHtml(user, natureName) {
   const dayMaster = user.pillars.day.stemIdx;
   const dayBranch = user.pillars.day.branchIdx;
   const dayEl = CHEONGAN_ELEMENTS[dayMaster];
-  const strength = user.strength;
   const pattern = user.pattern || SAJU_PATTERNS['정관격'];
+  const strength = user.strength;
   const yongshin = user.yongshin;
   const seun = getDynamicSeunContext(user);
   const med = diagnoseMedicalSaju(user);
   const persona = buildCareerPersonaProse(user);
 
+  const userConcern = user.userConcernDetail
+    ? `<div class="counseling-empathy-box">
+         <h5><i class="fa-solid fa-feather-pointed"></i> 의뢰인 ${user.name}님의 실제 진로 고민 분석</h5>
+         <p><strong>의뢰인 호소:</strong> "${user.userConcernDetail}"<br>
+         현재 느끼시는 불안과 답답함은 당신의 역량이 부족해서가 아닙니다. 화분이 좁아진 나무가 뿌리로 화분 벽을 두드리듯, 당신의 그릇(${pattern.name})이 커져 현재 조직의 한계와 충돌하고 있는 지극히 정상적인 신호입니다.</p>
+       </div>`
+    : '';
+
   return `
     ${buildMyeongshikTableHtml(user)}
 
-    <!-- 제1장: 정신과 상담실 진입 & 전 영역 가이드 -->
+    <!-- 제1장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 01 · 심층 커리어 상담실의 문을 열며 (프롤로그)</div>
       <h3 class="chapter-title">불안으로 잠 못 이루는 당신의 밤을 먼저 읽습니다 — 맞춤형 커리어 처방 안내</h3>
       <div class="chapter-prose">
         <p>
-          이름 석 자와 생년월일시를 넣고 ‘직업과 돈’의 운세를 펼쳐보는 사람의 마음에는 언제나 남들에게는 쉽게 털어놓지 못하는 무거운 삶의 무게가 실려 있습니다. 매달 돌아오는 카드값과 고정비, 나보다 앞서가는 것 같은 동기들의 소식, 그리고 “과연 내가 지금 맞게 가고 있는 걸까”라는 새벽녘의 서늘한 불안감까지—그 간절함을 알기에 이 감명서는 얄팍한 길흉 판정이 아니라, <strong>당신의 지친 내면을 깊이 들여다보는 정신과 상담실의 의자</strong>에서부터 이야기를 시작하고자 합니다.
+          "이 회사를 계속 다녀야 할까, 아니면 지금이라도 이직해야 할까?", "내 사업을 시작해도 밥은 먹고살 수 있을까?", "왜 나는 남들처럼 적당히 만족하며 살지 못하고 끊임없이 길을 찾아 헤맬까?"... 지금 이 글을 읽고 계신 ${user.name}님의 머릿속을 맴도는 수많은 질문을 잘 알고 있습니다.
         </p>
-        <div class="counseling-empathy-box">
-          <h5><i class="fa-solid fa-compass-drafting"></i> 본 커리어 비서(秘書)의 구성 원칙과 활용법</h5>
+
+        ${userConcern}
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-stethoscope"></i> 정신과 상담형 커리어 진단 — 당신을 옥죄는 불안의 실체</h5>
           <p>
-            사람의 직업적 주기는 하나로 고정되어 있지 않습니다. 지금은 취업을 갈망하지만 3년 뒤에는 이직을 고민하고, 5년 뒤에는 내 사업(창업·부업)을 꿈꾸게 됩니다. 따라서 본 서책에는 <strong>① 이직(Job Change), ② 취업·시험(Job Seeking), ③ 창업·사업·동업(Business), ④ 조직 내 승진·생존(Corporate Survival)</strong>의 모든 상황에 대한 비책을 빠짐없이 수록하였습니다.<br><br>
-            판에 박힌 가정법으로 두루뭉술하게 말하지 않고, <strong>오직 ${user.name}님의 사주 원국(${natureName} · ${pattern.name})이 각 상황에 놓였을 때 드러나는 진짜 본심과 승률</strong>로 직격합니다. 우선 현재 본인의 상황에 해당하는 장(Chapter)을 먼저 찾아 읽으시고, 나머지 상황의 장들도 향후 다가올 인생의 나침반이자 보너스 비기(秘記)로 평생 소장하십시오.
+            대한민국 직장인의 80%는 자신의 사주 격국과 맞지 않는 옷을 입은 채 매일 자책과 열등감에 시달립니다. 본 감명서는 뜬구름 잡는 위로를 건네지 않습니다. ${user.name}님이 타고난 <strong>직업적 유전자(${persona.title})</strong>를 정확히 규명하고, 이직의 승률 계산부터 연봉 협상 화법, 사내 정치 방어, 1인 창업의 조건까지 가장 현실적인 로드맵을 처방합니다.
           </p>
         </div>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:26%;">진로 고민 영역</th>
-              <th>본 감명서의 핵심 공감 접근법 및 맞춤 해결 전략</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>🔄 이직(Job Change)</strong></td>
-              <td>마음을 달래고 자책을 멈추며, 잃을 것 없는 안전한 환승 타이밍과 이직 승률을 객관적으로 분석합니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🎯 취업(Job Seeking)</strong></td>
-              <td>"만약 취업한다면" 식의 무책임한 가정이 아니라, 사주상 밥그릇의 크기를 상기시키며 스스로 '못' 들어가는지 '안' 들어가는지 방어기제를 허물어줍니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🚀 창업·사업(Business)</strong></td>
-              <td>독립할 시기가 왔는지, 아직 자본과 지혜를 축적해야 할 때인지 동업 관계와 현금 흐름을 기준으로 칼같이 진단합니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🏢 조직 내 생존(Survival)</strong></td>
-              <td>사내 정치와 번아웃의 파도 속에서 내 밥그릇을 지키고 상사와 부하를 내 편으로 만드는 실전 처세술을 제시합니다.</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-compass"></i> 커리어 천직 비서 20장 활용 매뉴얼</h5>
+          <p>
+            제3장~5장은 <strong>이직을 고민하는 분</strong>, 제6장~8장은 <strong>취업과 시험을 앞둔 분</strong>, 제9장~11장은 <strong>내 사업과 창업을 꿈꾸는 분</strong>을 위한 집중 챕터입니다. 현재 본인의 상황에 맞는 페이지를 먼저 펼쳐보시되, 전체 20장을 순서대로 독파할 때 평생을 지탱할 커리어 무기가 완성됩니다.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -1604,222 +1732,255 @@ function buildCareerReportHtml(user, natureName) {
       <h3 class="chapter-title">${user.name}님은 조직의 톱니바퀴인가, 판을 짜는 설계자인가, 칼을 쥔 야전사령관인가</h3>
       <div class="chapter-prose">
         <p>
-          직업운을 읽는 첫 단추는 내 사주의 <strong>월주(${user.pillars.month.hanja}) 격국인 [${pattern.name}]</strong>과 일간의 강약(<strong>${strength.title}, ${strength.score}점</strong>)을 결합하여 나의 ‘근로 근육’을 파악하는 것입니다.
+          모든 인간은 태어날 때 우주로부터 고유한 '직업적 역할 코드'를 부여받습니다. ${user.name}님의 사주는 <strong>[${persona.title}]</strong>으로, ${persona.summary}
         </p>
-        <p>
-          ${user.name}님은 타인이 시키는 단순 반복 노동을 할 때 에너지가 가장 빨리 고갈됩니다. 반대로 내 재량권(권한)이 보장되고, 내가 투입한 지략과 노력이 명확한 수치나 결과물로 피드백되는 환경에 던져지면 밤을 새워도 눈이 빛나는 체질입니다. 당신이 직장에서 겪는 피로의 70%는 ‘업무량’ 자체가 아니라, <strong>‘납득되지 않는 비논리적 지시’와 ‘자율성의 박탈’</strong>에서 비롯됩니다.
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-id-badge"></i> ${user.name}님의 핵심 커리어 DNA 요약</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-chess"></i> 조직 내에서 발현되는 당신의 핵심 강점과 치명적 약점</h5>
           <p>
-            • <strong>최적 포지션:</strong> ${pattern.career}<br>
-            • <strong>핵심 무기:</strong> ${yongshin.eokbuYongshin}의 기운을 활용한 문제 해결력과 문서·계약 장악력<br>
-            • <strong>치명적 아킬레스건:</strong> 내 공로를 포장하지 않고 묵묵히 일만 하다가 정치력 좋은 이에게 과실을 뺏기거나, 한 번 정이 떨어지면 뒤도 안 돌아보고 판을 접으려는 급발진
+            • <strong>독점적 무기:</strong> ${persona.careerTrait}<br>
+            • <strong>치명적 약점:</strong> 본인의 기준이 워낙 높고 완벽을 추구하다 보니, 일 처리가 느리거나 무책임한 동료를 보면 속에서 천불이 나며 감정 조절이 어려워집니다. 혼자 다 떠안으려다 번아웃에 빠지는 패턴을 반복하게 됩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-bolt"></i> 내 몸값을 2배로 올리는 에너지 재배치 전략</h5>
+          <p>
+            남들과 똑같은 스펙 쌓기에 시간을 낭비하지 마십시오. 당신의 격국인 <strong>[${pattern.name}]</strong>의 강점을 살려, '내가 가장 적은 스트레스를 받으면서 남들보다 압도적인 퀄리티를 뽑아낼 수 있는 단 하나의 핵심 직무'에 모든 자원을 집중하십시오.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- 제3장: 이직 상담 1 (동적 화법 적용) -->
+    <!-- 제3장: 이직 1 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 03 · [심층 이직 상담 ①] 당신이 지금 이직을 떠올리는 진짜 이유</div>
       <h3 class="chapter-title">마음을 달래며 들여다본 본심 — 지금의 답답함은 무능이 아니라 그릇의 팽창입니다</h3>
       <div class="chapter-prose">
-        <p>${persona.jobChangeOpening}</p>
-        <p>${persona.jobChangeCore}</p>
-        <div class="counseling-empathy-box">
-          <h5><i class="fa-solid fa-mug-hot"></i> 명리 상담가의 처방 — 자책을 멈추고 ‘확률 게임’으로 전환하십시오</h5>
+        <p>
+          지금 현 직장에서 느끼는 권태, 상사에 대한 환멸, 또는 매일 아침 출근길에 차오르는 한숨을 “내가 인내심이 부족한가”라는 자책으로 연결하지 마십시오. 나무(${ELEMENT_KOREAN[dayEl]})가 자라 화분이 좁아지면 뿌리가 화분 벽을 뚫고 나오듯, 당신의 운기가 다음 단계로 넘어가려 할 때 나타나는 자연스러운 성장통입니다.
+        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-triangle-exclamation"></i> 지금 당장 퇴사하면 안 되는 '도피성 퇴사'의 함정</h5>
           <p>
-            지금 현 직장에서 느끼는 권태나 분노를 “내가 조직 부적응자인가”라는 자책으로 연결하지 마십시오. 나무(${ELEMENT_KOREAN[dayEl]})가 자라 화분이 좁아지면 뿌리가 화분 벽을 뚫고 나오듯, 당신의 운기가 다음 단계로 넘어가려 할 때 나타나는 자연스러운 성장통입니다. 다만 감정에 휩쓸려 ‘도피성 퇴사’를 하면 내 몸값을 스스로 깎아먹게 되니, 다음 장의 승률 계산표에 따라 가장 비싸게 나를 팔 수 있는 타이밍을 잡아야 합니다.
+            운이 흉한 달에 감정적으로 사표를 던지면, 새로 옮겨간 회사에서도 똑같이 무능한 상사와 열악한 처우를 만나는 '악연의 도돌이표'에 갇히게 됩니다. 이직은 도망치는 것이 아니라, 가장 몸값이 비싼 순간에 당당하게 환승하는 철저한 전략이어야 합니다.
           </p>
         </div>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:28%;">심층 심리 진단</th>
-              <th>현재 내면의 상태와 운명학적 극복 솔루션</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>💔 내면의 결핍 신호</strong></td>
-              <td>내 능력과 기여도에 비해 조직의 보상과 피드백이 턱없이 부족하여 발생하는 극심한 허탈감과 인정 욕구의 결핍입니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🛡️ 자존감 회복 비책</strong></td>
-              <td>회사의 평가를 나의 절대적 가치로 동일시하지 마십시오. 당신은 회사의 부속품이 아니라, 잠시 노동력을 빌려주고 있는 독립된 전문가입니다.</td>
-            </tr>
-            <tr>
-              <td><strong>⚖️ 상담가의 행동 처방</strong></td>
-              <td>퇴사 통보를 먼저 지르지 말고, 이력서를 몰래 업데이트하며 외부 시장의 반응을 먼저 떠보십시오. 문밖에 다른 기회가 있다는 확신만 생겨도 지금 회사의 스트레스가 80% 줄어듭니다.</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-bullseye"></i> 감정을 냉각하고 협상력을 키우는 실전 솔루션</h5>
+          <p>
+            • 현 직장에서 '받을 수 있는 모든 성과와 포트폴리오'를 엑셀과 PDF로 완전히 정리할 때까지는 절대로 퇴사 의사를 입 밖으로 내지 마십시오.<br>
+            • "나는 언제든 떠날 준비가 되어 있다"는 내적 여유를 품는 순간, 아이러니하게도 현 직장에서의 스트레스가 절반으로 줄어들고 상사를 관조하는 힘이 생깁니다.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제4장: 이직 상담 2 -->
+    <!-- 제4장: 이직 2 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 04 · [심층 이직 상담 ②] 이직의 승률과 최적의 탈출·진입 타이밍</div>
       <h3 class="chapter-title">지금 움직일 때의 승산은 몇 퍼센트인가 — 환승 이직의 골든 타임</h3>
       <div class="chapter-prose">
         <p>
-          이직에서 승리한다는 것은 단순히 ‘다른 회사로 간다’는 뜻이 아니라, <strong>연봉·직급·워라밸·커리어 네임밸류 중 최소 두 가지 이상을 확실히 우상향시켜 옮긴다</strong>는 뜻입니다. 현재 세운(<strong>${seun.yearHanja} · ${seun.yearTenGod}</strong>)과 향후 12개월 월운을 대조해 볼 때 ${user.name}님의 이직 승률은 다음과 같이 갈립니다.
+          이직에서 승리한다는 것은 단순히 회사를 옮기는 것이 아니라, <strong>연봉·직급·워라밸·기업 브랜드 중 최소 두 가지 이상을 우상향시켜 옮긴다</strong>는 뜻입니다. 현재 세운(${seun.yearHanja})과 향후 12개월 월운을 대조할 때 ${user.name}님의 이직 승률은 다음과 같이 갈립니다.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:25%;">이직 시나리오</th>
-              <th>승률 판정 및 사주 명리학적 실행 수칙</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>선(先) 퇴사 후 이직 준비</strong><br><span style="color:#f87171;">승률 35% (비권장)</span></td>
-              <td>${user.name}님의 사주는 소속(관성·인성)의 울타리가 완전히 사라진 상태에서 구직 활동을 하면 조급증이 발동하여 본래 몸값보다 낮은 곳에 성급히 도장을 찍을 위험이 큽니다.</td>
-            </tr>
-            <tr>
-              <td><strong>재직 중 물밑 환승 이직</strong><br><span style="color:#34d399;">승률 88% (강력 권장)</span></td>
-              <td>현재 명함을 방패 삼아 헤드헌터나 링크드인, 업계 네트워크로 오퍼를 먼저 받은 뒤 움직일 때 협상 테이블의 주도권을 100% 쥐게 됩니다.</td>
-            </tr>
-            <tr>
-              <td><strong>향후 1년 내 베스트 이직월</strong></td>
-              <td>일지나 월지에 <strong>합(合)이나 귀인·관인운</strong>이 들어오는 <strong>${seun.months12[1].month}월, ${seun.months12[4].month}월, ${seun.months12[8].month}월</strong>에 최종 오퍼레터 날인이 이루어지도록 지원 일정을 역산하십시오.</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-chart-line"></i> 월운별 이직 승률과 이력서 제출 골든타임</h5>
+          <p>
+            • <strong>승률 85% 이상 골든 먼스:</strong> 원국의 월지와 육합(六合) 또는 삼합(三合)을 이루는 달(주로 봄과 가을의 관인상생 월)에는 헤드헌터의 제안이 몰리고 면접관의 호감을 한 몸에 받습니다.<br>
+            • <strong>절대 움직이면 안 되는 달 (승률 30% 미만):</strong> 일지나 월지가 정면 충(沖)을 맞아 깨지는 달에는 입사하자마자 부서가 공중분해되거나 약속된 연봉이 깎이는 사기성 이직에 휘말릴 수 있으니 몸을 낮추십시오.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-file-arrow-up"></i> 이력서 투척과 면접 일정 조율 비방</h5>
+          <p>
+            이력서는 화요일 오전 10시~11시 사이에 제출하십시오. 인사 담당자의 기운이 가장 맑고 긍정적인 평가를 내리는 시간대입니다.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제5장: 이직 상담 3 -->
+    <!-- 제5장: 이직 3 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 05 · [심층 이직 상담 ③] 연봉 협상과 면접에서 내 격국을 가장 비싸게 파는 법</div>
       <h3 class="chapter-title">면접관의 심리를 꿰뚫는 [${pattern.name}] 어필 화법과 몸값 극대화 전략</h3>
       <div class="chapter-prose">
         <p>
-          경력직 이직 면접과 연봉 협상에서 ${user.name}님이 가장 주의해야 할 점은 ‘과도한 겸손’입니다. 당신은 내가 실제로 해낸 성과도 “팀원들과 함께했습니다”라고 에둘러 말하는 경향이 있는데, 이는 냉정한 채용 시장에서 손해입니다.
+          면접은 스펙을 평가받는 시험이 아니라, <strong>면접관이 가진 문제와 고통을 내가 해결해 줄 수 있음을 증명하는 비즈니스 세일즈</strong>입니다.
         </p>
-        <p>
-          • <strong>이력서 및 면접 필승 프레임:</strong> [${pattern.name}]의 강점을 살려, “기존 조직에 어떤 비효율(문제)이 있었고, 내가 어떤 시스템/전략을 도입하여 수치상으로 몇 퍼센트의 비용 절감이나 매출 상승을 이끌어냈는가”를 <strong>숫자(금·수 기운)</strong>로 제시하십시오.<br>
-          • <strong>연봉 테이블 협상술:</strong> 희망 연봉을 부를 때는 내가 원하는 마지노선보다 7~10% 높은 구간을 기준점으로 먼저 제시하고, 기본급 조정이 어렵다면 사이닝 보너스나 스톡옵션, 원격근무 조건 등 부대 문서 조건을 결합해 총보상(Total Compensation)을 끌어올리십시오.
-        </p>
-      </div>
-    </div>
 
-    <!-- 제6장: 취업·시험 상담 1 (동적 팩폭 화법 적용) -->
-    <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 06 · [심층 취업·시험 상담 ①] ‘못’ 들어가는 것인가, ‘안’ 들어가는 것인가</div>
-      <h3 class="chapter-title">뼈를 때리는 사주 팩트체크 — 당신의 발목을 잡는 진짜 범인은 스펙이 아닙니다</h3>
-      <div class="chapter-prose">
-        <p>${persona.jobSeekOpening}</p>
-        <p>${persona.jobSeekCore}</p>
-        <div class="critical-warning-box">
-          <h5><i class="fa-solid fa-gavel"></i> 천문(天門) 커리어 독심술의 냉정한 진단</h5>
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-comments-dollar"></i> 연봉 협상 테이블에서 벌어지는 심리전</h5>
           <p>
-            당신의 사주 원국은 일단 현장에 들어가서 명함을 파고 실무를 굴리기 시작하면 누구보다 빠르게 두각을 나타낼 실전형 팔자입니다. 책상 앞에서 ‘합격 수기’나 읽으며 완벽한 준비를 기다리는 시간은 이제 끝내야 합니다. 눈높이라는 이름의 두려움을 버리고, 내 커리어의 첫 교두보가 될 현장에 이번 달 안에 최소 15곳 이상 지원서를 꽂으십시오.
+            기업은 당신의 실력보다 '당신이 이직을 얼마나 절박하게 원하는가'를 보고 연봉을 후려칩니다. 조급함을 내비치는 순간 협상 주도권을 빼앗기게 됩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-handshake"></i> [${pattern.name}] 전용 연봉 20% 인상 화법</h5>
+          <p>
+            • "저는 이전 직장에서 이러이러한 정량적 성과를 냈으며, 귀사에 합류할 경우 3개월 내에 귀사의 주력 병목 현상을 해결해 드릴 수 있습니다."라는 문제 해결자 프레임을 선점하십시오.<br>
+            • 희망 연봉을 먼저 부르지 마시고, "회사 내 동급 포지션의 상위 밴드를 기대하며, 기여도에 따른 인센티브 테이블을 함께 열어두고 싶습니다"라고 대응하여 상한선을 열어두십시오.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- 제7장: 취업·시험 상담 2 -->
+    <!-- 제6장: 취업 1 -->
+    <div class="report-chapter">
+      <div class="chapter-badge">CHAPTER 06 · [심층 취업·시험 상담 ①] ‘못’ 들어가는 것인가, ‘안’ 들어가는 것인가</div>
+      <h3 class="chapter-title">뼈를 때리는 사주 팩트체크 — 당신의 발목을 잡는 진짜 범인은 스펙이 아닙니다</h3>
+      <div class="chapter-prose">
+        <p>
+          취업이나 공시, 전문직 시험에서 번번이 문턱을 넘지 못할 때, 사람들은 자격증이 부족하거나 학벌이 모자라다고 자책합니다. 그러나 명리학의 관점에서 보면, <strong>당신의 영혼이 그 자리가 내 길이 아님을 알고 무의식중에 시험을 거부하고 있는 경우</strong>가 태반입니다.
+        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-eye-low-vision"></i> 불합격이 반복되는 구조적 원인</h5>
+          <p>
+            내 사주가 야생의 사자(식상·편관)인데 남들이 좋다는 공무원이나 안정적인 공기업(정인·정관)에 억지로 자신을 쑤셔 넣으려 하니, 서류와 면접관의 눈에 '영혼 없는 지원자'로 비치는 것입니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-arrows-split-up-and-left"></i> 방향 전환과 합격선 재설정</h5>
+          <p>
+            무리하게 남들의 기준에 맞추지 마시고, 당신의 일간 오행(${ELEMENT_KOREAN[dayEl]})이 활발하게 소통할 수 있는 인더스트리로 타깃을 15도만 틀어보십시오. 경쟁률이 100대 1인 곳에서 3대 1인 독점적 시장으로 진입하는 순간 단숨에 최종 합격 통지서를 거머쥐게 됩니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제7장: 취업 2 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 07 · [심층 취업·시험 상담 ②] 관운(官運)과 인성(印星) 합격 기운을 여는 루틴</div>
       <h3 class="chapter-title">서류 탈락의 사슬을 끊고 최종 합격 통지서를 끌어당기는 명리학적 실전 비법</h3>
       <div class="chapter-prose">
         <p>
-          명리학에서 취업은 <strong>관성(官星: 나를 부르는 조직의 간판)</strong>이요, 자격증과 시험 합격은 <strong>인성(印星: 국가나 기관이 내리는 인증 문서)</strong>입니다. 이 두 기운이 내 사주에 달라붙게 만들려면 생활 환경부터 관인상생(官印相生)의 파장으로 바꾸어야 합니다.
+          시험과 취업의 당락을 가르는 기운은 <strong>관성(官星: 조직의 간택)</strong>과 <strong>인성(印星: 문서와 자격 합격증)</strong>입니다. 이 두 기운이 원국이나 대운에서 부족하더라도, 일상 루틴과 공간 풍수로 관인의 통로를 강제로 뚫어낼 수 있습니다.
         </p>
-        <p>
-          • <strong>1. 지원 기업의 오행 매칭:</strong> 막연히 아무 곳에나 지원하기보다, 당신의 용신(<strong>${yongshin.eokbuYongshin}</strong>)과 격국(<strong>${pattern.career.split(',')[0]}</strong>)에 해당하는 산업군을 1순위로 타겟팅할 때 서류 통과율이 2배 이상 치솟습니다.<br>
-          • <strong>2. 면접 당일의 개운 복식:</strong> 면접 날에는 당신의 관성과 인성을 생조하는 단정한 정장 차림에 <strong>${med.deficientEl === 'water' ? '네이비·딥블루' : med.deficientEl === 'wood' ? '차분한 그린·틸블루' : med.deficientEl === 'fire' ? '버건디·웜톤' : med.deficientEl === 'earth' ? '베이지·골드브라운' : '화이트·실버그레이'}</strong> 계열의 넥타이, 스카프, 혹은 손목시계를 착용하여 첫인상 3초의 기운을 장악하십시오.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-graduation-cap"></i> 합격을 방해하는 탁기와 잡념</h5>
+          <p>
+            시험 직전 집중력이 흐트러지거나 마킹 실수, 또는 면접 당일 극심한 긴장으로 머릿속이 하얘지는 것은 사주의 조후가 깨져 상열(上熱)이 머리로 치솟기 때문입니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-pen-nib"></i> 관인상생(官印相生) 합격 부스트 루틴</h5>
+          <p>
+            • <strong>책상 풍수:</strong> 공부하거나 자소서를 쓰는 책상은 문을 등지지 말고, 문을 대각선으로 바라보는 '권력형 좌석'에 배치하십시오.<br>
+            • <strong>합격 의상:</strong> 면접 당일에는 ${yongshin.johuYongshin === '수(水)' ? '단정한 다크 네이비' : '따뜻한 차콜 그레이'} 정장에 신뢰감을 주는 푸른빛 넥타이나 스카프를 매치하십시오.<br>
+            • <strong>마인드 컨트롤:</strong> 면접관을 심사위원이 아니라 "나에게 조언을 구하러 온 내담자"로 바라보는 멘탈 전환이 면접관을 압도합니다.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제8장: 취업·시험 상담 3 -->
+    <!-- 제8장: 취업 3 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 08 · [심층 취업·시험 상담 ③] 대기업 · 공직 · 전문직 · 스타트업 토양 매칭</div>
       <h3 class="chapter-title">어떤 규모의 조직에 들어갔을 때 ${user.name}님의 수명과 자산이 가장 길어지는가</h3>
       <div class="chapter-prose">
         <p>
-          누군가에게는 신의 직장인 공기업이 다른 사주에게는 숨 막히는 감옥이 되고, 누군가에게는 불안한 스타트업이 다른 사주에게는 일약 신분 상승의 사다리가 됩니다.
+          누군가에게는 신의 직장인 공기업이 다른 사주에게는 숨 막히는 감옥이 되고, 누군가에게는 불안한 스타트업이 다른 사주에게는 초고속 신분 상승의 사다리가 됩니다.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:26%;">조직 유형</th>
-              <th>${user.name}님 사주 적합도 및 진입 전략</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>🏛️ 공직 · 공공기관 · 교직</strong></td>
-              <td>초년의 안정성은 높으나 연공서열과 경직된 절차 속에서 ${user.name}님의 날카로운 직관력이 답답함을 느낄 수 있습니다. 만약 진입한다면 일반 행정보다 감사·기획·전문 연구 파트처럼 독립성이 보장되는 보직을 택해야 합니다.</td>
-            </tr>
-            <tr>
-              <td><strong>🏢 대기업 · 중견 · 금융권</strong></td>
-              <td><strong>[최상급 매칭]</strong> 체계적인 시스템과 브랜드를 등 뒤에 업고 일할 때 당신의 <strong>${pattern.name}</strong> 역량이 가장 크게 증폭됩니다. 초기 5~10년은 반드시 규모 있는 조직에서 프로세스와 인맥을 흡수하십시오.</td>
-            </tr>
-            <tr>
-              <td><strong>🚀 외국계 · IT · 강소기업</strong></td>
-              <td>연차보다 실력과 퍼포먼스로 평가받는 수평적 문화가 ${user.name}님의 자존심과 승부욕을 긍정적으로 자극합니다. 빠른 승진과 스톡옵션·인센티브를 노릴 때 최적의 무대입니다.</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-building"></i> 조직 규모별 ${user.name}님의 적합도 판정</h5>
+          <p>
+            • <strong>대기업 / 다국적 기업:</strong> ${pattern.name}의 구조상 체계화된 시스템과 높은 브랜드 가치가 당신의 방패막이가 되어주므로 매우 유리합니다.<br>
+            • <strong>공직 / 공기업:</strong> 안정성은 있으나 경직된 위계질서와 느린 의사결정으로 인해 5년 차 전후로 심각한 권태를 느낄 수 있습니다.<br>
+            • <strong>스타트업 / 스케일업:</strong> 초기 혼란은 있으나 스톡옵션과 빠른 의사결정 권한을 쥐며 C-Level로 직행할 수 있는 폭발적 무대가 됩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-landmark"></i> 최적의 조직 선택 공식</h5>
+          <p>
+            당장의 연봉 몇백만 원 차이보다 "내가 3년 뒤 이 회사의 이름을 등에 업고 더 큰 시장으로 점프할 수 있는가"를 최우선 기준으로 삼으십시오.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제9장: 창업·사업 상담 1 -->
+    <!-- 제9장: 창업 1 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 09 · [심층 창업·사업 상담 ①] 내 이름으로 간판을 걸어도 되는 사주인가</div>
       <h3 class="chapter-title">월급쟁이의 천장을 깨고 내 사업(Owner)으로 나아갈 때의 명리학적 조건</h3>
       <div class="chapter-prose">
         <p>
-          현재 사업을 운영 중이시거나 향후 창업을 꿈꾸고 계신다면, 가장 먼저 점검해야 할 것은 내 사주의 <strong>식상생재(食傷生財: 내 기술과 마케팅으로 현금을 만들어내는 힘)</strong>와 <strong>관성(리크스 통제력)</strong>입니다.
+          사주에 <strong>편재(偏財)와 식상(食傷)</strong>이 발달하고 일간의 근(根)이 튼튼하면 반드시 인생의 어느 시점에 내 이름으로 된 사업체를 차리게 됩니다. 그러나 자본금만 들고 무작정 뛰어들면 3년 내에 폐업하는 비극을 피할 수 없습니다.
         </p>
-        <p>
-          ${user.name}님은 궁극적으로 남의 밑에서 평생을 마칠 사주가 아닙니다. 늦어도 40대 중후반 이후에는 본인의 이름이나 전문 라이선스, 혹은 독자적인 법인·사업체를 통해 주체적으로 수익을 창출해야 직성이 풀립니다. 다만, <strong>초기 고정비(높은 보증금·인테리어·과도한 정규직 채용)가 많이 들어가는 오프라인 장치 산업</strong>으로 시작하면 운이 흔들리는 달에 현금흐름이 막혀 고전합니다. 반드시 <strong>내 무형 자산(지식·기술·중개·솔루션·온라인 플랫폼)을 기반으로 고정비를 최소화한 고마진 구조</strong>로 첫 깃발을 꽂으십시오.
-        </p>
-      </div>
-    </div>
 
-    <!-- 제10장: 창업·사업 상담 2 -->
-    <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 10 · [심층 창업·사업 상담 ②] 돈이 붙는 업종 아이템과 1인 기업 vs 조직 확장</div>
-      <h3 class="chapter-title">${user.name}님의 손끝에서 황금으로 변하는 비즈니스 모델 설계</h3>
-      <div class="chapter-prose">
-        <p>
-          사업 아이템에도 오행이 있습니다. ${user.name}님의 용신(<strong>${yongshin.eokbuYongshin} / ${yongshin.johuYongshin}</strong>)과 격국에 비추어 볼 때 가장 높은 영업이익률을 안겨줄 비즈니스 모델은 다음과 같습니다.
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-sack-dollar"></i> 천문(天門) 추천 3대 황금 비즈니스 모델</h5>
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-shop"></i> 사업가로 독립할 수 있는 명리학적 징조</h5>
           <p>
-            1. <strong>전문 에이전시 & 컨설팅·교육형 비즈니스:</strong> 복잡한 정보 비대칭을 해결해 주고 수수료나 자문료를 받는 B2B/프리미엄 B2C 모델.<br>
-            2. <strong>디지털 콘텐츠 & 자동화 플랫폼:</strong> 한 번 구축해 두면 복제 비용이 거의 들지 않는 소프트웨어, 전자책, 온라인 강의, 브랜드 커머스.<br>
-            3. <strong>정밀 기술·의료·뷰티·웰니스 특화업:</strong> 원국의 예리한 감각과 의명(醫命)적 치유 에너지를 결합한 고부가가치 전문 서비스.
+            회사에서 시키는 일보다 내가 기획한 아이템으로 성과를 낼 때 희열을 느끼고, "왜 대표는 저렇게 멍청하게 의사결정을 할까"라는 생각이 자주 든다면 이미 마음속에 오너의 씨앗이 싹튼 것입니다.
           </p>
         </div>
-        <p>
-          또한 직원을 수십 명 거느리며 노무 관리에 진을 빼기보다, 핵심 코어 인력 소수(2~4명)와 외주 파트너십·AI 자동화 툴을 결합한 <strong>‘고밀도 강소 조직(Lean Team)’</strong>으로 운영할 때 순이익률이 극대화됩니다.
-        </p>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-door-open"></i> 안전한 소프트 랜딩 창업 공식</h5>
+          <p>
+            직장을 덜컥 그만두지 마시고, 주말과 퇴근 후 시간을 활용하여 <strong>'월 100만 원의 부수입이 나오는 1인 비즈니스 모델'</strong>을 먼저 완성하십시오. 부수입이 본업 월급의 80%에 도달하는 순간이 바로 독립의 대길일입니다.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- 제11장: 창업·사업 상담 3 -->
+    <!-- 제10장: 창업 2 -->
     <div class="report-chapter">
-      <div class="chapter-badge">CHAPTER 11 · [심층 창업·사업 상담 ③] 동업(同業)의 독약과 성약 — 지분 및 투자 유치의 철칙</div>
-      <h3 class="chapter-title">누구와 손을 잡으면 망하고, 어떤 조건으로 묶어야 흥하는가</h3>
+      <div class="chapter-badge">CHAPTER 10 · [심층 창업·사업 상담 ②] 돈이 붙는 업종 아이템과 1인 기업 vs 조직 확장</div>
+      <h3 class="chapter-title">나를 부자로 만드는 비즈니스 모델 — 고정비 없는 디지털 자산 vs 오프라인 매장</h3>
       <div class="chapter-prose">
         <p>
-          사업가에게 동업은 가장 달콤한 유혹이자 가장 무서운 지뢰밭입니다. ${user.name}님의 사주 구조상, <strong>친구·선후배·친척 등 감정적 의리로 5:5 지분을 나누는 동업은 99% 파국</strong>으로 끝납니다. 일지 ${JIJI_HANJA[dayBranch]}의 주체성이 강해 결국 의사결정권이 충돌하고 돈과 사람을 모두 잃게 됩니다.
+          현대 비즈니스에서 가장 미련한 창업은 보증금과 인테리어 비용으로 수억 원의 빚을 지고 시작하는 오프라인 자영업입니다. ${user.name}님의 사주는 <strong>'지식·콘텐츠·소프트웨어·브랜딩'</strong>과 같은 무형의 고부가가치 아이템에서 가장 큰 마진을 남깁니다.
         </p>
-        <div class="critical-warning-box">
-          <h5><i class="fa-solid fa-file-signature"></i> 불가피하게 동업이나 파트너십을 맺을 때의 3대 철칙</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-cubes"></i> 1인 기업 vs 팀 빌딩 확장 타이밍</h5>
           <p>
-            • <strong>지분율의 절대 우위:</strong> 반드시 ${user.name}님이 <strong>최소 51% 이상의 의결권(지분)과 통장 인감 통제권</strong>을 단독 보유하십시오.<br>
-            • <strong>역할의 완벽한 분리:</strong> 당신이 ‘기획·기술·재무’를 맡는다면 파트너는 철저히 ‘외부 영업·마케팅’만 전담하는 식으로 영역이 겹치지 않아야 합니다.<br>
-            • <strong>엑시트(Exit) 조항 선명기:</strong> 시작할 때부터 “결별 시 지분을 얼마에 어떻게 매수/매도한다”는 주주간 계약서(SHA)를 공증받아 두어야 원진살을 피합니다.
+            초기 2년은 직원을 뽑지 마시고 자동화 툴과 외주 파트너를 활용한 고효율 1인 지식 기업으로 현금을 비축하십시오. 고정 인건비가 나가지 않아야 위기 시에도 끄떡없이 생존합니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-lightbulb"></i> 돈이 저절로 굴러들어오는 캐시카우 설계</h5>
+          <p>
+            내 시간을 1대 1로 파는 용역 서비스에서 벗어나, 한 번 만들어두면 24시간 자동으로 판매되는 디지털 강의, 템플릿, 구독 소프트웨어, 독점 라이선스 구조로 피벗하십시오.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제11장: 창업 3 -->
+    <div class="report-chapter">
+      <div class="chapter-badge">CHAPTER 11 · [심층 창업·사업 상담 ③] 동업(同業)의 독약과 성약 — 지분 및 투자 유치의 철칙</div>
+      <h3 class="chapter-title">절대 손잡으면 안 되는 동업자 명식 vs 지분 51%의 절대 사수</h3>
+      <div class="chapter-prose">
+        <p>
+          "친한 친구끼리 동업하면 돈 잃고 사람도 잃는다"는 말은 명리학적으로 100% 진실입니다. 특히 원국에 <strong>비견·겁재(比肩·劫財)</strong>가 흉하게 작용하는 시기에 동업을 하면, 회사가 잘될수록 지분 싸움과 횡령으로 법정 공방을 벌이게 됩니다.
+        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-handshake-slash"></i> 동업 파탄의 전형적 징조</h5>
+          <p>
+            초기에는 "의리로 함께하자"며 구두로 대충 지분을 5대 5로 나눴다가, 실제 매출이 발생하고 한쪽이 더 많이 일한다고 느끼는 순간 지옥 같은 의심과 배신이 시작됩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-file-contract"></i> 동업 시 반드시 지켜야 할 3대 철칙</h5>
+          <p>
+            1. <strong>지분 51% 사수:</strong> 대표권과 의사결정권은 반드시 한 사람이 쥐고 있어야 조직이 산으로 가지 않습니다.<br>
+            2. <strong>주주간 계약서(SHA) 공증:</strong> 중도 퇴사 시 지분 회수 조건(베스팅)과 겸업 금지 조항을 법무법인을 통해 공증받으십시오.<br>
+            3. <strong>피해야 할 명식:</strong> 내 일간과 일지를 정면 충하거나, 말만 앞서고 실행력이 없는 비겁 태과자는 절대 공동 창업자로 들이지 마십시오.
           </p>
         </div>
       </div>
@@ -1828,30 +1989,51 @@ function buildCareerReportHtml(user, natureName) {
     <!-- 제12장: 조직 생존 1 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 12 · [조직 생존 · 사내 정치 ①] 상사와 결정권자를 내 편으로 조종하는 심리학</div>
-      <h3 class="chapter-title">굽신거리지 않고도 윗사람의 절대적 신임을 얻는 관성(官星) 컨트롤 기법</h3>
+      <h3 class="chapter-title">권력자의 가려운 곳을 긁어라 — 관성(官星)을 다루는 궁극의 보고법과 처세술</h3>
       <div class="chapter-prose">
         <p>
-          ${user.name}님은 빈말이나 아부를 체질적으로 혐오합니다. 하지만 조직에서 아부와 ‘전략적 보고’는 전혀 다릅니다. 윗사람이 당신을 어렵게 느끼거나 견제하는 이유는 당신의 실력이 부족해서가 아니라, <strong>당신이 상사의 체면(인성)을 세워주지 않고 너무 정론(팩폭)만 말하기 때문</strong>입니다.
+          직장에서 일만 잘하면 인정받을 것이라는 생각은 순진한 착각입니다. 승진과 보직을 결정하는 것은 당신의 실력 30%와 <strong>결정권자의 심리를 안정시켜 주는 정치력 70%</strong>입니다.
         </p>
-        <p>
-          결론을 다 정해놓고 보고하러 갈 때조차도 마지막 5%의 선택지(A안과 B안)를 남겨두어 <strong>“팀장님/대표님의 경험으로 볼 때 어느 쪽이 더 나을지 최종 혜안을 구합니다”</strong>라고 상사에게 결정의 명분을 선물하십시오. 그 한마디가 상사를 당신의 가장 강력한 방패막이로 만들어 줍니다.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-user-tie"></i> 꼰대 상사가 당신을 경계하는 이유</h5>
+          <p>
+            당신의 똑똑함과 정론직필이 상사에게는 '자신의 자리를 위협하는 도전'이나 '다루기 힘든 부하'로 느껴질 수 있습니다. 상사를 가르치려 드는 순간 인사고과에 보복이 가해집니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-comment-dots"></i> 상사의 충성을 이끌어내는 3단계 보고 화법</h5>
+          <p>
+            • <strong>두괄식 요약:</strong> "팀장님, 말씀해주신 방향에 따라 3가지 옵션을 준비했습니다. 1안이 비용 대비 가장 효율적이라 사료됩니다."<br>
+            • <strong>공로의 헌납:</strong> "팀장님께서 지난 회의 때 짚어주신 포인트 덕분에 거래처를 설득할 수 있었습니다"라며 상사의 체면을 세워주십시오.<br>
+            • 상사의 신뢰를 얻으면 당신에게 전적인 재량권이 위임되며, 사내 정쟁에서 가장 든든한 방패막이가 되어줍니다.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- 제13장: 조직 생존 2 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 13 · [조직 생존 · 사내 정치 ②] 내 공로를 가로채는 동료와 소인배 완벽 차단법</div>
-      <h3 class="chapter-title">착한 호구가 되지 마라 — 기록과 경계선으로 내 밥그릇을 지키는 기술</h3>
+      <h3 class="chapter-title">웃는 얼굴 뒤에 칼을 숨긴 오피스 빌런 — 비겁(比劫) 쟁재를 방어하는 철벽 방어막</h3>
       <div class="chapter-prose">
         <p>
-          사주에 비겁(경쟁자)이나 상관·원진의 기류가 스칠 때 직장 내에서 가장 흔히 겪는 일이 ‘일 잘하는 사람에게 일만 몰리고, 승진과 포상은 말만 번지르르한 자가 가져가는 부조리’입니다.
+          내가 밤새워 만든 기획서나 성과를 윗선에 슬쩍 가로채 보고하거나, 뒤에서 은근히 험담을 퍼뜨려 평판을 깎아내리는 동료는 사주명리학에서 <strong>'내 밥그릇을 깨뜨리는 겁재(劫財)'</strong>에 해당합니다.
         </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-shield-cat"></i> 사내 소인배 및 무임승차자 원천 봉쇄 3원칙</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-user-ninja"></i> 오피스 빌런이 파고드는 빈틈</h5>
           <p>
-            1. <strong>모든 업무 협조는 메일과 메신저 기록(CC 포함)으로 남겨라:</strong> 구두로 부탁받고 해준 일은 당신의 실적이 되지 않습니다. 반드시 상급자가 참조된 텍스트 채널에서 요청과 완료 보고가 오가게 하십시오.<br>
-            2. <strong>나의 핵심 노하우(Raw Data)를 100% 공유하지 마라:</strong> 결과물은 친절하게 주되, 그 결과물을 만드는 핵심 템플릿과 네트워크는 당신만이 다룰 수 있는 블랙박스로 남겨두어야 대체 불가능한 존재가 됩니다.
+            당신의 착한 성품과 "좋은 게 좋은 거지"라는 유화적인 태도를 만만하게 보고 점진적으로 영역을 침범합니다. 단 한 번이라도 단호하게 선을 긋지 않으면 계속해서 착취당하게 됩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-shield"></i> 소인배를 한 방에 제압하는 증거 수집과 냉혈한 처세</h5>
+          <p>
+            • <strong>기록의 무기화:</strong> 모든 지시와 아이디어 제안은 구두가 아닌 이메일, 메신저 캡처로 날짜와 시간을 남기고 참조인(CC)에 상사를 걸어두십시오.<br>
+            • <strong>단호한 침묵:</strong> 사내 루머나 뒷담화 모임에는 철저히 불참하고 "저는 제 업무에만 집중하고 싶습니다"라는 서늘한 선을 유지하십시오. 빌런은 감정적 반응이 없는 강자에게는 덤비지 못합니다.
           </p>
         </div>
       </div>
@@ -1860,77 +2042,104 @@ function buildCareerReportHtml(user, natureName) {
     <!-- 제14장: 조직 생존 3 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 14 · [조직 생존 · 사내 정치 ③] 승진 · 인사 발령 · 핵심 보직 쟁취 전략</div>
-      <h3 class="chapter-title">인사철마다 누락되지 않고 핵심 라인(Mainstream)에 올라타는 법</h3>
+      <h3 class="chapter-title">주류 라인에 올라타라 — 인사이동 시즌의 사주학적 베팅과 생존 매뉴얼</h3>
       <div class="chapter-prose">
         <p>
-          조직 내에서 승진과 보직 이동은 매년 들어오는 세운과 월운의 <strong>관성(정관·편관)</strong> 기류와 정확히 맞물려 돌아갑니다. 인사 평가가 이루어지는 분기에는 묵묵히 지원 부서(Back-office)의 일만 처리하기보다, 회사의 <strong>‘매출 직결 부서’나 ‘신규 전략 TF’</strong>처럼 경영진의 시선이 집중되는 프로젝트에 이름을 올려야 합니다.
+          인사 발령 시즌은 회사의 정치 지형도가 재편되는 격변기입니다. 줄을 잘못 서거나 한직으로 밀려나면 지난 수년간의 노력이 한순간에 물거품이 됩니다.
         </p>
-        <p>
-          특히 올해와 내년 사이에는 기존 업무의 안정적 유지보다 <strong>‘새로운 시스템 도입이나 비용 구조 개선’</strong>을 주도한 이력이 당신의 승진 티켓이 됩니다.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-arrows-split-up-and-left"></i> 보직 배치의 길흉 분기점</h5>
+          <p>
+            겉만 번지르르하고 실속 없는 지원 부서에 안주하다가는 구조조정의 1순위 타깃이 됩니다. 회사의 매출이 발생하거나 최고 권력자의 핵심 관심사가 있는 '주력 부서'로 진입해야 생명력이 길어집니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-chess-queen"></i> 핵심 보직을 쟁취하는 사전 정지 작업</h5>
+          <p>
+            인사 발표 2개월 전부터 평소 눈여겨보던 핵심 부서의 리더와 티타임을 갖고 당신의 역량과 합류 의사를 은밀히 타진하십시오. "뽑아주시면 이러이러한 문제를 해결하겠습니다"라는 구체적 카드를 제시하는 자가 요직을 꿰찹니다.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- 제15장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 15 · 타고난 천직(天職) 도메인 10선과 절대 피해야 할 상극 업종</div>
-      <h3 class="chapter-title">${user.name}님의 오행과 격국이 가장 찬란하게 만개하는 직업군 총정리</h3>
+      <h3 class="chapter-title">${user.name}님의 부귀를 보장하는 최적의 산업군 vs 기운을 갉아먹는 블랙홀 산업</h3>
       <div class="chapter-prose">
         <p>
-          평생을 두고 이직이나 전직, 혹은 커리어 피벗(Pivot)을 고민할 때 기준점으로 삼으셔야 할 ${user.name}님만의 천직 도메인 매트릭스입니다.
+          사주 원국의 오행 배합과 격국에 부합하는 산업군에서 일하면 1의 노력으로 10의 결실을 얻지만, 상극인 산업군에 머물면 10을 갈아 넣어도 1의 인정조차 받지 못합니다.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:26%;">구분</th>
-              <th>상세 직무 및 산업 도메인</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>🌟 1순위 천직 도메인</strong><br>(격국: ${pattern.name})</td>
-              <td><strong>${pattern.career}</strong><br>→ 당신의 사주 원국 기둥이 흔들림 없이 지지해 주는 본연의 무대입니다.</td>
-            </tr>
-            <tr>
-              <td><strong>💎 2순위 용신 도메인</strong><br>(용신: ${yongshin.eokbuYongshin})</td>
-              <td>데이터 분석, 전략 기획, 자산 운용·핀테크, 디지털 미디어·브랜딩, 라이선스 기반 전문 자문, 고부가가치 B2B 솔루션 영업</td>
-            </tr>
-            <tr>
-              <td><strong>🚫 피해야 할 상극 직무</strong></td>
-              <td>자율성 없이 매뉴얼대로만 감정노동을 강요당하는 저단가 대면 서비스, 현금 회수 주기가 지나치게 긴 하도급 건설·납품, 불투명한 다단계성 영업</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-star"></i> ${user.name}님에게 가장 돈이 붙는 3대 천직 도메인</h5>
+          <p>
+            1. <strong>핵심 주력 분야:</strong> ${pattern.career} — 당신의 고유한 직업적 DNA와 완벽히 공명하는 판입니다.<br>
+            2. <strong>제2 확장 분야:</strong> ${yongshin.johuYongshin === '수(水)' ? '글로벌 무역 · 데이터 분석 · 지식 이커머스' : yongshin.johuYongshin === '화(火)' ? '미디어 브랜딩 · 엔터테인먼트 · 첨단 AI 기술' : '금융 자산 운용 · 전략 컨설팅 · 프리미엄 서비스'}.<br>
+            3. <strong>전문 자격 분야:</strong> 남들이 쉽게 진입하지 못하는 독점적 라이선스 및 기술 특화 영역.
+          </p>
+        </div>
+
+        <div class="critical-warning-box">
+          <h5><i class="fa-solid fa-ban"></i> 절대 발을 들이면 안 되는 상극(相剋) 업종</h5>
+          <p>
+            단순 노무, 저가 출혈 경쟁 자영업, 규제가 극심하여 개인의 창의성이 말살되는 관료적 조직은 당신의 기혈을 말리고 우울증을 유발하므로 과감히 배제하십시오.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- 제16장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 16 · 본업을 뛰어넘는 부업(Side-Job) · N잡 파이프라인 설계</div>
-      <h3 class="chapter-title">근로소득 하나만으로는 불안한 시대 — 내 사주에 맞는 제2의 월급통장 만들기</h3>
+      <h3 class="chapter-title">월급 외 월 300만 원의 자유 — 시간과 장소에 구애받지 않는 제2 수익 엔진</h3>
       <div class="chapter-prose">
         <p>
-          ${user.name}님의 사주는 본업의 명함을 유지하면서 시주(時柱)의 기운을 활용해 <strong>제2의 수익 파이프라인(편재·식상)</strong>을 돌릴 때 심리적 여유와 본업의 협상력이 동시에 올라갑니다. 회사에 목매지 않아도 된다는 확신이 생길 때 오히려 회사에서도 더 당당하게 인정받기 때문입니다.
+          평생직장의 개념이 사라진 시대에 단 하나의 월급 통장에만 생계를 의존하는 것은 브레이크 없는 자동차를 운전하는 것과 같습니다. 사주에 내재된 <strong>시주(時柱)의 잠재력</strong>을 깨워 본업의 전문성을 레버리지하는 부업 시스템을 구축해야 합니다.
         </p>
-        <p>
-          다만 퇴근 후 내 몸을 갈아 넣는 시간제 아르바이트나 대리운전·단순 배달 같은 노동 집약적 부업은 당신의 <strong>${med.deficientOrgan.zang}</strong>을 망가뜨려 본업까지 무너뜨립니다. 반드시 <strong>내가 직장에서 겪으며 해결한 실무 노하우를 전자책·강의·블로그·유튜브로 자산화하거나, 배당주·달러 자산·소액 부동산 경매/임대</strong>처럼 ‘자본과 문서가 일하게 만드는 파이프라인’을 구축하십시오.
-        </p>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-network-wired"></i> 실패하지 않는 N잡의 조건</h5>
+          <p>
+            배달이나 단순 알바처럼 내 육체 노동 시간을 직접 파는 부업은 본업을 망치고 건강만 해칩니다. 반드시 '한 번의 노력으로 반복적인 수익이 창출되는 지식 자산'이어야 합니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-laptop-code"></i> ${user.name}님 맞춤형 디지털 파이프라인 3단계</h5>
+          <p>
+            • <strong>1단계 (전자책/템플릿):</strong> 현 직무에서 겪었던 시행착오와 해결 노하우를 30페이지 PDF로 정리하여 크몽이나 탈잉에 런칭하십시오.<br>
+            • <strong>2단계 (소규모 유료 커뮤니티):</strong> 같은 고민을 가진 직장인들을 모아 월 회비 기반의 실무 스터디를 운영하십시오.<br>
+            • <strong>3단계 (온디맨드 컨설팅):</strong> 고단가 1대 1 자문 서비스를 통해 시간당 단가를 20만 원 이상으로 끌어올리십시오.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- 제17장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 17 · 직장인 번아웃(Burnout)과 가면증후군 심리 치유 처방</div>
-      <h3 class="chapter-title">“내가 잘하고 있는 걸까”라는 밤의 불안을 잠재우는 정신과적 명리 솔루션</h3>
+      <h3 class="chapter-title">열심히 살았는데 왜 허무할까 — 영혼의 배터리를 재충전하는 명리학적 휴식법</h3>
       <div class="chapter-prose">
         <p>
-          남들은 당신을 보고 “일도 잘하고 자기 앞가림 똑 부러지게 한다”고 말하지만, 정작 ${user.name}님 본인은 성취를 이루고 나서도 기쁨을 오래 누리지 못한 채 곧바로 다음 과제를 걱정하는 <strong>‘성취 중독과 가면증후군(Imposter Syndrome)’</strong>에 시달리기 쉽습니다.
+          "언제까지 이렇게 버틸 수 있을까?", "사람들이 내 실력의 밑천을 알아채면 어쩌지?"라는 가면증후군과 번아웃은 <strong>사주의 일간이 모든 에너지를 밖으로 쏟아붓고 진액이 고갈되었을 때</strong> 뇌가 보내는 절규입니다.
         </p>
-        <div class="counseling-empathy-box">
-          <h5><i class="fa-solid fa-spa"></i> 번아웃 임계점을 넘지 않기 위한 3대 멘탈 수칙</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-battery-empty"></i> 번아웃이 부르는 위험한 신호</h5>
           <p>
-            • <strong>퇴근 후 ‘ON/OFF 의식’ 만들기:</strong> 현관문을 여는 순간 회사에서의 직함과 실수를 문밖에 벗어두십시오. 샤워 후 환복하고 조명을 낮추는 물리적 루틴이 뇌의 교감신경을 진정시킵니다.<br>
-            • <strong>나의 가치를 회사의 평가와 분리하기:</strong> 회사는 당신의 노동력을 잠시 빌려 쓰는 거래처일 뿐, 당신의 인격과 인생 전체를 채점할 자격이 없습니다.
+            만성적인 두통, 이유 없는 짜증, 주말 내내 누워만 있어도 피로가 풀리지 않는 상태는 이미 자율신경계가 한계에 도달했음을 뜻합니다. 이때 스스로를 채찍질하면 공황장애나 우울증으로 직결됩니다.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-shield-heart"></i> 죄책감 없는 '완전 단절'의 안식 비방</h5>
+          <p>
+            • <strong>퇴근 후 업무 톡 차단:</strong> 저녁 7시 이후에는 회사 업무 알림을 완전히 음소거하고 일과 나를 분리하는 '심리적 퇴근'을 실천하십시오.<br>
+            • <strong>오행 디톡스:</strong> 주말 하루는 자연 속으로 들어가 스마트폰을 끄고 숲길을 걷거나 온천욕을 즐기며 대지의 순수한 생기를 재충전하십시오.<br>
+            • 당신은 일하기 위해 태어난 기계가 아니라, 삶을 누리기 위해 태어난 존귀한 존재임을 매일 밤 거울 앞에서 상기하십시오.
           </p>
         </div>
       </div>
@@ -1939,17 +2148,25 @@ function buildCareerReportHtml(user, natureName) {
     <!-- 제18장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 18 · 근로계약 · 동업계약 · 스톡옵션 · 법적 분쟁 리스크 방어</div>
-      <h3 class="chapter-title">억울하게 당하지 않기 위해 서명 전에 반드시 확인해야 할 문서 체크리스트</h3>
+      <h3 class="chapter-title">사인은 마지막에 하라 — 관재구설(官災口舌)과 사기를 원천 차단하는 계약의 법</h3>
       <div class="chapter-prose">
         <p>
-          커리어의 전환기마다 사주에 <strong>형(刑)이나 충(沖), 원진</strong>이 작동하면 호의로 시작한 일이 노동법적 분쟁이나 경업금지 소송, 혹은 임금·성과급 미지급 사태로 번질 수 있습니다.
+          커리어의 정상에서 한순간에 나락으로 떨어지는 것은 실력이 없어서가 아니라, <strong>계약서의 독소 조항 하나를 무심코 넘겼다가 법적 소송에 휘말리기 때문</strong>입니다.
         </p>
-        <div class="critical-warning-box">
-          <h5><i class="fa-solid fa-file-contract"></i> 커리어 계약서 날인 전 필수 확인 3계명</h5>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-gavel"></i> 직장인과 창업가를 위협하는 3대 계약 리스크</h5>
           <p>
-            1. <strong>성과급(인센티브) 산정 기준의 명문화:</strong> “성과에 따라 지급한다”는 추상적 문구 대신, 구체적인 KPI 비율과 지급 시점을 오퍼레터에 명시하게 하십시오.<br>
-            2. <strong>전직금지(경업금지) 및 지식재산권 조항:</strong> 퇴사 후 동종업계 이직이나 개인 사이드 프로젝트에 족쇄가 될 독소 조항이 없는지 꼼꼼히 살피십시오.<br>
-            3. <strong>권고사직 vs 자진퇴사 구분:</strong> 회사의 사정으로 그만두게 될 때는 절대 먼저 자진퇴사 사직서에 서명하지 말고, 실업급여 및 위로금 조건을 문서로 확약받으십시오.
+            1. <strong>과도한 경업금지 조항:</strong> 퇴사 후 2년간 동종 업계 취업을 금지한다는 부당한 서약서에 서명했다가 커리어가 끊기는 비극.<br>
+            2. <strong>스톡옵션 행사 조건의 함정:</strong> 회사가 상장되거나 인수합병될 때 휴지 조각이 되도록 설계된 불공정 조항.<br>
+            3. <strong>지식재산권(IP) 귀속 분쟁:</strong> 내가 개발한 독창적 소프트웨어나 콘텐츠의 권리를 회사가 강제로 빼앗아 가는 사태.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-scale-balanced"></i> 관재를 원천 차단하는 문서 날인 5대 수칙</h5>
+          <p>
+            모든 중요 계약서는 서명 전 반드시 전문 노무사나 변호사의 유료 자문을 거치십시오. 수십만 원의 자문료가 훗날 수억 원의 자산과 법적 평화를 지켜주는 최고의 보험입니다.
           </p>
         </div>
       </div>
@@ -1958,51 +2175,50 @@ function buildCareerReportHtml(user, natureName) {
     <!-- 제19장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 19 · 향후 10년 커리어 & 몸값 점프업 타임라인 매트릭스</div>
-      <h3 class="chapter-title">언제 배우고, 언제 옮기고, 언제 내 깃발을 꽂을 것인가 — 10개년 마스터 로드맵</h3>
+      <h3 class="chapter-title">단기적 파도에 흔들리지 마라 — 10년 뒤 업계의 정점에 서는 연차별 마일스톤</h3>
       <div class="chapter-prose">
         <p>
-          단기적인 눈앞의 파도에 흔들리지 않도록, 현재 시점(${seun.curYear}년)으로부터 향후 10년간 ${user.name}님의 커리어를 최정상 궤도에 올려놓을 연차별 전략 매트릭스를 제시합니다.
+          단기적인 눈앞의 연봉 인상에 일희일비하지 마십시오. 현재 시점(${seun.curYear}년)으로부터 향후 10년간 ${user.name}님의 커리어를 최정상 궤도에 올려놓을 연차별 전략 매트릭스를 제시합니다.
         </p>
-        <table class="report-detail-table">
-          <thead>
-            <tr>
-              <th style="width:24%;">시기 구분</th>
-              <th>핵심 커리어 미션 및 자산 축적 목표</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>1~2년 차 (단기)</strong><br>핵심 무기 벼리기</td>
-              <td>불필요한 감정 소모를 끊고 내 직무 포트폴리오를 수치화하여 <strong>몸값을 최소 20~30% 끌어올리는 이직/승진</strong> 또는 첫 취업 안착을 완수하는 구간입니다.</td>
-            </tr>
-            <tr>
-              <td><strong>3~5년 차 (중기)</strong><br>포지션 확장 & 제2소득</td>
-              <td>실무자에서 <strong>프로젝트 리더·관리자·핵심 전문가</strong>로 직급을 올리고, 본업 외에 월 현금흐름을 창출하는 사이드 파이프라인과 문서 자산을 결합하는 구간입니다.</td>
-            </tr>
-            <tr>
-              <td><strong>6~10년 차 (장기)</strong><br>독립적 권위 완성</td>
-              <td>어느 조직에 속해 있든 내 이름 자체가 브랜드가 되어 <strong>내가 일할 사람과 조건을 직접 고르는 자유(경제적·직업적 독립)</strong>를 완성하는 황금 수확기입니다.</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="event-prediction-box">
+          <h5><i class="fa-solid fa-timeline"></i> 10개년 3단계 커리어 퀀텀 점프 로드맵</h5>
+          <p>
+            • <strong>초기 3년 (전문성 확립기):</strong> 누구도 부인할 수 없는 정량적 프로젝트 성과 3개를 포트폴리오로 완성하고 업계 내 핵심 네트워크를 확보하십시오.<br>
+            • <strong>중기 4년 (영향력 확장기):</strong> 팀장, 임원, 또는 독립 법인의 대표로서 독자적인 시스템과 팀을 구축하여 레버리지를 극대화하십시오.<br>
+            • <strong>후기 3년 (자산화 완성기):</strong> 내 노동력을 쓰지 않아도 지분 배당과 라이선스, 플랫폼 수익으로 자산이 불어나는 완전한 경제적 자유를 달성하십시오.
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-flag-checkered"></i> 10년 후 당신이 서 있을 최종 고지</h5>
+          <p>
+            ${pattern.name}의 기운을 온전히 꽃피운 10년 뒤의 당신은, 더 이상 남의 눈치를 보지 않고 업계의 룰을 스스로 결정하는 독보적인 마스터가 되어 있을 것입니다.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- 제20장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 20 · 천직을 향해 나아가는 ${user.name}님께 바치는 헌사 (에필로그)</div>
-      <h3 class="chapter-title">당신의 사주에는 이미 답이 적혀 있습니다 — 이제 두려움 없이 문을 여십시오</h3>
+      <h3 class="chapter-title">당신의 가치는 당신이 매기는 것이다 — 위대한 여정을 시작하는 당신에게</h3>
       <div class="chapter-prose">
         <p>
-          지금까지 이직의 갈증, 취업의 정곡, 사업의 냉철한 셈법, 그리고 조직 생존의 비기까지 총 20장에 걸쳐 ${user.name}님의 커리어 운명을 함께 걸어왔습니다.
+          사주 여덟 글자는 당신이 가야 할 방향을 비추는 등대일 뿐, 그 바다를 직접 항해하고 파도를 넘어서는 것은 결국 당신 자신의 용기와 결단입니다.
         </p>
-        <p>
-          세상이 아무리 불황이라 말하고 남들이 아무리 어렵다고 수군거려도, 사주명리학의 진리는 명확합니다. <strong>자신의 격국([${pattern.name}])을 정확히 알고, 용신([${yongshin.eokbuYongshin}])의 방향을 향해 오늘 하루의 실행을 쌓는 사람은 어떤 시대에도 결국 자신의 몫과 자리를 거머쥡니다.</strong>
-        </p>
-        <div class="key-point-box">
-          <h5><i class="fa-solid fa-compass"></i> 제4권 이직 · 취업 · 창업 커리어 천직 비서 총결</h5>
+
+        <div class="counseling-empathy-box">
+          <h5><i class="fa-solid fa-heart"></i> 천문(天門) 커리어 상담실의 마지막 응원</h5>
           <p>
-            "${user.name}님, 당신은 결코 작게 쓰일 그릇이 아닙니다. 흔들리는 날마다 이 비서를 다시 펼쳐 당신이 얼마나 단단한 8글자를 타고났는지 확인하십시오. 당신이 내딛는 다음 걸음이 곧 당신의 가장 빛나는 전성기가 될 것입니다."
+            "세상이 정해놓은 좁은 잣대에 당신의 무한한 가능성을 가두지 마십시오. 당신은 남들의 기준에 맞추어 평가받기 위해 태어난 것이 아니라, 당신만의 고유한 깃발을 꽂고 세상을 놀라게 하기 위해 태어났습니다. 가슴속에 타오르는 야망의 불꽃을 두려워하지 마시고, 오늘부터 당신의 찬란한 전성기를 향해 당당하게 첫 발을 내딛으십시오."
+          </p>
+        </div>
+
+        <div class="action-secret-box">
+          <h5><i class="fa-solid fa-stamp"></i> 천문명리학술원 흠정비장(欽定秘藏) 인가</h5>
+          <p>
+            본 감명서는 ${user.name}님만을 위해 천문력과 명리학 고전의 정수를 집대성하여 봉헌되었습니다. 길이 보이지 않을 때마다 이 페이지를 다시 펼쳐 당신 안에 잠든 거인의 힘을 일깨우십시오.
           </p>
         </div>
       </div>
@@ -2010,3 +2226,18 @@ function buildCareerReportHtml(user, natureName) {
   `;
 }
 
+
+
+// 브라우저 및 Node 환경 공용 내보내기
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    MEDICAL_SAJU_ORGANS,
+    diagnoseMedicalSaju,
+    getDynamicSeunContext,
+    buildNewYearReportHtml,
+    buildMasterReportHtml,
+    buildMatchReportHtml,
+    buildCareerPersonaProse,
+    buildCareerReportHtml
+  };
+}
