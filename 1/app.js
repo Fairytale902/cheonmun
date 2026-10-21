@@ -1684,21 +1684,65 @@ async function confirmPayment() {
         return;
       }
 
-      // 결제 성공
+      // 결제 성공 검증 후 리포트 발급
       completePaymentSuccess(btn, origText);
       return;
     } catch (err) {
       console.error('포트원 결제 오류:', err);
-      alert('결제창 호출 중 문제가 발생했습니다. 관리자 콘솔 키 설정을 확인해주세요.');
+      alert('결제창 호출 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
       if (btn) { btn.innerHTML = origText; btn.disabled = false; }
       return;
     }
   }
 
-  // 실연동 키 입력 전 개발/테스트 시뮬레이션 처리
+  // PG사 심사 및 승인 전 안내: 무단 열람 차단
   setTimeout(() => {
-    completePaymentSuccess(btn, origText);
-  }, 1000);
+    if (btn) { btn.innerHTML = origText; btn.disabled = false; }
+    closePayModal();
+    alert('현재 결제 심사 및 채널 키 연동 대기 중입니다.\n\n결제 전 감명서 양식과 완성본 검수는 화면의 [견본 보기] 버튼을 이용해주세요.');
+  }, 600);
+}
+
+// 결제 전 결과물 양식/품질 사전 확인용 더미 샘플 리포트 렌더러
+function openSampleDummyReport() {
+  if (!currentAnalysisData) {
+    // 분석 데이터가 없는 경우 기본 임인일주 샘플 프로필 생성
+    const astro = calculateAstronomicalPillars(1996, 7, 15, "09:30", "solar");
+    const shinsal = calculateExtendedShinsal(astro.dayStem, astro.monthBranch, astro.pillars);
+    currentAnalysisData = {
+      name: "체험자",
+      year: 1996,
+      month: 7,
+      day: 15,
+      timeStr: "09:30",
+      gender: "female",
+      calendarType: "solar",
+      solar: astro.solar,
+      lunar: astro.lunar,
+      ec: astro.ec,
+      pillars: astro.pillars,
+      daewoon: astro.daewoon,
+      shinsal: shinsal,
+      isDummySample: true
+    };
+  }
+
+  // 4대 리포트 전체를 더미로 세팅
+  const allReportKeys = ['newyear', 'master', 'match', 'career'];
+  renderPurchasedReportBook(allReportKeys);
+
+  // 상단 툴바 표시를 견본 모드로 안내
+  const barUserName = document.getElementById('reportBarUserName');
+  if (barUserName) {
+    barUserName.innerHTML = `<span style="background:#eab308;color:#000;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;margin-right:6px;">견본(SAMPLE)</span> ${currentAnalysisData.name || '체험자'}님의 86p 감명서`;
+  }
+  const certPill = document.querySelector('.cert-pill');
+  if (certPill) {
+    certPill.innerHTML = `<i class="fa-solid fa-eye"></i> 견본 미리보기`;
+  }
+
+  // 리포트 서책 화면으로 전환
+  switchView('report');
 }
 
 function completePaymentSuccess(btn, origText) {

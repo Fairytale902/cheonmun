@@ -78,7 +78,6 @@
         <a href="javascript:void(0)" onclick="switchView('input')">만세력 조회</a>
         <a href="#storySection" onclick="if(currentView!=='landing'){switchView('landing'); setTimeout(()=>document.getElementById('storySection').scrollIntoView({behavior:'smooth'}), 100);}">운명 스토리</a>
         <a href="#reviewsSection" onclick="if(currentView!=='landing'){switchView('landing'); setTimeout(()=>document.getElementById('reviewsSection').scrollIntoView({behavior:'smooth'}), 100);}">적중 후기</a>
-        <a href="/2/index.html" style="color: #c084fc; font-weight: 700;" title="천문 심리 타로 살롱으로 이동"><i class="fa-solid fa-wand-magic-sparkles"></i> 심리 타로</a>
       </nav>
 
       <div class="header-cta">
@@ -694,6 +693,14 @@
                 <i class="fa-solid fa-credit-card"></i>
                 <span id="payBtnText">리포트를 선택해주세요</span>
               </button>
+
+              <!-- 결제 전 결과물 양식/품질 사전 확인용 더미 샘플 버튼 -->
+              <div class="sample-preview-cta-wrap" style="margin-top: 14px; text-align: center;">
+                <button type="button" class="btn-sample-preview" onclick="openSampleDummyReport()" style="background: rgba(245, 208, 97, 0.08); border: 1px dashed rgba(245, 208, 97, 0.45); color: #f5d061; font-size: 0.88rem; padding: 10px 16px; border-radius: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s ease;">
+                  <i class="fa-solid fa-book-open"></i> <strong>[견본 보기] 86p 정통 서책 감명서 결과물 미리보기</strong>
+                </button>
+                <span style="display: block; font-size: 0.76rem; color: #94a3b8; margin-top: 5px;">* 결제 시 실제 발급되는 4대 테마 전권 통합 감명서의 양식과 구성을 사전에 확인하실 수 있습니다.</span>
+              </div>
 
               <div class="payment-methods-logos">
                 <span>지원 결제수단:</span>
