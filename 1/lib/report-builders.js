@@ -232,6 +232,197 @@ function getDynamicSeunContext(user) {
   };
 }
 
+// ----------------------------------------------------------------------------
+// 공통 헬퍼: 결제 전 블러(봉인) 티저 & P.S. 결정적 시기 100% 일치 직답 박스 생성기
+// ----------------------------------------------------------------------------
+function buildUnsealedAnswersBoxHtml(user, reportType) {
+  const dayMaster = user.pillars.day.stemIdx;
+  const dayBranch = user.pillars.day.branchIdx;
+  const dmElIdx = Math.floor(dayMaster / 2);
+  const talentElIdx = (dmElIdx + 1) % 5;
+  const wealthElIdx = (dmElIdx + 2) % 5;
+  const pattern = user.pattern || SAJU_PATTERNS['정관격'];
+  const strength = user.strength || { title: '중화 사주', badgeClass: 'balance', score: 52 };
+  const seun = getDynamicSeunContext(user);
+  const med = diagnoseMedicalSaju(user);
+
+  // 육합 짝 지지 매핑 (자축, 인해, 묘술, 진유, 사신, 오미)
+  const yukapMap = [1, 0, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+  const harmonyBranchIdx = yukapMap[dayBranch];
+  const clashBranchIdx = (dayBranch + 6) % 12;
+
+  // 12개월 중 합(合)/길신 달과 충(沖)/주의 달 탐색
+  const turningMonth = seun.months12.find(m => m.branchIdx === harmonyBranchIdx)
+    || seun.months12.find(m => ['식신', '정재', '편재', '정관'].includes(m.tenGod))
+    || seun.months12[2];
+  const cautionMonth = seun.months12.find(m => m.branchIdx === clashBranchIdx)
+    || seun.months12.find(m => ['겁재', '편관', '상관'].includes(m.tenGod))
+    || seun.months12[5];
+  const careerJumpMonth = seun.months12.find(m => ['정관', '편관', '정인', '식신'].includes(m.tenGod) && m.branchIdx !== clashBranchIdx)
+    || seun.months12[3];
+
+  const turningDay = (turningMonth.month * 3) % 9 + 11;
+
+  // 과거 회한 연도 & 향후 재도래 시기 계산 (app.js의 renderColdReadAndSeals와 동일 공식)
+  const branchElArr = [4, 2, 0, 0, 2, 1, 1, 2, 3, 3, 2, 4];
+  const birthYear = user.year || 1996;
+  let pastYear = seun.curYear - 5;
+  for (let y = seun.curYear - 3; y >= seun.curYear - 8; y--) {
+    const sEl = Math.floor((((y - 4) % 10 + 10) % 10) / 2);
+    const bEl = branchElArr[((y - 4) % 12 + 12) % 12];
+    if (sEl === talentElIdx || bEl === talentElIdx) { pastYear = y; break; }
+  }
+  const pastStemIdx = ((pastYear - 4) % 10 + 10) % 10;
+  const pastBranchIdx = ((pastYear - 4) % 12 + 12) % 12;
+  const pastGanzhi = `${CHEONGAN_HANJA[pastStemIdx]}${JIJI_HANJA[pastBranchIdx]}(${CHEONGAN[pastStemIdx]}${JIJI[pastBranchIdx]})`;
+  const pastAge = pastYear - birthYear + 1;
+
+  // 향후 10년 내 재능·재물운이 폭발하는 3개 연도 산출
+  const futureSurgeYears = [];
+  for (let y = seun.curYear; y <= seun.curYear + 11 && futureSurgeYears.length < 3; y++) {
+    const sEl = Math.floor((((y - 4) % 10 + 10) % 10) / 2);
+    const bEl = branchElArr[((y - 4) % 12 + 12) % 12];
+    if (sEl === wealthElIdx || bEl === wealthElIdx || sEl === talentElIdx) {
+      futureSurgeYears.push(`${y}년`);
+    }
+  }
+  while (futureSurgeYears.length < 3) {
+    futureSurgeYears.push(`${seun.curYear + futureSurgeYears.length * 3 + 1}년`);
+  }
+
+  const dirs = ['동남(東南)', '북서(北西)', '남서(南西)', '동북(東北)', '정남(正南)'];
+  const nobleFaces = [
+    '말수가 적으나 실무 결정권을 쥔 3040 선배·상사',
+    '아이디어와 추진력이 빠르고 언변이 뛰어난 동종업계 파트너',
+    '문서·법무·재무 계통의 꼼꼼한 전문가형 조력자',
+    '원칙이 뚜렷하고 맺고 끊음이 확실한 리더형 귀인',
+    '통찰력이 깊고 외부 네트워크를 연결해 주는 멘토형 인물'
+  ];
+  const nobleDir = dirs[dayMaster % 5];
+  const nobleFace = nobleFaces[dayMaster % 5];
+
+  if (reportType === 'newyear') {
+    return `
+      <div class="unsealed-truth-box">
+        <div class="unsealed-header">
+          <span class="unsealed-stamp">封印解除</span>
+          <div>
+            <h5>결제 전 가려져 있던 ${user.name}님의 세운(歲運) 3대 봉인 & 결정적 시기 직답록</h5>
+            <span class="unsealed-sub">만세력 결과 화면에서 블러(▓) 처리되었던 핵심 천기(天機)의 실명 해답입니다.</span>
+          </div>
+        </div>
+        <div class="unsealed-items">
+          <div class="unsealed-row">
+            <span class="u-badge">P.S. 최종 판정</span>
+            <p><strong>고민이 풀리는 결정적 시기:</strong> <span class="u-highlight">「 ${turningMonth.year}년 ${turningMonth.month}월 ${turningDay}일 (${turningMonth.gan}${turningMonth.zhi}월 절입 전환기) 」</span> — 막혀 있던 금전·관계·진로의 매듭이 풀리는 올해 최대 변곡점입니다.</p>
+          </div>
+          <div class="unsealed-row">
+            <span class="u-badge">봉인 해제 ①</span>
+            <p><strong>판이 뒤집히는 달:</strong> 12개월 중 움직이면 1년치 성과가 몰리는 달은 <span class="u-highlight">「 ${turningMonth.year}년 ${turningMonth.month}월(${turningMonth.kor}월 · ${turningMonth.tenGod}) 절입 직후 」</span>입니다. 핵심 승부수를 이 달에 집중하십시오.</p>
+          </div>
+          <div class="unsealed-row">
+            <span class="u-badge">봉인 해제 ②</span>
+            <p><strong>돈이 새는 달 · 붙잡아야 할 계약:</strong> 가장 경계할 손재(損財) 구간은 <span class="u-highlight">「 ${cautionMonth.year}년 ${cautionMonth.month}월(${cautionMonth.kor}월) 」</span>이며, 계약 시 반드시 <span class="u-highlight">「 중도 해지 위약금 조항과 선금 지급 기일 」</span>을 문서로 못 박고 서명하십시오.</p>
+          </div>
+          <div class="unsealed-row">
+            <span class="u-badge">봉인 해제 ③</span>
+            <p><strong>귀인이 들어오는 방향:</strong> 올해 당신을 끌어올려 줄 귀인은 <span class="u-highlight">「 ${nobleDir}쪽 방위 」</span>에서 <span class="u-highlight">「 ${nobleFace} 」</span>의 모습으로 다가옵니다.</p>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  if (reportType === 'master') {
+    return `
+      <div class="unsealed-truth-box">
+        <div class="unsealed-header">
+          <span class="unsealed-stamp">封印解除</span>
+          <div>
+            <h5>결제 전 가려져 있던 ${user.name}님의 평생 총운 3대 봉인 & 과거 회한 연도 직답록</h5>
+            <span class="unsealed-sub">독심술 박스와 봉인 목록에서 블러(▓) 처리되었던 핵심 천기(天機)의 실명 해답입니다.</span>
+          </div>
+        </div>
+        <div class="unsealed-items">
+          <div class="unsealed-row">
+            <span class="u-badge">회한 연도 해답</span>
+            <p><strong>${pastYear}년(${pastGanzhi}년 · ${pastAge}세) 놓친 운의 재도래:</strong> 당시 흐지부지되었던 식상·재성의 대운 파동이 다시 찾아오는 다음 시기는 <span class="u-highlight">「 ${turningMonth.year}년 ${turningMonth.month}월 」</span>입니다. 이번에는 미리 준비하여 반드시 수확하십시오.</p>
+          </div>
+          <div class="unsealed-row">
+            <span class="u-badge">봉인 해제 ①</span>
+            <p><strong>타고난 그릇의 정체:</strong> 남들이 십 년 걸려 얻는 것을 처음부터 지니고 태어난 자리는 <span class="u-highlight">「 ${pattern.name} (${pattern.badge}) 」</span>의 설계력과 결단력입니다.</p>
+          </div>
+          <div class="unsealed-row">
+            <span class="u-badge">봉인 해제 ②</span>
+            <p><strong>여태 제 크기로 못 산 이유:</strong> 재능 부족이 아니라 원국 내 과열된 <span class="u-highlight">「 ${med.excessOrgan.elKor} 기운의 조급증과 결핍된 ${med.deficientOrgan.elKor} 기운 」</span>이 결정적 순간마다 앞을 가로막았기 때문입니다.</p>
+          </div>
+          <div class="unsealed-row">
+            <span class="u-badge">봉인 해제 ③</span>
+            <p><strong>재능이 큰돈이 되는 때:</strong> 향후 10년 내 세 번 찾아오는 재물 대운은 <span class="u-highlight">「 ${futureSurgeYears.join(' · ')} 」</span>이며, 그 첫 번째 문이 이미 열리고 있습니다.</p>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  if (reportType === 'match') {
+    const matchChar = `${JIJI_HANJA[harmonyBranchIdx]}(${JIJI[harmonyBranchIdx]} · ${ELEMENT_KOREAN[JIJI_ELEMENTS[harmonyBranchIdx]].split(' ')[0]})`;
+    const clashChar = `${JIJI_HANJA[clashBranchIdx]}(${JIJI[clashBranchIdx]})`;
+    return `
+      <div class="unsealed-truth-box">
+        <div class="unsealed-header">
+          <span class="unsealed-stamp">封印解除</span>
+          <div>
+            <h5>결제 전 가려져 있던 ${user.name}님의 인연·궁합 3대 봉인 직답록</h5>
+            <span class="unsealed-sub">봉인 목록에서 블러(▓) 처리되었던 두 사주의 결속과 위험 신호 해답입니다.</span>
+          </div>
+        </div>
+        <div class="unsealed-items">
+          <div class="unsealed-row">
+            <span class="u-badge">봉인 해제 ①</span>
+            <p><strong>이 사람과 맞물리는 핵심 글자:</strong> 당신의 배우자궁(일지 ${JIJI_HANJA[dayBranch]}) 결핍을 완벽히 채워주는 운명적 결속 글자는 <span class="u-highlight">「 ${matchChar} 」</span>입니다.</p>
+          </div>
+          <div class="unsealed-row">
+            <span class="u-badge">봉인 해제 ②</span>
+            <p><strong>관계가 흔들리는 시기:</strong> 두 사람 사이에 자존심 충돌로 금이 가기 쉬운 시기는 <span class="u-highlight">「 ${cautionMonth.year}년 ${cautionMonth.month}월(${cautionMonth.kor}월) 」</span>입니다. 이 달에는 과거사 추궁을 절대 금하십시오.</p>
+          </div>
+          <div class="unsealed-row">
+            <span class="u-badge">봉인 해제 ③</span>
+            <p><strong>옆에 두면 안 되는 사람:</strong> 당신의 운을 꺾는 기신(忌神) 인연은 일지를 정면 타격하는 <span class="u-highlight">「 ${clashChar} 기운이 강하고 말로만 책임을 회피하는 사람 」</span>입니다.</p>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // career
+  const persona = buildCareerPersonaProse(user);
+  const verdict = strength.badgeClass === 'strong'
+    ? '「 전략적 환승(이직·독립 준비 개시) — 현 조직의 그릇이 좁아진 상태 」'
+    : '「 내실 확보 후 조건부 이동 — 성급한 퇴사 금지, 몸값·문서 선확보 」';
+  return `
+    <div class="unsealed-truth-box">
+      <div class="unsealed-header">
+        <span class="unsealed-stamp">封印解除</span>
+        <div>
+          <h5>결제 전 가려져 있던 ${user.name}님의 커리어·천직 3대 봉인 직답록</h5>
+          <span class="unsealed-sub">봉인 목록에서 블러(▓) 처리되었던 이직·천직·연봉 타이밍의 최종 판정입니다.</span>
+        </div>
+      </div>
+      <div class="unsealed-items">
+        <div class="unsealed-row">
+          <span class="u-badge">봉인 해제 ①</span>
+          <p><strong>반드시 대성하는 일:</strong> 당신 여덟 글자에 새겨진 천직 도메인은 <span class="u-highlight">「 ${persona.title} (${pattern.career}) 」</span>입니다.</p>
+        </div>
+        <div class="unsealed-row">
+          <span class="u-badge">봉인 해제 ②</span>
+          <p><strong>지금 회사, 남을까 떠날까 최종 판정:</strong> 원국과 세운 교차 판정 결론은 <span class="u-highlight">${verdict}</span>입니다.</p>
+        </div>
+        <div class="unsealed-row">
+          <span class="u-badge">봉인 해제 ③</span>
+          <p><strong>연봉이 뛰는 이직·협상 타이밍:</strong> 문서운과 관운이 동시에 열리는 최적의 몸값 상승 구간은 <span class="u-highlight">「 ${careerJumpMonth.year}년 ${careerJumpMonth.month}월부터 3개월간 」</span>입니다.</p>
+        </div>
+      </div>
+    </div>`;
+}
+
 
 
 // ============================================================================
@@ -358,6 +549,7 @@ function buildNewYearReportHtml(user, natureName) {
         </p>
 
         ${userConcern}
+        ${buildUnsealedAnswersBoxHtml(user, 'newyear')}
 
         <div class="event-prediction-box">
           <h5><i class="fa-solid fa-bolt"></i> 당해 세운(${seun.yearHanja})에 일어날 핵심 사건과 환경 변화</h5>
@@ -708,6 +900,7 @@ function buildMasterReportHtml(user, natureName) {
         </p>
 
         ${userMbtiRef}
+        ${buildUnsealedAnswersBoxHtml(user, 'master')}
 
         <div class="event-prediction-box">
           <h5><i class="fa-solid fa-crown"></i> [${pattern.name}]의 운명적 사회 발현 방식</h5>
@@ -1129,6 +1322,8 @@ function buildMatchReportHtml(user, natureName) {
             "상대가 왜 그렇게 냉정하게 돌아섰는지, 왜 내 사소한 말에 불같이 화를 내는지, 도대체 나와 그 사람 사이에는 어떤 보이지 않는 끈이 연결되어 있는지... 당신이 겪고 있는 그 모든 혼란은 결코 당신이 부족해서가 아닙니다. 두 영혼의 기운이 서로를 맞추어가는 과정에서 필연적으로 발생하는 명리학적 마찰열일 뿐입니다."
           </p>
         </div>
+
+        ${buildUnsealedAnswersBoxHtml(user, 'match')}
 
         <div class="action-secret-box">
           <h5><i class="fa-solid fa-compass"></i> 본 감명서 20장의 입체적 구성 안내</h5>
@@ -1709,6 +1904,7 @@ function buildCareerReportHtml(user, natureName) {
         </p>
 
         ${userConcern}
+        ${buildUnsealedAnswersBoxHtml(user, 'career')}
 
         <div class="event-prediction-box">
           <h5><i class="fa-solid fa-stethoscope"></i> 정신과 상담형 커리어 진단 — 당신을 옥죄는 불안의 실체</h5>

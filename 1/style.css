@@ -4455,6 +4455,337 @@ body {
 }
 
 /* ==========================================================================
+   봉인 해제(封印解除) 직답록 박스 & 영구 보관함 모달 & 모바일 실기기 QA
+   ========================================================================== */
+.unsealed-truth-box {
+  margin: 16px 0 18px;
+  background: linear-gradient(155deg, rgba(34, 21, 14, 0.96) 0%, rgba(19, 14, 28, 0.96) 100%);
+  border: 1.5px solid rgba(220, 74, 51, 0.55);
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), inset 0 0 24px rgba(220, 74, 51, 0.08);
+}
+
+.unsealed-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px dashed rgba(245, 208, 97, 0.3);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.unsealed-stamp {
+  flex-shrink: 0;
+  border: 2px solid #ef4444;
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.12);
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 5px 8px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+  transform: rotate(-4deg);
+}
+
+.unsealed-header h5 {
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: var(--gold-primary);
+  margin: 0 0 3px;
+  line-height: 1.4;
+}
+
+.unsealed-sub {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.unsealed-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.unsealed-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(245, 208, 97, 0.16);
+  border-radius: 9px;
+  padding: 9px 12px;
+}
+
+.u-badge {
+  flex-shrink: 0;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 5px;
+  margin-top: 2px;
+}
+
+.unsealed-row p {
+  margin: 0 !important;
+  font-size: 0.86rem !important;
+  line-height: 1.6 !important;
+  color: #f1f5f9 !important;
+}
+
+.u-highlight {
+  color: #fde047;
+  font-weight: 800;
+  background: rgba(245, 208, 97, 0.12);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* 헤더 다시보기 버튼 */
+.btn-archive-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 208, 97, 0.08);
+  border: 1px solid rgba(245, 208, 97, 0.35);
+  color: var(--gold-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-archive-header:hover {
+  background: rgba(245, 208, 97, 0.18);
+  border-color: var(--gold-primary);
+}
+
+/* 리포트 상단 평생 재열람 배너 */
+.report-permanent-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.12) 0%, rgba(21, 18, 38, 0.88) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.38);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.perm-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.83rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+}
+
+.perm-info > i {
+  color: #34d399;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.btn-perm-copy {
+  flex-shrink: 0;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(52, 211, 153, 0.5);
+  color: #6ee7b7;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-perm-copy:hover {
+  background: rgba(16, 185, 129, 0.32);
+  color: #fff;
+}
+
+/* 감명서 보관함 & 주문조회 모달 */
+.order-lookup-modal-card {
+  max-width: 520px;
+}
+
+.saved-orders-section,
+.lookup-search-section {
+  text-align: left;
+  margin-top: 16px;
+}
+
+.lookup-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gold-primary);
+  margin-bottom: 8px;
+}
+
+.saved-orders-list {
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.saved-order-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 11px 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.saved-order-item:hover {
+  border-color: var(--border-gold-bright);
+  background: rgba(245, 208, 97, 0.07);
+}
+
+.saved-order-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.saved-order-top strong {
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.saved-order-date {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.saved-order-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.saved-order-badge.paid {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.saved-order-badge.sample {
+  background: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.4);
+}
+
+.saved-order-meta {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.btn-saved-open {
+  flex-shrink: 0;
+  background: var(--gold-gradient);
+  color: #120c02;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.empty-saved-orders {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed var(--border-subtle);
+  border-radius: 8px;
+  padding: 14px;
+  margin: 0;
+  text-align: center;
+}
+
+.lookup-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.lookup-input-row input {
+  flex: 1;
+  background: rgba(9, 7, 16, 0.9);
+  border: 1px solid var(--border-gold);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.btn-lookup-submit {
+  background: var(--gold-gradient);
+  color: #120c02;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.lookup-Result-msg {
+  font-size: 0.78rem;
+  color: #f87171;
+  margin: 8px 0 0;
+  min-height: 18px;
+}
+
+/* 실기기 QA: iOS Safari / 갤럭시 360px 소형 화면 대응 */
+html, body {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (max-width: 640px) {
+  .report-permanent-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-perm-copy {
+    width: 100%;
+    text-align: center;
+  }
+  .unsealed-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 390px) {
+  .btn-archive-header span {
+    display: none;
+  }
+  .btn-archive-header {
+    padding: 8px 10px;
+  }
+}
+
+/* ==========================================================================
    인쇄 및 PDF 저장 전용 스타일 (@media print - A4 황실 감명서 규격)
    ========================================================================== */
 @media print {
@@ -5227,5 +5558,75 @@ body {
   .s-card-desc {
     color: #5c3516 !important;
     font-size: 8pt !important;
+  }
+
+  /* 화면 전용 배너 및 모달 인쇄 제외 */
+  .no-print,
+  .report-permanent-banner,
+  #orderLookupModal {
+    display: none !important;
+  }
+
+  /* 봉인 해제 직답록 고서 A4 인쇄 조판 */
+  .unsealed-truth-box {
+    background: #fdf6e7 !important;
+    border: 1.5px solid #96311f !important;
+    border-radius: 4px !important;
+    padding: 6px 10px !important;
+    margin: 5px 0 6px !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .unsealed-header {
+    border-bottom: 1px dashed #b9936c !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 5px !important;
+    gap: 8px !important;
+  }
+  .unsealed-stamp {
+    border: 1.5px solid #96311f !important;
+    color: #96311f !important;
+    background: #fff5f5 !important;
+    font-size: 7.5pt !important;
+    padding: 2px 5px !important;
+    transform: none !important;
+  }
+  .unsealed-header h5 {
+    color: #7c1d10 !important;
+    font-size: 8.6pt !important;
+    margin: 0 !important;
+  }
+  .unsealed-sub {
+    color: #5c3516 !important;
+    font-size: 7.2pt !important;
+  }
+  .unsealed-items {
+    gap: 3px !important;
+  }
+  .unsealed-row {
+    background: transparent !important;
+    border: none !important;
+    padding: 2px 0 !important;
+    gap: 6px !important;
+    flex-direction: row !important;
+  }
+  .u-badge {
+    background: #96311f !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 6.8pt !important;
+    padding: 1px 5px !important;
+  }
+  .unsealed-row p {
+    color: #1f140a !important;
+    font-size: 7.8pt !important;
+    line-height: 1.38 !important;
+  }
+  .u-highlight {
+    color: #96311f !important;
+    background: transparent !important;
+    font-weight: 800 !important;
+    padding: 0 !important;
   }
 }

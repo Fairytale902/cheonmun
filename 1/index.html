@@ -78,9 +78,13 @@
         <a href="javascript:void(0)" onclick="switchView('input')">만세력 조회</a>
         <a href="#storySection" onclick="if(currentView!=='landing'){switchView('landing'); setTimeout(()=>document.getElementById('storySection').scrollIntoView({behavior:'smooth'}), 100);}">운명 스토리</a>
         <a href="#reviewsSection" onclick="if(currentView!=='landing'){switchView('landing'); setTimeout(()=>document.getElementById('reviewsSection').scrollIntoView({behavior:'smooth'}), 100);}">적중 후기</a>
+        <a href="javascript:void(0)" onclick="openOrderLookupModal()"><i class="fa-solid fa-box-archive"></i> 감명서 보관함</a>
       </nav>
 
-      <div class="header-cta">
+      <div class="header-cta" style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="btn-archive-header" onclick="openOrderLookupModal()" title="발급받은 감명서 다시 열기 / 주문번호 조회">
+          <i class="fa-solid fa-receipt"></i> <span>다시보기</span>
+        </button>
         <button type="button" class="btn btn-primary-sm glow-btn" onclick="switchView('input')">
           <i class="fa-solid fa-wand-magic-sparkles"></i> 바로 확인
         </button>
@@ -971,13 +975,27 @@
             <span class="report-user-name" id="reportBarUserName">김우주님의 운명서</span>
           </div>
           <div class="report-bar-actions">
+            <button type="button" class="btn-report-tool" onclick="copyPermanentRestoreLink()" title="창을 닫거나 기기가 바뀌어도 바로 열리는 평생 소장 링크 복사">
+              <i class="fa-solid fa-link"></i> <span>소장링크</span>
+            </button>
             <button type="button" class="btn-report-tool" onclick="downloadOrPrintReport()" title="PDF로 저장 / 인쇄">
               <i class="fa-solid fa-file-pdf"></i> <span>PDF 저장</span>
             </button>
-            <button type="button" class="btn-report-tool" onclick="shareReport()" title="리포트 링크 복사">
+            <button type="button" class="btn-report-tool" onclick="shareReport()" title="카카오톡·메시지로 감명서 링크 보내기">
               <i class="fa-solid fa-share-nodes"></i>
             </button>
           </div>
+        </div>
+
+        <!-- 평생 재열람 보증 안내 배너 (화면 전용, 인쇄 시 자동 숨김) -->
+        <div class="report-permanent-banner no-print" id="reportPermanentBanner">
+          <div class="perm-info">
+            <i class="fa-solid fa-cloud-arrow-down"></i>
+            <span><strong>자동 보관 완료:</strong> 창을 닫아도 상단 <strong>[다시보기]</strong>에서 언제든 재열람됩니다. 카카오톡 나에게 보내기로 소장 링크를 남겨두시면 다른 기기에서도 즉시 열립니다.</span>
+          </div>
+          <button type="button" class="btn-perm-copy" onclick="copyPermanentRestoreLink()">
+            <i class="fa-solid fa-copy"></i> 평생 소장 링크 복사
+          </button>
         </div>
 
         <!-- 구매 리포트 탭 네비게이션 (2개 이상 구매 시 표시) -->
@@ -1086,6 +1104,7 @@
           </div>
           <div class="link-col">
             <h4>고객센터 & 약관</h4>
+            <a href="javascript:void(0)" onclick="openOrderLookupModal()" style="color: #fff; font-weight: 600;"><i class="fa-solid fa-box-archive"></i> 발급 감명서 재열람 (주문조회)</a>
             <a href="javascript:void(0)" onclick="alert('카카오 채널: @cheonmun-saju')">카카오톡 1:1 상담</a>
             <a href="/1/refund.html" target="_blank" style="color: var(--gold-primary); font-weight: 600;">취소 및 환불정책</a>
             <a href="/1/terms.html" target="_blank">이용약관</a>
@@ -1166,6 +1185,39 @@
       </button>
 
       <p class="security-text"><i class="fa-solid fa-lock"></i> 포트원(PortOne) 256bit 암호화 보안 결제</p>
+    </div>
+  </div>
+
+  <!-- 감명서 보관함 & 주문번호 재열람 모달 -->
+  <div id="orderLookupModal" class="modal-backdrop hidden" onclick="if(event.target === this) closeOrderLookupModal();">
+    <div class="modal-card order-lookup-modal-card">
+      <button type="button" class="modal-close" onclick="closeOrderLookupModal()"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="portone-modal-badge">
+        <i class="fa-solid fa-box-archive"></i>
+        <span>평생 소장 보관함 · 주문번호/이름 재열람</span>
+      </div>
+
+      <h3>내 감명서 보관함 · 다시보기</h3>
+      <p class="modal-desc">이 기기에서 열람·발급된 감명서 목록이거나, 주문번호·이름으로 즉시 복원할 수 있습니다.</p>
+
+      <!-- 1. 이 기기에 자동 보관된 감명서 목록 -->
+      <div class="saved-orders-section">
+        <label class="lookup-label"><i class="fa-solid fa-clock-rotate-left"></i> 최근 보관된 감명서 (클릭 시 즉시 열람)</label>
+        <div id="savedOrdersList" class="saved-orders-list">
+          <!-- JS 동적 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 2. 주문번호 / 이름 / 소장링크로 조회 -->
+      <div class="lookup-search-section">
+        <label class="lookup-label" for="orderLookupInput"><i class="fa-solid fa-magnifying-glass"></i> 주문번호 · 의뢰인 성함 · 소장링크로 찾기</label>
+        <div class="lookup-input-row">
+          <input type="text" id="orderLookupInput" placeholder="예: ORD-2026... 또는 성함(김우주) 또는 소장링크 붙여넣기">
+          <button type="button" class="btn-lookup-submit" onclick="lookupOrderByQuery()">열람</button>
+        </div>
+        <p class="lookup-Result-msg" id="orderLookupMsg"></p>
+      </div>
     </div>
   </div>
 

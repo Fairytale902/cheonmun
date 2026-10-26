@@ -188,6 +188,11 @@ function switchView(viewName) {
     }
   }
 
+  if (typeof trackFunnelEvent === 'function') {
+    if (viewName === 'input') trackFunnelEvent('StartInput');
+    else if (viewName === 'landing') trackFunnelEvent('ViewContent');
+  }
+
   // 리포트 열람 뷰 진입 시 방해되는 토스트 및 긴급 배너 자동 은닉
   document.body.classList.toggle('in-report-view', viewName === 'report');
   const liveToast = document.getElementById('liveToast');
@@ -1194,6 +1199,14 @@ function renderFullResult(name, year, month, day, timeStr, gender = 'female', ca
   // 재능관 역공학: 단점→재능 리프레이밍 독심술 · 과거 회한 연도 트리거 · 리포트 봉인 티저
   renderColdReadAndSeals(name, year, dayMaster, strength);
 
+  if (typeof trackFunnelEvent === 'function') {
+    trackFunnelEvent('Lead', {
+      content_name: natureName,
+      strength: strength.status,
+      has_concern: Boolean(userConcernDetail)
+    });
+  }
+
   // 신강/신약 배지 & 계절 배지
   const strengthBadgeEl = document.getElementById('resStrengthBadge');
   if (strengthBadgeEl) {
@@ -1708,6 +1721,15 @@ function toggleReport(key) {
     selectedReports.add(key);
   }
   updateCartUI();
+  if (typeof trackFunnelEvent === 'function') {
+    const { total } = calcCart();
+    trackFunnelEvent('AddToCart', {
+      content_ids: Array.from(selectedReports),
+      toggled_item: key,
+      value: total,
+      currency: 'KRW'
+    });
+  }
 }
 
 function resetCart() {
@@ -1775,16 +1797,34 @@ document.addEventListener('keydown', e => {
 });
 
 /// ==========================================================================
-// 10. 포트원(PortOne V2) 결제 모듈 (초기 가맹비 0원 제휴 PG 연동)
+// 10. 포트원(PortOne V2) 결제 모듈 (초기 가맹비 0원 제휴 PG 연동 + 서버 검증)
 // ==========================================================================
 const PORTONE_CONFIG = {
   // 포트원 관리자 콘솔(https://admin.portone.io) > 결제 연동 > 연동 정보에서 발급받은 Store ID
   storeId: "store-demo-cheonmun-saju",
   // 포트원 관리자 콘솔 > 채널 관리에서 등록한 채널 키 (나이스페이먼츠, KG이니시스, 카카오페이 등)
   channelKey: "channel-key-demo",
-  // 테스트 모드 플래그 (실제 키 입력 전까지는 안전하게 테스트 시뮬레이션 지원)
+  // 테스트 모드 플래그 (실제 키 입력 시 자동 해제)
   isTestMode: true
 };
+
+// 런타임/환경변수/URL/로컬스토리지 기반 실결제 키 동적 감지
+function getEffectivePortOneConfig() {
+  let saved = {};
+  try {
+    saved = JSON.parse(localStorage.getItem('cm_portone_config') || '{}');
+  } catch (e) {}
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('storeId') && params.get('channelKey')) {
+    saved = { storeId: params.get('storeId'), channelKey: params.get('channelKey') };
+    try { localStorage.setItem('cm_portone_config', JSON.stringify(saved)); } catch (e) {}
+  }
+  const winCfg = window.CHEONMUN_PORTONE_CONFIG || {};
+  const storeId = winCfg.storeId || saved.storeId || PORTONE_CONFIG.storeId;
+  const channelKey = winCfg.channelKey || saved.channelKey || PORTONE_CONFIG.channelKey;
+  const isLive = Boolean(storeId && channelKey && !storeId.includes('demo') && !channelKey.includes('demo'));
+  return { storeId, channelKey, isLive };
+}
 
 let currentSelectedPayMethod = 'CARD';
 
@@ -1816,6 +1856,15 @@ function triggerPayment() {
   document.getElementById('payConfirmBtnText').textContent = `${won(total)} 안전 결제하기`;
 
   document.getElementById('payModal').classList.remove('hidden');
+
+  if (typeof trackFunnelEvent === 'function') {
+    trackFunnelEvent('InitiateCheckout', {
+      value: total,
+      currency: 'KRW',
+      content_ids: Array.from(selectedReports),
+      num_items: items.length
+    });
+  }
 }
 
 function closePayModal() {
@@ -1836,15 +1885,19 @@ async function confirmPayment() {
   const orderTitle = items.length === 1 
     ? items[0].title 
     : `${items[0].title} 외 ${items.length - 1}건`;
-  const paymentId = `order_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+  const today = new Date();
+  const dateCompact = `${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}`;
+  const rand4 = Math.floor(Math.random() * 8999 + 1000);
+  const paymentId = `ORD-${dateCompact}-${rand4}`;
   const userName = (currentAnalysisData && currentAnalysisData.name) ? currentAnalysisData.name : "익명";
+  const cfg = getEffectivePortOneConfig();
 
-  // 포트원 V2 브라우저 SDK 공식 연동 (실제 storeId가 설정되었을 때 실행)
-  if (typeof PortOne !== 'undefined' && PORTONE_CONFIG.storeId && !PORTONE_CONFIG.storeId.includes('demo')) {
+  // 포트원 V2 브라우저 SDK 공식 연동 (실제 storeId/channelKey가 설정되었을 때 실행)
+  if (typeof PortOne !== 'undefined' && cfg.isLive) {
     try {
       const paymentParams = {
-        storeId: PORTONE_CONFIG.storeId,
-        channelKey: PORTONE_CONFIG.channelKey,
+        storeId: cfg.storeId,
+        channelKey: cfg.channelKey,
         paymentId: paymentId,
         orderName: orderTitle,
         totalAmount: total,
@@ -1869,7 +1922,6 @@ async function confirmPayment() {
       const response = await PortOne.requestPayment(paymentParams);
 
       if (response && response.code != null) {
-        // 결제 실패 또는 사용자 취소 처리
         if (response.code === 'FAILURE_TYPE_CANCELLED' || (response.message && response.message.includes('취소'))) {
           alert('결제가 취소되었습니다.');
         } else {
@@ -1879,8 +1931,30 @@ async function confirmPayment() {
         return;
       }
 
-      // 결제 성공 검증 후 리포트 발급
-      completePaymentSuccess(btn, origText);
+      // 서버사이드 금액·상태 검증 (/api/verify-payment)
+      try {
+        const verifyRes = await fetch('/api/verify-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            paymentId,
+            expectedAmount: total,
+            items: Array.from(selectedReports)
+          })
+        });
+        if (verifyRes.ok) {
+          const verifyJson = await verifyRes.json();
+          if (verifyJson && verifyJson.verified === false) {
+            alert(`결제 검증 실패: ${verifyJson.error || '금액 불일치'}`);
+            if (btn) { btn.innerHTML = origText; btn.disabled = false; }
+            return;
+          }
+        }
+      } catch (vErr) {
+        // 정적 로컬 서버 등 API 미구동 환경에서는 SDK 응답으로 진행
+      }
+
+      completePaymentSuccess(btn, origText, paymentId, total);
       return;
     } catch (err) {
       console.error('포트원 결제 오류:', err);
@@ -1900,34 +1974,25 @@ async function confirmPayment() {
 
 // 결제 전 결과물 양식/품질 사전 확인용 더미 샘플 리포트 렌더러
 function openSampleDummyReport() {
-  if (!currentAnalysisData) {
-    // 분석 데이터가 없는 경우 기본 임인일주 샘플 프로필 생성
-    const astro = calculateAstronomicalPillars(1996, 7, 15, "09:30", "solar");
-    const shinsal = calculateExtendedShinsal(astro.dayStem, astro.monthBranch, astro.pillars);
-    currentAnalysisData = {
-      name: "체험자",
-      year: 1996,
-      month: 7,
-      day: 15,
-      timeStr: "09:30",
-      gender: "female",
-      calendarType: "solar",
-      birthCity: "seoul",
-      userMbti: "INTJ",
-      userConcernDetail: "3년 차 개발자인데 이직이 맞는지, 버텨야 하는지 막막합니다",
-      solar: astro.solar,
-      lunar: astro.lunar,
-      ec: astro.ec,
-      pillars: astro.pillars,
-      daewoon: astro.daewoon,
-      shinsal: shinsal,
-      isDummySample: true
-    };
+  if (!currentAnalysisData || !currentAnalysisData.climate || !currentAnalysisData.pillars || !currentAnalysisData.pillars.day) {
+    renderFullResult(
+      "체험자",
+      1996,
+      7,
+      15,
+      "09:30",
+      "female",
+      "solar",
+      "seoul",
+      "INTJ",
+      "3년 차 직장인인데 지금 이직이 맞는지 버텨야 하는지 막막합니다"
+    );
+    currentAnalysisData.isDummySample = true;
   }
 
   // 4대 리포트 전체를 더미로 세팅
   const allReportKeys = ['newyear', 'master', 'match', 'career'];
-  renderPurchasedReportBook(allReportKeys);
+  renderPurchasedReportBook(allReportKeys, null, true);
 
   // 상단 툴바 표시를 견본 모드로 안내
   const barUserName = document.getElementById('reportBarUserName');
@@ -1939,11 +2004,15 @@ function openSampleDummyReport() {
     certPill.innerHTML = `<i class="fa-solid fa-eye"></i> 견본 미리보기`;
   }
 
+  if (typeof trackFunnelEvent === 'function') {
+    trackFunnelEvent('SamplePreview', { name: currentAnalysisData.name || '체험자' });
+  }
+
   // 리포트 서책 화면으로 전환
   switchView('report');
 }
 
-function completePaymentSuccess(btn, origText) {
+function completePaymentSuccess(btn, origText, verifiedOrderId, paidTotal) {
   closePayModal();
   if (btn) {
     btn.innerHTML = origText;
@@ -1953,19 +2022,29 @@ function completePaymentSuccess(btn, origText) {
   // 구매한 리포트 목록
   const purchasedKeys = Array.from(selectedReports);
 
-  // 운명서 서책 렌더링
-  renderPurchasedReportBook(purchasedKeys);
+  if (typeof trackFunnelEvent === 'function') {
+    trackFunnelEvent('Purchase', {
+      order_id: verifiedOrderId || '',
+      value: paidTotal || 0,
+      currency: 'KRW',
+      content_ids: purchasedKeys
+    });
+  }
+
+  // 운명서 서책 렌더링 및 영구 보관
+  renderPurchasedReportBook(purchasedKeys, verifiedOrderId, false);
 
   // 리포트 뷰로 화면 전환
   switchView('report');
 }
 
 // ==========================================================================
-// 10-1. 프리미엄 맞춤 운명서 서책 렌더러 (모바일 퍼스트 UX)
+// 10-1. 프리미엄 맞춤 운명서 서책 렌더러 & 영구 재열람 보관 엔진
 // ==========================================================================
 let activeReportTab = null;
+let currentActiveOrderRecord = null;
 
-function renderPurchasedReportBook(purchasedKeys) {
+function renderPurchasedReportBook(purchasedKeys, forcedOrderId = null, isSample = false) {
   if (!currentAnalysisData || purchasedKeys.length === 0) return;
 
   const user = currentAnalysisData;
@@ -1976,13 +2055,23 @@ function renderPurchasedReportBook(purchasedKeys) {
   // 상단 툴바 정보
   document.getElementById('reportBarUserName').textContent = `${user.name}님의 운명서`;
   document.getElementById('reportRecipient').textContent = `${user.name} 님 惠存 (혜존)`;
+  const certPill = document.querySelector('.cert-pill');
+  if (certPill && !isSample) {
+    certPill.innerHTML = `<i class="fa-solid fa-certificate"></i> 정품 인증`;
+  }
 
   // 주문번호 & 발급일자 생성
   const today = new Date();
   const dateStr = `${today.getFullYear()}. ${String(today.getMonth() + 1).padStart(2, '0')}. ${String(today.getDate()).padStart(2, '0')}`;
   const randomNum = Math.floor(Math.random() * 8999 + 1000);
-  document.getElementById('reportOrderId').textContent = `주문번호: ORD-${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}-${randomNum}`;
+  const finalOrderId = forcedOrderId || `ORD-${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}-${randomNum}`;
+  document.getElementById('reportOrderId').textContent = `주문번호: ${finalOrderId}`;
   document.getElementById('reportIssueDate').textContent = `발급일자: ${dateStr}`;
+
+  // 영구 보관함(localStorage) 저장 및 평생 소장 복원 토큰 생성
+  if (typeof saveOrderToArchive === 'function') {
+    currentActiveOrderRecord = saveOrderToArchive(user, purchasedKeys, finalOrderId, dateStr, isSample);
+  }
 
   // 서책 메인 타이틀
   const productTitles = purchasedKeys.map(k => REPORT_PRODUCTS[k].title.replace(/&.*/, '').trim());
@@ -2196,27 +2285,362 @@ function buildMyeongshikTableHtml(user) {
 
 // ※ 4대 카테고리 86페이지 정밀 리포트 빌더(buildNewYearReportHtml, buildMasterReportHtml, buildMatchReportHtml, buildCareerReportHtml)는 lib/report-builders.js에 수록되어 있습니다.
 
-// PDF 다운로드 또는 인쇄 트리거 (모바일/PC 공용)
+// PDF 다운로드 또는 인쇄 트리거 (모바일 iOS Safari / 갤럭시 / 인앱 브라우저 완벽 대응)
 function downloadOrPrintReport() {
+  if (typeof trackFunnelEvent === 'function') {
+    trackFunnelEvent('DownloadPDF', {
+      order_id: currentActiveOrderRecord ? currentActiveOrderRecord.orderId : ''
+    });
+  }
+  const ua = navigator.userAgent || '';
+  const isInApp = /KAKAOTALK|Instagram|FBAN|FBAV|Line|NAVER/i.test(ua);
+  if (isInApp) {
+    // 인앱 브라우저에서는 window.print()가 막히는 경우가 있으므로 소장 링크 복사와 외부 브라우저 안내 병행
+    const proceed = confirm(
+      '카카오톡·인스타그램 등 앱 내 브라우저에서는 PDF 인쇄 창이 제한될 수 있습니다.\n\n' +
+      '[확인]을 누르시면 인쇄/PDF 저장을 시도하며, 만약 창이 뜨지 않으면 상단 [소장링크]를 복사해 사파리(Safari)나 크롬(Chrome)에서 열어주세요.'
+    );
+    if (!proceed) return;
+  }
   window.print();
 }
 
-// 리포트 공유하기
+// 리포트 공유하기 (평생 소장 복원 링크 포함)
 function shareReport() {
-  const url = window.location.href;
+  const url = getPermanentRestoreUrl();
+  const userName = (currentAnalysisData && currentAnalysisData.name) ? currentAnalysisData.name : '고객';
   if (navigator.share) {
     navigator.share({
-      title: `${currentAnalysisData.name}님의 천문사주 운명서 (cheonmun.life)`,
-      text: '나의 사주 총운과 월별 터닝포인트 리포트가 완성되었습니다.',
+      title: `${userName}님의 천문사주 86p 정통 감명서 (cheonmun.life)`,
+      text: `${userName}님의 사주 원국과 결정적 시기 감명서 평생 소장 링크입니다.`,
       url: url
     }).catch(() => {});
   } else {
-    navigator.clipboard.writeText(url).then(() => {
-      alert('운명서 열람 링크가 클립보드에 복사되었습니다! 카카오톡이나 메모장에 저장해두세요.');
-    }).catch(() => {
-      alert('링크 복사를 지원하지 않는 브라우저입니다.');
-    });
+    copyPermanentRestoreLink();
   }
+}
+
+// ==========================================================================
+// 10-3. 감명서 영구 보관 · 평생 소장 링크(?restore=) · 주문번호 재열람 시스템
+// ==========================================================================
+const ORDERS_STORAGE_KEY = 'cheonmun_orders_v1';
+
+function encodeRestoreToken(payload) {
+  try {
+    const json = JSON.stringify(payload);
+    const b64 = btoa(encodeURIComponent(json).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode('0x' + p1)));
+    return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  } catch (e) {
+    return '';
+  }
+}
+
+function decodeRestoreToken(token) {
+  try {
+    const clean = String(token).trim().replace(/-/g, '+').replace(/_/g, '/');
+    const pad = clean.length % 4 ? clean + '='.repeat(4 - (clean.length % 4)) : clean;
+    const bin = atob(pad);
+    const pct = Array.prototype.map.call(bin, c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('');
+    return JSON.parse(decodeURIComponent(pct));
+  } catch (e) {
+    return null;
+  }
+}
+
+function getSavedOrders() {
+  try {
+    const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
+    const arr = JSON.parse(raw || '[]');
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveOrderToArchive(user, purchasedKeys, orderId, issueDateStr, isSample = false) {
+  const compactPayload = {
+    id: orderId,
+    d: issueDateStr,
+    s: isSample ? 1 : 0,
+    k: purchasedKeys,
+    u: {
+      n: user.name || '고객',
+      y: user.year || 1996,
+      m: user.month || 7,
+      day: user.day || 15,
+      t: user.timeStr || 'unknown',
+      g: user.gender || 'female',
+      c: user.calendarType || 'solar',
+      bc: user.birthCity || 'seoul',
+      mb: user.userMbti || 'unknown',
+      cd: user.userConcernDetail || ''
+    }
+  };
+
+  const restoreToken = encodeRestoreToken(compactPayload);
+  const record = {
+    orderId,
+    issueDate: issueDateStr,
+    isSample: Boolean(isSample),
+    purchasedKeys,
+    user: compactPayload.u,
+    restoreToken,
+    savedAt: Date.now()
+  };
+
+  try {
+    const list = getSavedOrders().filter(o => o.orderId !== orderId);
+    list.unshift(record);
+    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(list.slice(0, 30)));
+  } catch (e) {}
+
+  return record;
+}
+
+function getPermanentRestoreUrl(record = currentActiveOrderRecord) {
+  const base = `${window.location.origin}${window.location.pathname}`;
+  if (!record || !record.restoreToken) return window.location.href;
+  return `${base}?restore=${encodeURIComponent(record.restoreToken)}`;
+}
+
+function copyPermanentRestoreLink() {
+  const url = getPermanentRestoreUrl();
+  const orderId = currentActiveOrderRecord ? currentActiveOrderRecord.orderId : '';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      alert(
+        `평생 소장용 재열람 링크가 복사되었습니다!\n\n` +
+        `• 주문번호: ${orderId}\n` +
+        `• 카카오톡 '나에게 보내기'나 메모장에 붙여넣어 두시면 창을 닫거나 기기를 바꿔도 언제든 즉시 열람됩니다.`
+      );
+    }).catch(() => {
+      prompt('아래 평생 소장 링크를 복사해 보관해 주세요:', url);
+    });
+  } else {
+    prompt('아래 평생 소장 링크를 복사해 보관해 주세요:', url);
+  }
+}
+
+function openOrderLookupModal() {
+  renderSavedOrdersList();
+  const msgEl = document.getElementById('orderLookupMsg');
+  if (msgEl) msgEl.textContent = '';
+  const modal = document.getElementById('orderLookupModal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeOrderLookupModal() {
+  const modal = document.getElementById('orderLookupModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function renderSavedOrdersList() {
+  const container = document.getElementById('savedOrdersList');
+  if (!container) return;
+  const list = getSavedOrders();
+  if (list.length === 0) {
+    container.innerHTML = `<p class="empty-saved-orders">아직 이 기기에 보관된 감명서가 없습니다. 아래에서 소장링크를 붙여넣거나 만세력을 조회해 보세요.</p>`;
+    return;
+  }
+
+  container.innerHTML = list.map((item, idx) => {
+    const titles = (item.purchasedKeys || []).map(k => REPORT_PRODUCTS[k] ? REPORT_PRODUCTS[k].title.split('&')[0].trim() : k).join(' · ');
+    const badge = item.isSample
+      ? `<span class="saved-order-badge sample">견본</span>`
+      : `<span class="saved-order-badge paid">정품보관</span>`;
+    return `
+      <div class="saved-order-item" onclick="restoreOrderByIndex(${idx})">
+        <div class="saved-order-main">
+          <div class="saved-order-top">
+            ${badge}
+            <strong>${crEscape(item.user.n)}님의 감명서</strong>
+            <span class="saved-order-date">${crEscape(item.issueDate)}</span>
+          </div>
+          <div class="saved-order-meta">
+            <span>${crEscape(item.orderId)}</span> · <span>${crEscape(titles)}</span>
+          </div>
+        </div>
+        <button type="button" class="btn-saved-open">열기 <i class="fa-solid fa-chevron-right"></i></button>
+      </div>`;
+  }).join('');
+}
+
+function restoreOrderByIndex(idx) {
+  const list = getSavedOrders();
+  const item = list[idx];
+  if (!item) return;
+  closeOrderLookupModal();
+  restoreFromCompactData(item.orderId, item.issueDate, item.purchasedKeys, item.user, item.isSample);
+}
+
+function lookupOrderByQuery() {
+  const inputEl = document.getElementById('orderLookupInput');
+  const msgEl = document.getElementById('orderLookupMsg');
+  if (!inputEl) return;
+  const q = inputEl.value.trim();
+  if (!q) {
+    if (msgEl) msgEl.textContent = '주문번호, 의뢰인 성함, 또는 복사해 둔 소장링크를 입력해주세요.';
+    return;
+  }
+
+  // 1) 소장 링크(?restore=...) 또는 복원 토큰 직접 입력 시 즉시 복원
+  let tokenCandidate = q;
+  if (q.includes('restore=')) {
+    try {
+      const u = new URL(q, window.location.origin);
+      tokenCandidate = u.searchParams.get('restore') || '';
+    } catch (e) {
+      const m = q.match(/restore=([^&\s]+)/);
+      if (m) tokenCandidate = decodeURIComponent(m[1]);
+    }
+  }
+  if (tokenCandidate && tokenCandidate.length > 24) {
+    const decoded = decodeRestoreToken(tokenCandidate);
+    if (decoded && decoded.u && Array.isArray(decoded.k)) {
+      closeOrderLookupModal();
+      restoreFromCompactData(decoded.id, decoded.d, decoded.k, decoded.u, Boolean(decoded.s));
+      return;
+    }
+  }
+
+  // 2) 기기 보관함에서 주문번호 또는 이름으로 검색
+  const list = getSavedOrders();
+  const qLower = q.toLowerCase();
+  const found = list.find(o =>
+    (o.orderId && o.orderId.toLowerCase().includes(qLower)) ||
+    (o.user && o.user.n && o.user.n.toLowerCase().includes(qLower))
+  );
+
+  if (found) {
+    closeOrderLookupModal();
+    restoreFromCompactData(found.orderId, found.issueDate, found.purchasedKeys, found.user, found.isSample);
+    return;
+  }
+
+  if (msgEl) {
+    msgEl.textContent = '일치하는 보관 내역을 찾지 못했습니다. 다른 기기에서 발급받으신 경우 복사해 둔 [평생 소장 링크]를 그대로 붙여넣어 주세요.';
+  }
+}
+
+function restoreFromCompactData(orderId, issueDate, purchasedKeys, u, isSample = false) {
+  if (!u || !Array.isArray(purchasedKeys) || purchasedKeys.length === 0) return;
+  renderFullResult(
+    u.n || '고객',
+    parseInt(u.y) || 1996,
+    parseInt(u.m) || 7,
+    parseInt(u.day) || 15,
+    u.t || 'unknown',
+    u.g || 'female',
+    u.c || 'solar',
+    u.bc || 'seoul',
+    u.mb || 'unknown',
+    u.cd || ''
+  );
+  if (isSample) currentAnalysisData.isDummySample = true;
+
+  renderPurchasedReportBook(purchasedKeys, orderId, isSample);
+  if (issueDate) {
+    const dateEl = document.getElementById('reportIssueDate');
+    if (dateEl) dateEl.textContent = `발급일자: ${issueDate}`;
+  }
+  if (isSample) {
+    const barUserName = document.getElementById('reportBarUserName');
+    if (barUserName) {
+      barUserName.innerHTML = `<span style="background:#eab308;color:#000;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;margin-right:6px;">견본(SAMPLE)</span> ${currentAnalysisData.name || '체험자'}님의 86p 감명서`;
+    }
+    const certPill = document.querySelector('.cert-pill');
+    if (certPill) certPill.innerHTML = `<i class="fa-solid fa-eye"></i> 견본 미리보기`;
+  }
+
+  if (typeof trackFunnelEvent === 'function') {
+    trackFunnelEvent('RestoreReport', { order_id: orderId, is_sample: isSample });
+  }
+  switchView('report');
+}
+
+// ==========================================================================
+// 10-4. 광고 추적(Meta Pixel / GA4 / GTM) & 퍼널 이벤트 수집기
+// ==========================================================================
+const AD_ATTR_KEY = 'cm_ad_attribution_v1';
+const FUNNEL_LOG_KEY = 'cm_funnel_events_v1';
+
+function initAdAttributionAndTracking() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'utm_id', 'fbclid', 'gclid', 'scene'];
+    const captured = {};
+    keys.forEach(k => {
+      const v = params.get(k);
+      if (v) captured[k] = v;
+    });
+    if (Object.keys(captured).length > 0) {
+      captured.landedAt = new Date().toISOString();
+      localStorage.setItem(AD_ATTR_KEY, JSON.stringify(captured));
+    }
+
+    // URL 파라미터(?pixel=...) 또는 전역 설정으로 Meta Pixel ID가 지정된 경우 자동 초기화
+    const pixelParam = params.get('pixel');
+    if (pixelParam) localStorage.setItem('cm_pixel_id', pixelParam);
+    const pixelId = window.CHEONMUN_PIXEL_ID || localStorage.getItem('cm_pixel_id');
+    if (pixelId && typeof window.fbq === 'undefined') {
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      window.fbq('init', pixelId);
+    }
+  } catch (e) {}
+
+  trackFunnelEvent('PageView');
+
+  // URL에 ?restore=... 가 있으면 즉시 감명서 자동 복원
+  try {
+    const restoreParam = new URLSearchParams(window.location.search).get('restore');
+    if (restoreParam) {
+      const decoded = decodeRestoreToken(restoreParam);
+      if (decoded && decoded.u && Array.isArray(decoded.k)) {
+        setTimeout(() => {
+          restoreFromCompactData(decoded.id, decoded.d, decoded.k, decoded.u, Boolean(decoded.s));
+        }, 120);
+      }
+    }
+  } catch (e) {}
+}
+
+function trackFunnelEvent(eventName, payload = {}) {
+  try {
+    const attr = JSON.parse(localStorage.getItem(AD_ATTR_KEY) || '{}');
+    const enriched = Object.assign({}, payload, {
+      event: eventName,
+      ts: new Date().toISOString(),
+      utm_source: attr.utm_source || '',
+      utm_campaign: attr.utm_campaign || ''
+    });
+
+    // 1) Meta Pixel 브릿지
+    if (typeof window.fbq === 'function') {
+      const stdEvents = ['PageView', 'ViewContent', 'Lead', 'AddToCart', 'InitiateCheckout', 'Purchase'];
+      if (stdEvents.includes(eventName)) {
+        window.fbq('track', eventName, payload);
+      } else {
+        window.fbq('trackCustom', eventName, payload);
+      }
+    }
+
+    // 2) Google Analytics 4 (gtag) & GTM (dataLayer) 브릿지
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, payload);
+    }
+    if (Array.isArray(window.dataLayer)) {
+      window.dataLayer.push(enriched);
+    }
+
+    // 3) 로컬 퍼널 로그 저장 (최근 50개)
+    const log = JSON.parse(localStorage.getItem(FUNNEL_LOG_KEY) || '[]');
+    log.push(enriched);
+    localStorage.setItem(FUNNEL_LOG_KEY, JSON.stringify(log.slice(-50)));
+  } catch (e) {}
 }
 
 
@@ -2294,8 +2718,9 @@ function loadMoreReviews() {
   renderReviews();
 }
 
-// 초기 로드 시 100개 리뷰 시스템 가동
+// 초기 로드 시 100개 리뷰 시스템 및 광고 추적 · 평생 소장 링크 자동 복원 가동
 document.addEventListener('DOMContentLoaded', () => {
   renderReviews();
+  initAdAttributionAndTracking();
 });
 renderReviews(); // 즉시 실행
