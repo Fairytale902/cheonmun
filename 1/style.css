@@ -3002,7 +3002,6 @@ body {
   border-top: 1px dashed rgba(255, 255, 255, 0.08);
   padding-top: 12px;
   margin-top: 8px;
-}  color: var(--text-muted);
 }
 
 /* 챕터 본문 영역 */
@@ -5408,9 +5407,6 @@ html, body {
     line-height: 1.55 !important;
     margin: 0 !important;
   }
-    font-weight: 900 !important;
-    font-family: 'Gowun Batang', 'Noto Serif KR', serif !important;
-  }
 
   .critical-warning-box {
     background: #fdf0ef !important;
@@ -5622,6 +5618,9 @@ html, body {
     color: #1f140a !important;
     font-size: 7.8pt !important;
     line-height: 1.38 !important;
+  }
+  .unsealed-row p strong {
+    color: #3b1602 !important;
   }
   .u-highlight {
     color: #96311f !important;
