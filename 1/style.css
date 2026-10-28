@@ -4784,6 +4784,223 @@ html, body {
   }
 }
 
+/* 예시 정보 1초 입력 칩 버튼 */
+.btn-quick-sample-fill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245, 208, 97, 0.1);
+  border: 1px dashed rgba(245, 208, 97, 0.45);
+  color: var(--gold-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-quick-sample-fill:hover {
+  background: rgba(245, 208, 97, 0.2);
+  border-style: solid;
+}
+
+/* 4권 전권(86p 완본) 원클릭 패키지 배너 */
+.all-in-one-pack-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(46, 33, 14, 0.92) 0%, rgba(22, 16, 38, 0.95) 100%);
+  border: 1.5px solid rgba(245, 208, 97, 0.45);
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+}
+
+.all-in-one-pack-bar:hover {
+  border-color: var(--gold-primary);
+  transform: translateY(-2px);
+}
+
+.all-in-one-pack-bar.active {
+  border: 2px solid #f5d061;
+  background: linear-gradient(135deg, rgba(68, 49, 16, 0.95) 0%, rgba(30, 22, 52, 0.98) 100%);
+  box-shadow: 0 0 28px rgba(245, 208, 97, 0.28);
+}
+
+.aio-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.aio-crown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  background: var(--gold-gradient);
+  color: #120c02;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.aio-left > strong {
+  font-size: 0.98rem;
+  color: #fff;
+  line-height: 1.4;
+}
+
+.aio-sub {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+}
+
+.aio-sub strong {
+  color: #fde047;
+  font-weight: 800;
+}
+
+.btn-aio-select {
+  flex-shrink: 0;
+  background: rgba(245, 208, 97, 0.16);
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-primary);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.all-in-one-pack-bar.active .btn-aio-select {
+  background: var(--gold-gradient);
+  color: #120c02;
+}
+
+/* 1:1 심층 궁합 상대방 입력 패널 */
+.partner-match-panel {
+  background: linear-gradient(145deg, rgba(44, 18, 32, 0.88) 0%, rgba(19, 14, 32, 0.95) 100%);
+  border: 1.5px solid rgba(244, 114, 182, 0.45);
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin: 18px 0 22px;
+  text-align: left;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+.pm-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.pm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(244, 114, 182, 0.16);
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  color: #f472b6;
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+
+.pm-header h4 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+
+.pm-header h4 small {
+  font-size: 0.78rem;
+  color: #f9a8d4;
+  font-weight: 600;
+}
+
+.pm-status {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.pm-status.synced {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.45);
+}
+
+.pm-desc {
+  font-size: 0.83rem;
+  color: #e2e8f0;
+  line-height: 1.55;
+  margin: 0 0 14px;
+}
+
+.pm-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  gap: 12px;
+}
+
+.pm-field label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #fbcfe8;
+  margin-bottom: 5px;
+}
+
+.pm-field input,
+.pm-field select {
+  width: 100%;
+  background: rgba(9, 7, 16, 0.85);
+  border: 1px solid rgba(244, 114, 182, 0.35);
+  border-radius: 8px;
+  padding: 9px 11px;
+  color: #fff;
+  font-size: 0.84rem;
+}
+
+.pm-date-row {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 6px;
+}
+
+@media (max-width: 768px) {
+  .all-in-one-pack-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .btn-aio-select {
+    width: 100%;
+    text-align: center;
+  }
+  .pm-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ==========================================================================
    인쇄 및 PDF 저장 전용 스타일 (@media print - A4 황실 감명서 규격)
    ========================================================================== */

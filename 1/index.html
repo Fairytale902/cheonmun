@@ -491,10 +491,15 @@
         <div class="analyzer-card">
           <div class="card-glow"></div>
 
-          <div class="section-header text-center" style="margin-bottom: 28px;">
+          <div class="section-header text-center" style="margin-bottom: 20px;">
             <span class="section-sub">BIRTH CHART DECRYPTION</span>
             <h2 class="section-title">나만의 <span class="gold-gradient">만세력 원국과 신살</span> 해독</h2>
             <p class="section-desc">태어난 순간의 천간과 지지 8글자를 추출하여 숨겨진 기운과 촌철살인 한줄평을 도출합니다.</p>
+            <div style="margin-top: 10px;">
+              <button type="button" class="btn-quick-sample-fill" onclick="fillSampleUserInput()">
+                <i class="fa-solid fa-bolt"></i> 예시 정보(1996.07.15)로 1초 체험 입력
+              </button>
+            </div>
           </div>
 
           <form id="sajuForm" class="saju-form" onsubmit="event.preventDefault(); analyzeSaju();">
@@ -502,7 +507,7 @@
               
               <div class="form-group">
                 <label for="userName"><i class="fa-solid fa-user"></i> 이름 (또는 별칭)</label>
-                <input type="text" id="userName" placeholder="예: 김우주" required value="김우주">
+                <input type="text" id="userName" placeholder="예: 홍길동 (미입력 시 '고객'으로 표기)" maxlength="20">
               </div>
 
               <div class="form-group">
@@ -540,9 +545,9 @@
               <div class="form-group">
                 <label for="birthDate"><i class="fa-solid fa-cake-candles"></i> 생년월일</label>
                 <div class="date-inputs">
-                  <input type="number" id="birthYear" placeholder="년도 (예: 1996)" min="1930" max="2035" value="1996" required>
-                  <input type="number" id="birthMonth" placeholder="월 (1~12)" min="1" max="12" value="7" required>
-                  <input type="number" id="birthDay" placeholder="일 (1~31)" min="1" max="31" value="15" required>
+                  <input type="number" id="birthYear" placeholder="출생연도 (예: 1996)" min="1930" max="2035">
+                  <input type="number" id="birthMonth" placeholder="월 (1~12)" min="1" max="12">
+                  <input type="number" id="birthDay" placeholder="일 (1~31)" min="1" max="31">
                 </div>
               </div>
 
@@ -774,9 +779,21 @@
                =================================================================== -->
           <div class="report-checkout-section" id="checkoutSection">
             <div class="checkout-header text-center">
-              <span class="special-badge">2개 이상 선택 시 추가 10% 할인</span>
+              <span class="special-badge">2권 10% · 3권 15% · 4권 전권 25% 특별 할인</span>
               <h3 class="checkout-title" id="checkoutTitle">"김우주님의 만세력에는 아직 열리지 않은 이야기가 남아 있습니다"</h3>
               <p class="checkout-desc">아래는 방금 해독한 <strong>내 8글자</strong>에서 읽어낸 신호입니다. 더 깊이 알고 싶은 이야기를 골라주세요. <strong>중복 선택</strong>이 가능합니다.</p>
+            </div>
+
+            <!-- 4권 전권(86p 완본) 원클릭 패키지 배너 -->
+            <div class="all-in-one-pack-bar" id="allInOnePackBar" onclick="toggleAllReportsBundle()">
+              <div class="aio-left">
+                <span class="aio-crown-badge"><i class="fa-solid fa-crown"></i> VIP 전권 소장팩 (86p 완본)</span>
+                <strong>4대 감명서 전권 한 번에 담기 (세운 + 평생대운·의명 + 심층궁합 + 천직커리어)</strong>
+                <span class="aio-sub">개별 합산 102,500원 ➔ 전권 25% 특가 <strong>76,870원</strong> (25,630원 즉시 절감)</span>
+              </div>
+              <button type="button" class="btn-aio-select" id="allInOneBtnText">
+                <i class="fa-solid fa-layer-group"></i> 전권 한번에 담기
+              </button>
             </div>
 
             <!-- 리포트 선택 카드 (4대 카테고리 · 중복 선택 가능) -->
@@ -852,6 +869,44 @@
 
             </div>
 
+            <!-- 1:1 심층 궁합 선택 시 활성화되는 상대방 생년월일 맞춤 입력 패널 -->
+            <div class="partner-match-panel hidden" id="partnerMatchPanel">
+              <div class="pm-header">
+                <div>
+                  <span class="pm-badge"><i class="fa-solid fa-heart-circle-check"></i> 1:1 심층 궁합 상대방 원국 대조</span>
+                  <h4>궁합을 맞춰볼 상대방의 정보를 입력해 주세요 <small>(선택)</small></h4>
+                </div>
+                <span class="pm-status" id="partnerSyncStatus">배우자궁 원국 분석 모드</span>
+              </div>
+              <p class="pm-desc">
+                상대방의 생년월일을 입력하시면 <strong>두 사람의 실제 일주(日柱) · 오행 유무 · 일지 합충(合沖) · 속궁합</strong>을 1:1로 맞대조합니다. 
+                <span style="color:#94a3b8;">(상대방 생일을 모르거나 비워두시면 내 사주 배우자궁에 새겨진 운명의 짝·재회 인연으로 해독됩니다.)</span>
+              </p>
+              <div class="pm-form-grid">
+                <div class="pm-field">
+                  <label for="partnerName">상대방 이름 (또는 호칭)</label>
+                  <input type="text" id="partnerName" placeholder="예: 그 사람 / 김철수" maxlength="20" oninput="syncPartnerInfo()">
+                </div>
+                <div class="pm-field">
+                  <label for="partnerRelation">현재 두 사람의 관계</label>
+                  <select id="partnerRelation" onchange="syncPartnerInfo()">
+                    <option value="reunion">이별 후 재회 희망 · 속마음</option>
+                    <option value="crush">짝사랑 · 썸 · 탐색기</option>
+                    <option value="couple" selected>현재 교제 중인 연인</option>
+                    <option value="marriage">결혼 예정 · 부부 궁합</option>
+                  </select>
+                </div>
+                <div class="pm-field pm-date-field">
+                  <label>상대방 양력 생년월일 (선택)</label>
+                  <div class="pm-date-row">
+                    <input type="number" id="partnerYear" placeholder="연도(1995)" min="1930" max="2035" oninput="syncPartnerInfo()">
+                    <input type="number" id="partnerMonth" placeholder="월(1~12)" min="1" max="12" oninput="syncPartnerInfo()">
+                    <input type="number" id="partnerDay" placeholder="일(1~31)" min="1" max="31" oninput="syncPartnerInfo()">
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- 운세위키 역공학: 결정적 시기 클로징 훅 & P.S. 블러 티저 -->
             <div class="decision-timing-hook">
               <div class="timing-badge"><i class="fa-solid fa-hourglass-half"></i> 決定的 時期 (결정적 시기)</div>
@@ -878,7 +933,7 @@
               <div class="portone-brand-row toss-brand-row">
                 <div class="portone-badge toss-badge">
                   <span class="portone-logo-text"><i class="fa-solid fa-shield-halved"></i> 포트원 안전결제</span>
-                  <span class="portone-sub">PG 수수료 우대</span>
+                  <span class="portone-sub">정품 인증 · 즉시 열람</span>
                 </div>
                 <span class="ssl-badge"><i class="fa-solid fa-lock"></i> SSL 암호화 · 결제 즉시 발급</span>
               </div>
@@ -892,7 +947,7 @@
                   <span id="subtotalPrice">0원</span>
                 </div>
                 <div class="sum-row bundle-discount hidden" id="bundleDiscountRow">
-                  <span><i class="fa-solid fa-gift"></i> 묶음 할인 (10%)</span>
+                  <span id="bundleDiscountLabel"><i class="fa-solid fa-gift"></i> 묶음 할인 (10%)</span>
                   <span id="bundleDiscountPrice">-0원</span>
                 </div>
                 <div class="sum-row total">
@@ -1115,8 +1170,8 @@
 
       <div class="footer-bottom">
         <p class="company-info">
-          천문사주 (cheonmun.life) | 운영사업자: 벅스라이프 | 대표자: 염동화 | 사업자등록번호: 540-46-01280<br>
-          주소: 경기도 광주시 상태길68번길 17-56, 109동 B02호(신현동, 동심그린타운) | 고객센터: 카카오톡 @cheonmun-saju | 문의: support@cheonmun.life
+          천문사주 (cheonmun.life) | 운영사업자: 벅스라이프 | 대표자: 염동화 | 사업자등록번호: 540-46-01280 | 통신판매업신고: 제2026-경기광주-0000호(신고진행중)<br>
+          주소: 경기도 광주시 상태길68번길 17-56, 109동 B02호(신현동, 동심그린타운) | 고객센터: 070-8028-4989 / 카카오톡 @cheonmun-saju | 문의: support@cheonmun.life
         </p>
         <p class="copyright">© CHEONMUN SAJU (cheonmun.life). All rights reserved.</p>
       </div>
@@ -1152,7 +1207,7 @@
       <div class="order-summary-box">
         <div id="payModalItems"></div>
         <div class="summary-row hidden" id="payModalDiscountRow">
-          <span>묶음 할인 (10%)</span>
+          <span id="payModalDiscountLabel">묶음 할인</span>
           <span class="discount-text" id="payModalDiscount">-0원</span>
         </div>
         <div class="summary-row highlight">

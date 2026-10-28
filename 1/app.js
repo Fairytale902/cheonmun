@@ -1011,6 +1011,33 @@ function generatePillarCritique(pillarKey, stemIdx, branchIdx, userName, climate
 // 7. 사주 분석 실행 및 결과 렌더링
 // ==========================================================================
 let currentAnalysisData = null;
+const LAST_INPUT_STORAGE_KEY = 'cm_last_user_input_v1';
+
+function fillSampleUserInput() {
+  const nEl = document.getElementById('userName');
+  const yEl = document.getElementById('birthYear');
+  const mEl = document.getElementById('birthMonth');
+  const dEl = document.getElementById('birthDay');
+  if (nEl && !nEl.value.trim()) nEl.value = '김우주';
+  if (yEl) yEl.value = '1996';
+  if (mEl) mEl.value = '7';
+  if (dEl) dEl.value = '15';
+}
+
+function loadLastUserInput() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LAST_INPUT_STORAGE_KEY) || 'null');
+    if (!saved) return;
+    if (saved.name && document.getElementById('userName')) document.getElementById('userName').value = saved.name;
+    if (saved.year && document.getElementById('birthYear')) document.getElementById('birthYear').value = saved.year;
+    if (saved.month && document.getElementById('birthMonth')) document.getElementById('birthMonth').value = saved.month;
+    if (saved.day && document.getElementById('birthDay')) document.getElementById('birthDay').value = saved.day;
+    if (saved.timeStr && document.getElementById('birthTime')) document.getElementById('birthTime').value = saved.timeStr;
+    if (saved.birthCity && document.getElementById('birthCity')) document.getElementById('birthCity').value = saved.birthCity;
+    if (saved.userMbti && document.getElementById('userMbti')) document.getElementById('userMbti').value = saved.userMbti;
+    if (saved.userConcernDetail && document.getElementById('userConcernDetail')) document.getElementById('userConcernDetail').value = saved.userConcernDetail;
+  } catch (e) {}
+}
 
 function analyzeSaju() {
   const name = document.getElementById('userName').value.trim() || '고객';
@@ -1023,6 +1050,15 @@ function analyzeSaju() {
   const birthCity = document.getElementById('birthCity')?.value || 'seoul';
   const userMbti = document.getElementById('userMbti')?.value || 'unknown';
   const userConcernDetail = document.getElementById('userConcernDetail')?.value.trim() || '';
+  const selectedConcern = document.querySelector('input[name="concern"]:checked')?.value || 'wealth';
+
+  try {
+    if (document.getElementById('userName').value.trim() || document.getElementById('birthYear').value) {
+      localStorage.setItem(LAST_INPUT_STORAGE_KEY, JSON.stringify({
+        name, year, month, day, timeStr, gender, calendarType, birthCity, userMbti, userConcernDetail
+      }));
+    }
+  } catch (e) {}
 
   const formEl = document.getElementById('sajuForm');
   const loaderEl = document.getElementById('analysisLoader');
@@ -1051,7 +1087,7 @@ function analyzeSaju() {
         formEl.classList.remove('hidden');
         
         // 데이터 계산 및 렌더링
-        renderFullResult(name, year, month, day, timeStr, gender, calendarType, birthCity, userMbti, userConcernDetail);
+        renderFullResult(name, year, month, day, timeStr, gender, calendarType, birthCity, userMbti, userConcernDetail, selectedConcern);
         // 화면을 결과 뷰로 전환
         switchView('result');
       }, 400);
@@ -1060,7 +1096,7 @@ function analyzeSaju() {
 }
 
 // 전체 결과 렌더링 (천문력 정밀 계산 & 궁통보감 120종 조후 연동)
-function renderFullResult(name, year, month, day, timeStr, gender = 'female', calendarType = 'solar', birthCity = 'seoul', userMbti = 'unknown', userConcernDetail = '') {
+function renderFullResult(name, year, month, day, timeStr, gender = 'female', calendarType = 'solar', birthCity = 'seoul', userMbti = 'unknown', userConcernDetail = '', selectedConcern = 'wealth') {
   const astro = calculateAstronomicalPillars(year, month, day, timeStr, calendarType);
   const enrichPillar = (p) => {
     if (!p) return null;
@@ -1278,9 +1314,19 @@ function renderFullResult(name, year, month, day, timeStr, gender = 'female', ca
   // 기본 활성 기둥: 일주(day) 세부정보 표출
   selectPillar('day');
 
-  // 만세력 기반 리포트별 후킹 멘트 생성 & 장바구니 초기화
+  // 만세력 기반 리포트별 후킹 멘트 생성 & 관심 고민 리포트 자동 프리셀렉트
   renderReportHooks();
-  resetCart();
+  selectedReports.clear();
+  const concernToReportMap = {
+    wealth: 'master',
+    love: 'match',
+    career: 'career',
+    year: 'newyear'
+  };
+  const preselectKey = concernToReportMap[selectedConcern] || 'newyear';
+  selectedReports.add(preselectKey);
+  syncPartnerInfo();
+  updateCartUI();
 }
 
 // 특정 기둥 탭 선택 시 실시간 상세정보 갱신
@@ -1516,7 +1562,7 @@ function setHook(key, text) {
 }
 
 // ==========================================================================
-// 9. 리포트 중복 선택 & 묶음 할인 (2개 이상 선택 시 10%)
+// 9. 리포트 중복 선택 & 계단식 묶음 할인 (2권 10% · 3권 15% · 4권 전권 25%)
 // ==========================================================================
 const REPORT_PRODUCTS = {
   newyear: { title: '세운(歲運) 총운 & 12개월 월별 터닝포인트', price: 22500 },
@@ -1527,6 +1573,13 @@ const REPORT_PRODUCTS = {
 const BUNDLE_MIN_COUNT = 2;
 const BUNDLE_RATE = 0.10;
 
+function getBundleDiscountRate(count) {
+  if (count >= 4) return 0.25;
+  if (count === 3) return 0.15;
+  if (count === 2) return 0.10;
+  return 0;
+}
+
 const selectedReports = new Set();
 
 const won = n => `${n.toLocaleString('ko-KR')}원`;
@@ -1534,9 +1587,10 @@ const won = n => `${n.toLocaleString('ko-KR')}원`;
 function calcCart() {
   const items = [...selectedReports].map(k => ({ key: k, ...REPORT_PRODUCTS[k] }));
   const subtotal = items.reduce((sum, i) => sum + i.price, 0);
+  const rate = getBundleDiscountRate(items.length);
   // 10원 단위 절사
-  const discount = items.length >= BUNDLE_MIN_COUNT ? Math.floor((subtotal * BUNDLE_RATE) / 10) * 10 : 0;
-  return { items, subtotal, discount, total: subtotal - discount };
+  const discount = rate > 0 ? Math.floor((subtotal * rate) / 10) * 10 : 0;
+  return { items, subtotal, discount, rate, total: subtotal - discount };
 }
 
 // ==========================================================================
@@ -1732,6 +1786,86 @@ function toggleReport(key) {
   }
 }
 
+function toggleAllReportsBundle() {
+  const allKeys = Object.keys(REPORT_PRODUCTS);
+  const allSelected = allKeys.every(k => selectedReports.has(k));
+  selectedReports.clear();
+  if (!allSelected) {
+    allKeys.forEach(k => selectedReports.add(k));
+  } else {
+    selectedReports.add('newyear');
+  }
+  updateCartUI();
+  if (typeof trackFunnelEvent === 'function') {
+    const { total } = calcCart();
+    trackFunnelEvent('AddToCart', {
+      content_ids: Array.from(selectedReports),
+      toggled_item: 'all_bundle_86p',
+      value: total,
+      currency: 'KRW'
+    });
+  }
+}
+
+function syncPartnerInfo() {
+  if (!currentAnalysisData) return;
+  const pName = document.getElementById('partnerName')?.value.trim() || '';
+  const pRel = document.getElementById('partnerRelation')?.value || 'couple';
+  const pYear = parseInt(document.getElementById('partnerYear')?.value) || 0;
+  const pMonth = parseInt(document.getElementById('partnerMonth')?.value) || 0;
+  const pDay = parseInt(document.getElementById('partnerDay')?.value) || 0;
+  const statusEl = document.getElementById('partnerSyncStatus');
+
+  const relLabelMap = {
+    reunion: '이별 후 재회 · 속마음',
+    crush: '짝사랑 · 썸 공략',
+    couple: '현재 교제 중인 연인',
+    marriage: '결혼 · 평생 배우자 합'
+  };
+
+  if (pYear >= 1930 && pYear <= 2035 && pMonth >= 1 && pMonth <= 12 && pDay >= 1 && pDay <= 31) {
+    try {
+      const pAstro = calculateAstronomicalPillars(pYear, pMonth, pDay, 'unknown', 'solar');
+      const dStem = pAstro.dayPillar.stemIdx;
+      const dBranch = pAstro.dayPillar.branchIdx;
+      const pIlju = `${CHEONGAN_HANJA[dStem]}${JIJI_HANJA[dBranch]}(${CHEONGAN[dStem]}${JIJI[dBranch]}일주)`;
+      const pEl = ELEMENT_KOREAN[CHEONGAN_ELEMENTS[dStem]].split(' ')[0];
+      currentAnalysisData.partner = {
+        hasPartnerBirth: true,
+        name: pName || '상대방',
+        relation: pRel,
+        relationLabel: relLabelMap[pRel] || '연인',
+        year: pYear,
+        month: pMonth,
+        day: pDay,
+        stemIdx: dStem,
+        branchIdx: dBranch,
+        ilju: pIlju,
+        elKor: pEl
+      };
+      if (statusEl) {
+        statusEl.textContent = `✓ ${currentAnalysisData.partner.name}님 ${pIlju} 원국 연동됨`;
+        statusEl.classList.add('synced');
+      }
+      return;
+    } catch (e) {}
+  }
+
+  currentAnalysisData.partner = {
+    hasPartnerBirth: false,
+    name: pName || '상대방',
+    relation: pRel,
+    relationLabel: relLabelMap[pRel] || '인연',
+    year: 0,
+    month: 0,
+    day: 0
+  };
+  if (statusEl) {
+    statusEl.textContent = pName ? `${pName}님 맞춤 (${relLabelMap[pRel]})` : '배우자궁 원국 분석 모드';
+    statusEl.classList.remove('synced');
+  }
+}
+
 function resetCart() {
   selectedReports.clear();
   updateCartUI();
@@ -1747,7 +1881,25 @@ function updateCartUI() {
     card.setAttribute('aria-checked', on ? 'true' : 'false');
   });
 
-  const { items, subtotal, discount, total } = calcCart();
+  // 1:1 궁합 선택 여부에 따라 상대방 정보 입력 패널 표시
+  const partnerPanel = document.getElementById('partnerMatchPanel');
+  if (partnerPanel) {
+    partnerPanel.classList.toggle('hidden', !selectedReports.has('match'));
+  }
+
+  // 4권 전권 패키지 배너 상태 동기화
+  const allBar = document.getElementById('allInOnePackBar');
+  const allBtnTxt = document.getElementById('allInOneBtnText');
+  const isAll4 = selectedReports.size === Object.keys(REPORT_PRODUCTS).length;
+  if (allBar) allBar.classList.toggle('active', isAll4);
+  if (allBtnTxt) {
+    allBtnTxt.innerHTML = isAll4
+      ? `<i class="fa-solid fa-circle-check"></i> 전권 25% 특가 적용됨`
+      : `<i class="fa-solid fa-layer-group"></i> 전권 한번에 담기`;
+  }
+
+  const { items, subtotal, discount, rate, total } = calcCart();
+  const ratePct = Math.round((rate || 0) * 100);
 
   // 선택 항목 리스트
   const list = document.getElementById('selectedItemsList');
@@ -1761,6 +1913,10 @@ function updateCartUI() {
 
   document.getElementById('subtotalPrice').textContent = won(subtotal);
   document.getElementById('bundleDiscountRow').classList.toggle('hidden', discount === 0);
+  const discLabelEl = document.getElementById('bundleDiscountLabel');
+  if (discLabelEl && ratePct > 0) {
+    discLabelEl.innerHTML = `<i class="fa-solid fa-gift"></i> ${items.length === 4 ? 'VIP 전권 특별 할인' : '묶음 할인'} (${ratePct}%)`;
+  }
   document.getElementById('bundleDiscountPrice').textContent = `-${won(discount)}`;
   document.getElementById('selectedReportPrice').textContent = won(total);
 
@@ -1768,15 +1924,18 @@ function updateCartUI() {
   const nudge = document.getElementById('bundleNudge');
   const remaining = Object.keys(REPORT_PRODUCTS).filter(k => !selectedReports.has(k));
   if (items.length === 0) {
-    nudge.innerHTML = `<i class="fa-solid fa-circle-info"></i> <strong>2개 이상</strong> 선택하면 전체 금액에서 <strong>10% 추가 할인</strong>됩니다.`;
+    nudge.innerHTML = `<i class="fa-solid fa-circle-info"></i> <strong>2권 10% · 3권 15% · 4권 전권 25%</strong> 추가 할인이 적용됩니다.`;
     nudge.className = 'bundle-nudge';
-  } else if (items.length < BUNDLE_MIN_COUNT) {
+  } else if (items.length === 1) {
     const cheapest = Math.min(...remaining.map(k => REPORT_PRODUCTS[k].price));
-    const expectedSave = Math.floor(((subtotal + cheapest) * BUNDLE_RATE) / 10) * 10;
-    nudge.innerHTML = `<i class="fa-solid fa-gift"></i> <strong>1개만 더</strong> 선택하면 최대 <strong>${won(expectedSave)}</strong> 추가 할인됩니다.`;
+    const expectedSave = Math.floor(((subtotal + cheapest) * 0.10) / 10) * 10;
+    nudge.innerHTML = `<i class="fa-solid fa-gift"></i> <strong>1권만 더</strong> 함께 담으면 즉시 <strong>10% (${won(expectedSave)}~)</strong> 할인됩니다.`;
     nudge.className = 'bundle-nudge';
+  } else if (items.length < 4) {
+    nudge.innerHTML = `<i class="fa-solid fa-circle-check"></i> <strong>${ratePct}% 묶음 할인(-${won(discount)})</strong> 적용 중! 4권 전권 선택 시 <strong>25%(-25,630원)</strong> 최대 할인이 적용됩니다.`;
+    nudge.className = 'bundle-nudge applied';
   } else {
-    nudge.innerHTML = `<i class="fa-solid fa-circle-check"></i> 묶음 할인 적용! <strong>${won(discount)}</strong>을 아끼셨어요.`;
+    nudge.innerHTML = `<i class="fa-solid fa-crown"></i> <strong>VIP 전권 25% 최대 할인(-${won(discount)})</strong> 적용 완료! 86p 전권이 한 번에 발급됩니다.`;
     nudge.className = 'bundle-nudge applied';
   }
 
@@ -1835,8 +1994,10 @@ function selectPayMethod(method, btn) {
 }
 
 function triggerPayment() {
-  const { items, discount, total } = calcCart();
+  const { items, discount, rate, total } = calcCart();
   if (items.length === 0) return;
+
+  if (typeof syncPartnerInfo === 'function') syncPartnerInfo();
 
   const refundCheck = document.getElementById('refundNoticeCheck');
   if (refundCheck && !refundCheck.checked) {
@@ -1851,6 +2012,11 @@ function triggerPayment() {
       <span>${won(i.price)}</span>
     </div>`).join('');
   document.getElementById('payModalDiscountRow').classList.toggle('hidden', discount === 0);
+  const modalDiscLabel = document.getElementById('payModalDiscountLabel');
+  if (modalDiscLabel && rate > 0) {
+    const ratePct = Math.round(rate * 100);
+    modalDiscLabel.textContent = `${items.length === 4 ? 'VIP 전권 할인' : '묶음 할인'} (${ratePct}%)`;
+  }
   document.getElementById('payModalDiscount').textContent = `-${won(discount)}`;
   document.getElementById('payModalTotal').textContent = won(total);
   document.getElementById('payConfirmBtnText').textContent = `${won(total)} 안전 결제하기`;
@@ -2373,7 +2539,8 @@ function saveOrderToArchive(user, purchasedKeys, orderId, issueDateStr, isSample
       c: user.calendarType || 'solar',
       bc: user.birthCity || 'seoul',
       mb: user.userMbti || 'unknown',
-      cd: user.userConcernDetail || ''
+      cd: user.userConcernDetail || '',
+      pt: user.partner || null
     }
   };
 
@@ -2536,6 +2703,7 @@ function restoreFromCompactData(orderId, issueDate, purchasedKeys, u, isSample =
     u.mb || 'unknown',
     u.cd || ''
   );
+  if (u.pt) currentAnalysisData.partner = u.pt;
   if (isSample) currentAnalysisData.isDummySample = true;
 
   renderPurchasedReportBook(purchasedKeys, orderId, isSample);
@@ -2593,6 +2761,7 @@ function initAdAttributionAndTracking() {
   } catch (e) {}
 
   trackFunnelEvent('PageView');
+  if (typeof loadLastUserInput === 'function') loadLastUserInput();
 
   // URL에 ?restore=... 가 있으면 즉시 감명서 자동 복원
   try {

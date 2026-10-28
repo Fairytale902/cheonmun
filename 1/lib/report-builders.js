@@ -364,21 +364,28 @@ function buildUnsealedAnswersBoxHtml(user, reportType) {
   }
 
   if (reportType === 'match') {
-    const matchChar = `${JIJI_HANJA[harmonyBranchIdx]}(${JIJI[harmonyBranchIdx]} · ${ELEMENT_KOREAN[JIJI_ELEMENTS[harmonyBranchIdx]].split(' ')[0]})`;
+    const pt = user.partner || {};
+    const ptName = pt.name || '상대방';
+    const matchChar = pt.hasPartnerBirth
+      ? `${pt.ilju} [상대 일지 ${JIJI_HANJA[pt.branchIdx]}(${JIJI[pt.branchIdx]}) · ${pt.elKor}] vs 내 일지 ${JIJI_HANJA[dayBranch]}(${JIJI[dayBranch]})`
+      : `${JIJI_HANJA[harmonyBranchIdx]}(${JIJI[harmonyBranchIdx]} · ${ELEMENT_KOREAN[JIJI_ELEMENTS[harmonyBranchIdx]].split(' ')[0]})`;
     const clashChar = `${JIJI_HANJA[clashBranchIdx]}(${JIJI[clashBranchIdx]})`;
+    const subLine = pt.hasPartnerBirth
+      ? `${user.name}님과 ${ptName}님(${pt.year}.${pt.month}.${pt.day} · ${pt.ilju})의 1:1 실명 원국 대조 해답입니다.`
+      : `봉인 목록에서 블러(▓) 처리되었던 ${user.name}님과 ${ptName}님의 결속·위험 신호 해답입니다.`;
     return `
       <div class="unsealed-truth-box">
         <div class="unsealed-header">
           <span class="unsealed-stamp">封印解除</span>
           <div>
-            <h5>결제 전 가려져 있던 ${user.name}님의 인연·궁합 3대 봉인 직답록</h5>
-            <span class="unsealed-sub">봉인 목록에서 블러(▓) 처리되었던 두 사주의 결속과 위험 신호 해답입니다.</span>
+            <h5>결제 전 가려져 있던 ${user.name}님 × ${ptName}님의 인연·궁합 3대 봉인 직답록</h5>
+            <span class="unsealed-sub">${subLine}</span>
           </div>
         </div>
         <div class="unsealed-items">
           <div class="unsealed-row">
             <span class="u-badge">봉인 해제 ①</span>
-            <p><strong>이 사람과 맞물리는 핵심 글자:</strong> 당신의 배우자궁(일지 ${JIJI_HANJA[dayBranch]}) 결핍을 완벽히 채워주는 운명적 결속 글자는 <span class="u-highlight">「 ${matchChar} 」</span>입니다.</p>
+            <p><strong>${ptName}님과 맞물리는 핵심 글자:</strong> 당신의 배우자궁(일지 ${JIJI_HANJA[dayBranch]})과 공명하는 운명적 결속 축은 <span class="u-highlight">「 ${matchChar} 」</span>입니다.</p>
           </div>
           <div class="unsealed-row">
             <span class="u-badge">봉인 해제 ②</span>
@@ -438,6 +445,11 @@ function buildNewYearReportHtml(user, natureName) {
   const yongshin = user.yongshin;
   const seun = getDynamicSeunContext(user);
   const med = diagnoseMedicalSaju(user);
+  const pt = user.partner || {};
+  const ptName = pt.name || '상대방';
+  const ptCompareLine = pt.hasPartnerBirth
+    ? `${user.name}님의 <strong>${natureName}</strong> 원국과 ${ptName}님(${pt.year}년 ${pt.month}월 ${pt.day}일생)의 <strong>${pt.ilju} [${pt.elKor}]</strong> 원국이 맞닿을 때, 두 사람은 서로에게 없던 온도와 시야를 단숨에 열어젖힙니다.`
+    : `${user.name}님의 <strong>${natureName}</strong> 기운은 ${ptName}님에게 전에 없던 안정감과 지적 매력을 선사하며, ${ptName}님의 기운은 당신의 굳어 있던 감성을 단숨에 흔들어 깨웁니다.`;
 
   const userConcern = user.userConcernDetail 
     ? `<div class="counseling-empathy-box">
@@ -814,6 +826,11 @@ function buildMasterReportHtml(user, natureName) {
   const dynamics = user.dynamics || { stemRelations: [], branchRelations: [] };
   const shinsalList = user.extendedShinsal || [];
   const med = diagnoseMedicalSaju(user);
+  const pt = user.partner || {};
+  const ptName = pt.name || '상대방';
+  const ptCompareLine = pt.hasPartnerBirth
+    ? `${user.name}님의 <strong>${natureName}</strong> 원국과 ${ptName}님(${pt.year}년 ${pt.month}월 ${pt.day}일생)의 <strong>${pt.ilju} [${pt.elKor}]</strong> 원국이 맞닿을 때, 두 사람은 서로에게 없던 온도와 시야를 단숨에 열어젖힙니다.`
+    : `${user.name}님의 <strong>${natureName}</strong> 기운은 ${ptName}님에게 전에 없던 안정감과 지적 매력을 선사하며, ${ptName}님의 기운은 당신의 굳어 있던 감성을 단숨에 흔들어 깨웁니다.`;
 
   const userMbtiRef = (user.userMbti && user.userMbti !== 'unknown')
     ? `<div class="key-point-box">
@@ -1303,6 +1320,11 @@ function buildMatchReportHtml(user, natureName) {
   const strength = user.strength;
   const yongshin = user.yongshin;
   const med = diagnoseMedicalSaju(user);
+  const pt = user.partner || {};
+  const ptName = pt.name || '상대방';
+  const ptCompareLine = pt.hasPartnerBirth
+    ? `${user.name}님의 <strong>${natureName}</strong> 원국과 ${ptName}님(${pt.year}년 ${pt.month}월 ${pt.day}일생)의 <strong>${pt.ilju} [${pt.elKor}]</strong> 원국이 맞닿을 때, 두 사람은 서로에게 없던 온도와 시야를 단숨에 열어젖힙니다.`
+    : `${user.name}님의 <strong>${natureName}</strong> 기운은 ${ptName}님에게 전에 없던 안정감과 지적 매력을 선사하며, ${ptName}님의 기운은 당신의 굳어 있던 감성을 단숨에 흔들어 깨웁니다.`;
 
   return `
     ${buildMyeongshikTableHtml(user)}
@@ -1337,7 +1359,7 @@ function buildMatchReportHtml(user, natureName) {
     <!-- 제2장 -->
     <div class="report-chapter">
       <div class="chapter-badge">CHAPTER 02 · 본원(本元)의 이끌림과 일주(日柱) 구조 해부</div>
-      <h3 class="chapter-title">${user.name}님과 상대방의 에너지 본질 — 자석처럼 끌리는 이유와 부딪히는 지점</h3>
+      <h3 class="chapter-title">${user.name}님과 ${ptName}님의 에너지 본질 — 자석처럼 끌리는 이유와 부딪히는 지점</h3>
       <div class="chapter-prose">
         <p>
           남녀가 처음 만나 스파크가 튀는 것은 머리의 계산이 아니라, <strong>일간(日干: 영혼의 본질)</strong>과 <strong>일지(日支: 육체와 안방의 기운)</strong>가 무의식중에 서로의 결핍을 알아보고 자석처럼 끌어당기기 때문입니다.
@@ -1346,7 +1368,7 @@ function buildMatchReportHtml(user, natureName) {
         <div class="event-prediction-box">
           <h5><i class="fa-solid fa-magnet"></i> 두 사람 사이에서 일어나는 화학 반응의 실체</h5>
           <p>
-            ${user.name}님의 ${natureName} 기운은 상대방에게 전에 없던 안정감과 지적 매력을 선사하며, 상대방의 기운은 당신의 굳어 있던 감성을 단숨에 흔들어 깨웁니다. 서로에게서 자신이 가지지 못한 세계를 발견하기에 급격한 설렘에 빠져들지만, 익숙해질수록 그 차이점이 "왜 나와 같지 않은가"라는 실망감으로 돌변하기 쉽습니다.
+            ${ptCompareLine} 서로에게서 자신이 가지지 못한 세계를 발견하기에 급격한 설렘에 빠져들지만, 익숙해질수록 그 차이점이 "왜 나와 같지 않은가"라는 실망감으로 돌변하기 쉽습니다.
           </p>
         </div>
 
@@ -1881,6 +1903,11 @@ function buildCareerReportHtml(user, natureName) {
   const yongshin = user.yongshin;
   const seun = getDynamicSeunContext(user);
   const med = diagnoseMedicalSaju(user);
+  const pt = user.partner || {};
+  const ptName = pt.name || '상대방';
+  const ptCompareLine = pt.hasPartnerBirth
+    ? `${user.name}님의 <strong>${natureName}</strong> 원국과 ${ptName}님(${pt.year}년 ${pt.month}월 ${pt.day}일생)의 <strong>${pt.ilju} [${pt.elKor}]</strong> 원국이 맞닿을 때, 두 사람은 서로에게 없던 온도와 시야를 단숨에 열어젖힙니다.`
+    : `${user.name}님의 <strong>${natureName}</strong> 기운은 ${ptName}님에게 전에 없던 안정감과 지적 매력을 선사하며, ${ptName}님의 기운은 당신의 굳어 있던 감성을 단숨에 흔들어 깨웁니다.`;
   const persona = buildCareerPersonaProse(user);
 
   const userConcern = user.userConcernDetail
