@@ -1932,7 +1932,7 @@ function updateCartUI() {
     nudge.innerHTML = `<i class="fa-solid fa-gift"></i> <strong>1권만 더</strong> 함께 담으면 즉시 <strong>10% (${won(expectedSave)}~)</strong> 할인됩니다.`;
     nudge.className = 'bundle-nudge';
   } else if (items.length < 4) {
-    nudge.innerHTML = `<i class="fa-solid fa-circle-check"></i> <strong>${ratePct}% 묶음 할인(-${won(discount)})</strong> 적용 중! 4권 전권 선택 시 <strong>25%(-25,630원)</strong> 최대 할인이 적용됩니다.`;
+    nudge.innerHTML = `<i class="fa-solid fa-circle-check"></i> <strong>${ratePct}% 묶음 할인(-${won(discount)})</strong> 적용 중! 4권 전권 선택 시 <strong>25%(-25,620원)</strong> 최대 할인이 적용됩니다.`;
     nudge.className = 'bundle-nudge applied';
   } else {
     nudge.innerHTML = `<i class="fa-solid fa-crown"></i> <strong>VIP 전권 25% 최대 할인(-${won(discount)})</strong> 적용 완료! 86p 전권이 한 번에 발급됩니다.`;
