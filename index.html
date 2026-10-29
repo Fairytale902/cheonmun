@@ -216,7 +216,8 @@
 
     .service-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: minmax(0, 560px);
+      justify-content: center;
       gap: 32px;
       margin-top: 20px;
     }
@@ -472,7 +473,6 @@
       </a>
       <div class="nav-buttons">
         <a href="1/index.html" class="btn-nav btn-nav-saju"><i class="fa-solid fa-scroll"></i> 사주 만세력</a>
-        <a href="2/index.html" class="btn-nav btn-nav-tarot"><i class="fa-solid fa-wand-magic-sparkles"></i> 심리 타로</a>
       </div>
     </div>
   </header>
@@ -481,14 +481,14 @@
   <section class="portal-hero">
     <div class="container">
       <div class="hero-eyebrow">
-        <i class="fa-solid fa-shield-halved"></i> 3,000년 정통 자평진전 명리학 × 칼 융 분석심리학
+        <i class="fa-solid fa-shield-halved"></i> 3,000년 정통 자평진전 · 궁통보감 명리학
       </div>
       <h2 class="hero-title">
         "정해진 운명의 거시적 흐름을 읽고,<br>
         <span class="gold-text">내면의 무의식</span>을 비추어 주체적 삶을 선택합니다."
       </h2>
       <p class="hero-subtitle">
-        답답한 갈림길에 서 계신가요? 사주 8글자의 대운 시간표와 타로 78장 아르카나의 영적 거울을 통해 당신 내면의 진짜 해답을 찾으십시오.
+        답답한 갈림길에 서 계신가요? 사주 8글자에 새겨진 대운 시간표로 지금 움직일 때와 기다릴 때를 먼저 확인하십시오.
       </p>
     </div>
   </section>
@@ -523,30 +523,6 @@
           </div>
         </a>
 
-        <!-- 서비스 2: 천문 심리 타로 살롱 -->
-        <a href="2/index.html" class="portal-card card-tarot">
-          <div>
-            <span class="card-badge"><i class="fa-solid fa-sparkles"></i> 융 분석심리학 3단계 화법</span>
-            <div class="card-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-            <h3 class="card-title">천문(天文) 심리 타로 살롱</h3>
-            <p class="card-desc">
-              단순한 점괘가 아닌 무의식을 비추는 거울. 78장 라이더-웨이트 3D 부채꼴 덱에서 직접 카드를 터치하여 뽑고,
-              4원소 조화도와 칼 융의 3단계(공감 ➔ 맹점 조명 ➔ 행동 지침)로 주체적 길을 찾습니다.
-            </p>
-            <ul class="feature-list">
-              <li><i class="fa-solid fa-circle-check"></i> 78장 아르카나 인터랙티브 3D 부채꼴 덱 1인칭 뽑기</li>
-              <li><i class="fa-solid fa-circle-check"></i> 켈틱 크로스 10카드, 3카드 시간선, 양자택일 5카드 지원</li>
-              <li><i class="fa-solid fa-circle-check"></i> '못' 가는지 '안' 가는지 뼈를 때리는 융 심리학 직면</li>
-              <li><i class="fa-solid fa-circle-check"></i> 14페이지 완벽 규격의 A4 소장용 타로 감명서 PDF 발급</li>
-            </ul>
-          </div>
-          <div>
-            <div class="btn-card-action">
-              <span>78장 아르카나 타로 뽑기</span>
-              <i class="fa-solid fa-arrow-right"></i>
-            </div>
-          </div>
-        </a>
 
       </div>
 
@@ -580,7 +556,6 @@
         <a href="1/privacy.html">개인정보처리방침</a>
         <a href="1/refund.html">환불정책 및 청약철회 안내</a>
         <a href="1/index.html">천문 사주명리학</a>
-        <a href="2/index.html">천문 타로살롱</a>
       </div>
 
       <div class="company-info">
@@ -590,7 +565,7 @@
           <strong>호스팅 서비스 제공자:</strong> Vercel Inc.
         </p>
         <p style="margin-top: 6px; color: #64748b; font-size: 0.8rem;">
-          ※ 본 서비스에서 제공하는 사주명리 및 심리 타로 감명서는 학술적 이론 및 분석심리학적 모델에 기반한 상담 참고 자료이며, 내담자의 주체적인 삶의 의사결정을 지원하기 위한 목적으로 제공됩니다.
+          ※ 본 서비스에서 제공하는 사주명리 감명서는 명리 고전 이론에 기반한 상담 참고 자료이며, 내담자의 주체적인 삶의 의사결정을 지원하기 위한 목적으로 제공됩니다.
         </p>
       </div>
 

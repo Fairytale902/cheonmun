@@ -6,6 +6,7 @@ from pathlib import Path
 from urllib.parse import unquote, urljoin, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
+TAROT_ROOT = ROOT / "tarot-salon"  # 독립 출시용 타로 패키지 (자체 도메인 루트 기준)
 ORIGIN = "https://cheonmun.test"
 
 class References(HTMLParser):
@@ -35,7 +36,7 @@ def variants(directory, name):
     return ["/" + stem, "/" + stem + "/", "/" + stem + ".html"]
 
 def documents():
-    for service, alias in [("1", "saju"), ("2", "tarot")]:
+    for service, alias in [("1", "saju")]:
         yield service + "/index.html", [
             "/" + service, "/" + service + "/", "/" + service + "/index.html",
             "/" + alias, "/" + alias + "/", "/" + alias + "/index.html",
@@ -45,13 +46,13 @@ def documents():
     for name in ["terms.html", "privacy.html", "refund.html"]:
         yield name, variants("", name)
 
-def missing_target(reference, page_url, asset=True):
+def missing_target(reference, page_url, asset=True, root=ROOT):
     if not reference or reference.startswith(("#", "javascript:", "mailto:", "tel:", "data:")):
         return None
     resolved = urlsplit(urljoin(page_url, reference))
     if resolved.netloc != urlsplit(ORIGIN).netloc:
         return None
-    path = ROOT / unquote(resolved.path).lstrip("/")
+    path = root / unquote(resolved.path).lstrip("/")
     candidates = [path] if asset else [path, Path(str(path) + ".html"), path / "index.html"]
     if not any(candidate.is_file() for candidate in candidates):
         return resolved.path
@@ -86,23 +87,23 @@ class AssetPathTests(unittest.TestCase):
 
     def test_dynamic_tarot_card_images_resolve_on_every_entry_url(self):
         refs = set()
-        for path in list((ROOT / "2/lib").glob("tarot-data-*.js")) + [ROOT / "2/app.js"]:
+        for path in list((TAROT_ROOT / "lib").glob("tarot-data-*.js")) + [TAROT_ROOT / "app.js"]:
             refs.update(re.findall(r"['\"]([^'\"]*assets/cards/[^'\"]+)['\"]", path.read_text(encoding="utf-8")))
         self.assertGreaterEqual(len(refs), 79)
         parser = References()
-        parser.feed((ROOT / "2/index.html").read_text(encoding="utf-8"))
+        parser.feed((TAROT_ROOT / "index.html").read_text(encoding="utf-8"))
         missing = []
-        for route in ["/2", "/2/", "/2/index.html", "/tarot", "/tarot/"]:
+        for route in ["/", "/index.html"]:
             page_url = urljoin(ORIGIN + route, parser.base) if parser.base else ORIGIN + route
             for ref in refs:
-                target = missing_target(ref, page_url)
+                target = missing_target(ref, page_url, root=TAROT_ROOT)
                 if target:
                     missing.append((route, ref, target))
         self.assertEqual(len(missing), 0, f"{len(missing)} missing card images; examples: {missing[:6]}")
 
     def test_css_assets_resolve_relative_to_the_stylesheet(self):
         missing = []
-        for service in ["1", "2"]:
+        for service in ["1"]:
             path = ROOT / service / "style.css"
             refs = re.findall(r"url\(\s*['\"]?([^)'\"]+)['\"]?\s*\)", path.read_text(encoding="utf-8"))
             for ref in refs:

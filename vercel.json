@@ -3,7 +3,6 @@
   "cleanUrls": true,
   "routes": [
     { "src": "/saju/?", "dest": "/1/index.html" },
-    { "src": "/tarot/?", "dest": "/2/index.html" },
     { "src": "/terms/?", "dest": "/1/terms.html" },
     { "src": "/privacy/?", "dest": "/1/privacy.html" },
     { "src": "/refund/?", "dest": "/1/refund.html" }

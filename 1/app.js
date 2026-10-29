@@ -3068,8 +3068,9 @@ function cmScrollToCheckout() {
 }
 
 // 12-4. 사주(1관) → 심리 타로 교차판매 브릿지
-// 타로는 별도 웹으로 독립 출시 예정: 도메인 확정 시 window.CHEONMUN_TAROT_URL 또는 아래 기본값만 교체
-const CM_TAROT_SITE_URL = 'https://cheonmun.life/2/';
+// 타로는 별도 웹으로 독립 출시 예정(도메인 미정): 도메인 확정 시 아래 값만 입력하면 배너가 자동 노출
+// 예) const CM_TAROT_SITE_URL = 'https://tarot.example.com/';  또는 window.CHEONMUN_TAROT_URL 주입
+const CM_TAROT_SITE_URL = '';
 const CM_CONCERN_TO_TAROT = {
   love: { situation: 'reunion', label: '재회 · 속마음 브릿지' },
   career: { situation: 'career', label: '이직 · 커리어 호스슈' },
@@ -3097,6 +3098,14 @@ function cmBuildTarotUrl(placement) {
 }
 
 function cmRenderTarotBridges() {
+  const tarotBase = window.CHEONMUN_TAROT_URL || CM_TAROT_SITE_URL;
+  if (!tarotBase) {
+    ['tarotBridgeResult', 'tarotBridgeReport'].forEach(id => {
+      const host = document.getElementById(id);
+      if (host) host.innerHTML = '';
+    });
+    return;
+  }
   const map = CM_CONCERN_TO_TAROT[cmCurrentConcern()] || CM_CONCERN_TO_TAROT.wealth;
   [['tarotBridgeResult', 'result'], ['tarotBridgeReport', 'report']].forEach(([id, placement]) => {
     const host = document.getElementById(id);
