@@ -161,9 +161,19 @@ const REVIEWS_100 = [{"id": 1, "cat": "career", "name": "김*진 (25세 · 대�
 // ==========================================================================
 let currentView = 'landing';
 
-function switchView(viewName) {
+function switchView(viewName, opts = {}) {
+  // 결과/리포트 데이터가 없는 상태에서 히스토리로 진입하면 입력 화면으로 보정
+  if ((viewName === 'result' || viewName === 'report') && typeof currentAnalysisData !== 'undefined' && !currentAnalysisData) {
+    viewName = 'input';
+  }
+  const prevView = currentView;
   currentView = viewName;
   const views = ['landing', 'input', 'result', 'report'];
+
+  // 모바일 뒤로가기 이탈 방어: 화면 전환마다 브라우저 히스토리 스택 기록
+  if (!opts.fromHistory && typeof cmPushViewHistory === 'function') {
+    cmPushViewHistory(viewName, prevView, opts.replace);
+  }
 
   views.forEach(v => {
     const el = document.getElementById(`${v}View`);
@@ -199,6 +209,9 @@ function switchView(viewName) {
   if (liveToast) liveToast.style.display = (viewName === 'report') ? 'none' : '';
   const urgencyBanner = document.getElementById('urgencyBanner');
   if (urgencyBanner) urgencyBanner.style.display = (viewName === 'report') ? 'none' : '';
+
+  if (typeof cmUpdateResultFloatBar === 'function') cmUpdateResultFloatBar();
+  if ((viewName === 'result' || viewName === 'report') && typeof cmRenderTarotBridges === 'function') cmRenderTarotBridges();
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1199,6 +1212,7 @@ function renderFullResult(name, year, month, day, timeStr, gender = 'female', ca
     birthCity,
     userMbti,
     userConcernDetail,
+    selectedConcern,
     solar: astro.solar,
     lunar: astro.lunar,
     ec: astro.ec,
@@ -1944,6 +1958,8 @@ function updateCartUI() {
   btn.disabled = items.length === 0;
   document.getElementById('payBtnText').textContent =
     items.length === 0 ? '리포트를 선택해주세요' : `${won(total)} · 감명서 이어서 읽기`;
+
+  if (typeof cmUpdateResultFloatBar === 'function') cmUpdateResultFloatBar();
 }
 
 // 카드 키보드 접근성 (Enter / Space)
@@ -2887,9 +2903,230 @@ function loadMoreReviews() {
   renderReviews();
 }
 
+// ==========================================================================
+// 12. 모바일 뒤로가기 방어 · 광고 딥링크 · 결과 플로팅 결제바 · 타로 교차판매
+// ==========================================================================
+const CM_HISTORY_STATE_KEY = 'cmView';
+let cmHistoryReady = false;
+
+// 12-1. SPA 히스토리: 화면 전환마다 pushState → 기기 뒤로가기 시 사이트 안에서 직전 화면으로 복귀
+function cmPushViewHistory(viewName, prevView, replace) {
+  try {
+    if (!window.history || typeof history.pushState !== 'function') return;
+    const nextState = Object.assign({}, history.state || {}, { [CM_HISTORY_STATE_KEY]: viewName });
+    if (replace || !cmHistoryReady) {
+      history.replaceState(nextState, '');
+      cmHistoryReady = true;
+      return;
+    }
+    if (history.state && history.state[CM_HISTORY_STATE_KEY] === viewName) return;
+    history.pushState(nextState, '');
+  } catch (e) {}
+}
+
+function cmInitHistoryGuard() {
+  try {
+    if (!window.history || typeof history.replaceState !== 'function') return;
+    history.replaceState(Object.assign({}, history.state || {}, { [CM_HISTORY_STATE_KEY]: currentView || 'landing' }), '');
+    cmHistoryReady = true;
+  } catch (e) {}
+
+  window.addEventListener('popstate', (e) => {
+    // 열려 있는 결제/보관함 모달은 먼저 닫음
+    ['payModal', 'orderLookupModal'].forEach(id => {
+      const m = document.getElementById(id);
+      if (m && !m.classList.contains('hidden')) m.classList.add('hidden');
+    });
+    const target = (e.state && e.state[CM_HISTORY_STATE_KEY]) || 'landing';
+    const from = currentView;
+    if (target === from) return;
+
+    // 분석 로딩 도중 이탈한 경우 폼 상태 원복
+    const formEl = document.getElementById('sajuForm');
+    const loaderEl = document.getElementById('analysisLoader');
+    if (loaderEl && !loaderEl.classList.contains('hidden')) {
+      loaderEl.classList.add('hidden');
+      if (formEl) formEl.classList.remove('hidden');
+    }
+
+    switchView(target, { fromHistory: true });
+    trackFunnelEvent('BackNavigation', { from, to: target });
+  });
+}
+
+// 12-2. 광고 소재별 딥링크 (?concern=love|career|wealth|year, ?step=input)
+const CM_CONCERN_ALIASES = {
+  wealth: 'wealth', money: 'wealth', master: 'wealth', health: 'wealth', life: 'wealth',
+  love: 'love', match: 'love', reunion: 'love', romance: 'love', marriage: 'love', couple: 'love',
+  career: 'career', job: 'career', work: 'career', business: 'career', jobchange: 'career',
+  year: 'year', newyear: 'year', '2026': 'year', fortune: 'year', monthly: 'year'
+};
+
+const CM_CONCERN_HERO = {
+  wealth: {
+    title: `"열심히 버는데,<br><span class="gold-gradient">왜 돈은 늘 손에서 새어나갈까?"</span>`,
+    desc: `타고난 <strong>재성(財星)의 그릇</strong>과 돈이 새는 구멍,<br>재물이 모이는 대운의 시기를 원국에서 직접 읽어냅니다.`,
+    sticky: '내 재물 그릇 크기는?'
+  },
+  love: {
+    title: `"연락이 끊긴 그 사람,<br><span class="gold-gradient">정말 인연이 끝난 걸까?"</span>`,
+    desc: `두 사람의 <strong>일주(日柱)와 합·충</strong>을 대조하면<br>다시 이어질 시기와 반드시 피해야 할 말이 보입니다.`,
+    sticky: '그 사람과 내 궁합은?'
+  },
+  career: {
+    title: `"버틸까, 떠날까.<br><span class="gold-gradient">이직 타이밍을 놓치고 있진 않을까?"</span>`,
+    desc: `내 <strong>십성(十星) 구조</strong>가 조직형인지 독립형인지,<br>문서·관운이 들어오는 달을 먼저 확인하세요.`,
+    sticky: '내 이직 타이밍은?'
+  },
+  year: {
+    title: `"2026 병오년(丙午年),<br><span class="gold-gradient">내 인생의 터닝포인트는 몇 월일까?"</span>`,
+    desc: `세운과 대운이 교차하는 <strong>12개월의 흐름</strong> 속에서<br>움직여야 할 달과 멈춰야 할 달을 미리 짚어드립니다.`,
+    sticky: '2026 내 터닝포인트는?'
+  }
+};
+
+function cmApplyConcern(concern) {
+  const radio = document.querySelector(`input[name="concern"][value="${concern}"]`);
+  if (!radio) return false;
+  radio.checked = true;
+  document.querySelectorAll('.concern-tag').forEach(tag => {
+    const r = tag.querySelector('input[name="concern"]');
+    tag.classList.toggle('active', Boolean(r && r.checked));
+  });
+  return true;
+}
+
+function cmApplyDeepLink() {
+  let params;
+  try { params = new URLSearchParams(window.location.search); } catch (e) { return; }
+  if (params.get('restore')) return; // 소장 링크 복원이 최우선
+
+  const rawConcern = String(params.get('concern') || params.get('topic') || params.get('c') || '').toLowerCase().trim();
+  const concern = CM_CONCERN_ALIASES[rawConcern];
+  if (concern && cmApplyConcern(concern)) {
+    const hero = CM_CONCERN_HERO[concern];
+    const titleEl = document.querySelector('#landingView .hero-title');
+    const descEl = document.querySelector('#landingView .hero-desc');
+    const stickyTxt = document.querySelector('#mobileStickyBar .sticky-text .txt');
+    if (hero && titleEl) titleEl.innerHTML = hero.title;
+    if (hero && descEl) descEl.innerHTML = hero.desc;
+    if (hero && stickyTxt) stickyTxt.textContent = hero.sticky;
+    document.body.dataset.concern = concern;
+    trackFunnelEvent('DeepLinkLanding', { concern, raw: rawConcern });
+  }
+
+  const step = String(params.get('step') || params.get('view') || '').toLowerCase().trim();
+  if (step === 'input' || step === 'form' || step === 'start') {
+    switchView('input');
+  }
+}
+
+// 12-3. 결과 화면 전용 하단 미니 플로팅 결제바
+let cmCheckoutInView = false;
+
+function cmInitResultFloatBar() {
+  const target = document.querySelector('#resultView .portone-payment-box');
+  if (!target || typeof IntersectionObserver === 'undefined') return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { cmCheckoutInView = en.isIntersecting; });
+    cmUpdateResultFloatBar();
+  }, { threshold: 0.15 });
+  io.observe(target);
+}
+
+function cmUpdateResultFloatBar() {
+  const bar = document.getElementById('resultFloatBar');
+  if (!bar) return;
+  const show = currentView === 'result' && !cmCheckoutInView;
+  bar.classList.toggle('hidden', !show);
+  document.body.classList.toggle('has-result-float', show);
+  if (!show || typeof calcCart !== 'function') return;
+
+  const { items, rate, total } = calcCart();
+  const tagEl = document.getElementById('rfbTag');
+  const priceEl = document.getElementById('rfbPrice');
+  const btnTxt = document.getElementById('rfbBtnText');
+  if (items.length === 0) {
+    if (tagEl) tagEl.textContent = '4대 감명서 중 선택';
+    if (priceEl) priceEl.textContent = '2권부터 묶음 할인';
+    if (btnTxt) btnTxt.textContent = '리포트 고르기';
+  } else {
+    const ratePct = Math.round((rate || 0) * 100);
+    if (tagEl) tagEl.textContent = `${items.length}권 선택${ratePct > 0 ? ` · ${ratePct}% 할인` : ''}`;
+    if (priceEl) priceEl.textContent = won(total);
+    if (btnTxt) btnTxt.textContent = '감명서 이어서 읽기';
+  }
+}
+
+function cmScrollToCheckout() {
+  const hasItems = typeof selectedReports !== 'undefined' && selectedReports.size > 0;
+  const target = hasItems
+    ? document.querySelector('#resultView .portone-payment-box')
+    : (document.getElementById('allInOnePackBar') || document.querySelector('#resultView .report-select-grid'));
+  if (target) target.scrollIntoView({ behavior: 'smooth', block: hasItems ? 'center' : 'start' });
+  trackFunnelEvent('FloatBarClick', { has_items: hasItems });
+}
+
+// 12-4. 사주(1관) → 심리 타로 교차판매 브릿지
+// 타로는 별도 웹으로 독립 출시 예정: 도메인 확정 시 window.CHEONMUN_TAROT_URL 또는 아래 기본값만 교체
+const CM_TAROT_SITE_URL = 'https://cheonmun.life/2/';
+const CM_CONCERN_TO_TAROT = {
+  love: { situation: 'reunion', label: '재회 · 속마음 브릿지' },
+  career: { situation: 'career', label: '이직 · 커리어 호스슈' },
+  wealth: { situation: 'wealth', label: '재물 다이아몬드' },
+  year: { situation: 'celtic', label: '켈틱 크로스 종합' }
+};
+
+function cmCurrentConcern() {
+  return (currentAnalysisData && currentAnalysisData.selectedConcern)
+    || document.querySelector('input[name="concern"]:checked')?.value
+    || 'wealth';
+}
+
+function cmBuildTarotUrl(placement) {
+  const base = window.CHEONMUN_TAROT_URL || CM_TAROT_SITE_URL;
+  const map = CM_CONCERN_TO_TAROT[cmCurrentConcern()] || CM_CONCERN_TO_TAROT.wealth;
+  const qs = new URLSearchParams({
+    situation: map.situation,
+    utm_source: 'cheonmun_saju',
+    utm_medium: 'crosssell',
+    utm_campaign: 'saju_to_tarot',
+    utm_content: placement
+  });
+  return `${base}${base.includes('?') ? '&' : '?'}${qs.toString()}`;
+}
+
+function cmRenderTarotBridges() {
+  const map = CM_CONCERN_TO_TAROT[cmCurrentConcern()] || CM_CONCERN_TO_TAROT.wealth;
+  [['tarotBridgeResult', 'result'], ['tarotBridgeReport', 'report']].forEach(([id, placement]) => {
+    const host = document.getElementById(id);
+    if (!host) return;
+    host.innerHTML = `
+      <div class="tarot-bridge-card">
+        <div class="tb-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <div class="tb-body">
+          <span class="tb-tag">천문 심리 타로 살롱 · 78장 정통 스프레드</span>
+          <strong class="tb-title">사주는 '언제·왜'를, 타로는 '지금 그 사람의 속마음'을 봅니다</strong>
+          <p class="tb-desc">원국으로 큰 흐름을 확인하셨다면, 당장의 양자택일과 상대의 무의식은 내가 직접 뽑은 카드로 확인해 보세요.</p>
+        </div>
+        <a class="btn tb-btn" href="${cmBuildTarotUrl(placement)}" target="_blank" rel="noopener"
+           onclick="trackFunnelEvent('CrossSellClick', { to: 'tarot', placement: '${placement}', situation: '${map.situation}' })">
+          ${map.label} 타로 뽑기 <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>`;
+  });
+}
+
 // 초기 로드 시 100개 리뷰 시스템 및 광고 추적 · 평생 소장 링크 자동 복원 가동
 document.addEventListener('DOMContentLoaded', () => {
   renderReviews();
+  cmInitHistoryGuard();
   initAdAttributionAndTracking();
+  cmApplyDeepLink();
+  cmInitResultFloatBar();
+  cmRenderTarotBridges();
+  document.addEventListener('change', e => {
+    if (e.target && e.target.name === 'concern') cmApplyConcern(e.target.value);
+  });
 });
 renderReviews(); // 즉시 실행
